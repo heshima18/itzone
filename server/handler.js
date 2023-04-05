@@ -3,10 +3,10 @@ let bodyParser = require('body-parser');
 let mysql = require('mysql');
 let app = express();
 let connection = mysql.createConnection({
-	host : 'sql306.byetcluster.com',
-	user : 'epiz_33949774',
-	password : 'yI4ld3lcICZu2e',
-	database : 'epiz_33949774_itzone'
+	host : 'sql108.epizy.com',
+	user : 'epiz_31932252',
+	password : 'mHz5Co3utx',
+	database : 'epiz_31932252_itzone'
 })
 try {
 	connection.connect(function (error) {
