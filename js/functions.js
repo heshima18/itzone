@@ -191,7 +191,7 @@ function shwcrtcntn(a,x,items) {
 }
 export async function request(url,options){
   try {
-    z = await fetch('http://localhost:8080/api/'+url,options);
+    z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
     y = await z.json();
     return y;
   } catch (error) {
