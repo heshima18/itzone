@@ -112,7 +112,7 @@ io.on('connection', function (socket) {
 			let c = req.body.cntn;
 			c = gnrtorctn(c)
 			  database.query(`SELECT products.id as prodid, products.name as pname,products.availability, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) where ${c}`,(err,result)=>{
-				if (err) return res.send({ success: false, message: error});
+				if (err) return res.send({ success: false, message: err});
 				const products = JSON.parse(JSON.stringify(result))
 				products.forEach(prods=>{
 					products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
