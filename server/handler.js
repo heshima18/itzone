@@ -6,7 +6,7 @@ let connection = mysql.createConnection({
 	host : 'sql108.epizy.com',
 	user : 'epiz_31932252',
 	password : 'mHz5Co3utx',
-	database : 'epiz_31932252_sourcecodester_posales'
+	database : 'epiz_31932252_itzone'
 })
 try {
 	connection.connect(function (error) {
