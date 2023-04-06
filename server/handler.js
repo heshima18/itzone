@@ -6,13 +6,10 @@ let path = require('path');
 const fs = require('fs');
 
 const connection = mysql.createConnection({
-  host: '34.135.120.157',
-  user: 'itzone',
-  password: 'itzone',
-  database: 'itzone',
-  ssl: {
-    ca: fs.readFileSync(path.join(__dirname, 'server-ca.pem')),
-  },
+  host: 'mysql.freehostia.com',
+  user: 'itzsho_itzone',
+  password: 'Heshimaherbert@1',
+  database: 'itzsho_itzone'
 });
 try {
 	connection.connect(function (error) {
