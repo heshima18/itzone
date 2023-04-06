@@ -18,7 +18,7 @@ const slideShowContainer = document.querySelector('.slideShow');
             slidesContainer.prepend(lastClone);
             var slideWidth = slides[index].clientWidth+4.5;
             window.addEventListener('resize',()=>{
-                slideWidth = slides[index].clientWidth;
+                slideWidth = slides[index].clientWidth+4.5;
             })
 
             slidesContainer.style.transform = `translateX(${-slideWidth * index}px)`;
