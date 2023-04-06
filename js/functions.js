@@ -11,6 +11,8 @@ export function checkCart() {
   var cart_badge = document.querySelector('font.cart-badge');
   var cart_badge_hol = document.querySelector('span.cart-badge-hol');
 	a = getdata('cart');
+  (a == null)? localStorage.setItem('cart',JSON.stringify([])) : 0
+  a = getdata('cart');
   if(a.length > 0){
 		if (cart_badge_hol.classList.contains('hidden')) {
 			cart_badge_hol.classList.remove('hidden');
@@ -59,7 +61,8 @@ export function showCart(theshade){
 		}
     animskel()
     a = getdata('cart');
-
+    (a == null)? localStorage.setItem('cart',JSON.stringify([])) : 0
+    a = getdata('cart');
     x = document.querySelector('div.c_title');
     if (a.length == 0) {
       x.innerHTML = '<font class="verdana fs-30p capitalize black">my&nbsp;cart</font>';
@@ -191,7 +194,7 @@ function shwcrtcntn(a,x,items) {
 }
 export async function request(url,options){
   try {
-    z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+    z = await fetch('http://localhost:8080/api/'+url,options);
     y = await z.json();
     return y;
   } catch (error) {
