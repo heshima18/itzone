@@ -3,21 +3,21 @@ let bodyParser = require('body-parser');
 let mysql = require('mysql');
 let app = express();
 let connection = mysql.createConnection({
-	host : 'localhost',
-	user : 'root',
-	password : '',
-	database : 'itzone'
+	host : 'sql108.epizy.com',
+	user : 'epiz_31932252',
+	password : 'mHz5Co3utx',
+	database : 'epiz_31932252_itzone'
 })
 try {
 	connection.connect(function (error) {
 		if(error)
-		 console.log('an error occured')
+		 console.log(error)
 			else
 				console.log('connected to my sql')
 	})
 	
 } catch (error) {
-	console.log('an error occured')
+	console.log(error)
 }
 
 const server = app.listen(8080,()=>{
