@@ -2,7 +2,7 @@ const slideShowContainer = document.querySelector('.slideShow');
             const slidesContainer = document.querySelector('.slidesContainer');
             const rightBtn = document.querySelector('#slideRight');
             const leftBtn = document.querySelector('#slideLeft');
-            const slideShowInterval = 8000;
+            const slideShowInterval = 3000;
             let slides = document.querySelectorAll('.slideCard');
             let index = 0;
             let currentSlide;

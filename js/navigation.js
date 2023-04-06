@@ -7,7 +7,7 @@ thecont.appendChild(thenav);
 thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r">
 <div class="w-100 h-100 bsbb">
 <ul class="ls-none w-100 h-100 flex jc-sb p-0 m-0">
-<li class="ml-5p w-a h-a verdana bcntr-resp bmt--10p"><a class="td-none ls-n black w-100 h-100 center" href="${geturl()}"><img src="${geturl()}/icons/favicon.png" class="w-35p h-35p fill"></a></li>
+<li class="ml-5p w-a h-a verdana bcntr-resp bmt--10p"><a class="td-none ls-n black w-100 h-100 center" href="${geturl()}"><img src="${geturl()}/icons/favicon.png" class="w-35p h-35p cover"></a></li>
         <li class="hidden-resp">
           <div class="verdana center-2 h-100">
           <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/about/" class="td-none ls-n"><span class="nowrap hover-2 black">About us</span></a></span>
