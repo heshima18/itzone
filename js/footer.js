@@ -23,8 +23,8 @@ thef.innerHTML = `<div class="bc-white w-90 m-a bfull-resp h-100 black pt-20p bs
                     <div class="w-a p-r h-100  p-20p bsbb">
                         <img class="w-80p h-80p contain" src="${geturl()}/icons/favicon.png">
                     </div>
-                    <span class="fs-12p verdana dgray h-100">ITZONEPLUS LTD is a Rwandan technology company focused on , Selling all small scale electronic devices, ICT consultancy services, as well as logistics services, Web services Training and internships.<br>
-                    our main goal is to serve our current customers and at all potential customers on socioeconomic levels sustainably. We believe that technology is a 7th sense that human use to create and recreate all possible solutions that the world is facing in nowa days. 
+                    <span class="fs-12p verdana dgray h-100">ITZONEPLUS LTD is a Rwandan technology company which deals with ,  SUPPLY-INSTALLATION-MAINTAINACE of all ICT & electronic devices, ICT consultancy services, as well as logistics services, Web services Training and internships.<br>
+                    our main goal is to serve our current customers and at all potential customers on socioeconomic levels sustainably. We believe that technology is a 7th sense that human use to create and recreate all possible solutions that the world is facing in nowa days. 
                     </span>
                 </div>
             </div>

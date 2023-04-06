@@ -30,9 +30,9 @@ if (f) {
                     </div>
                     <div clas="w-100 h-60p bsbb bc-white">
                     <div class="w-100 h-100 center-2 p-5p bsbb">
-                        <span class="verdana helvetica h-100 w-100 block pr-20p bsbb">
-                            <button class="w-a h-a bc-gray br-2p b-none p-10p hover-2 right">
-                                <span class="helvetica white fs-16p">Get started</span>
+                        <span class="verdana helvetica h-100 w-100 block p-10p bsbb">
+                            <button class="w-a h-a bfull-resp bc-dgray br-2p b-none p-10p hover-2 right">
+                                <span class="helvetica white fs-16p h-100 w-100 center">Get started</span>
                             </button>
                         </span>
                     </div>
@@ -100,7 +100,7 @@ if (f) {
                         v = {[v.type] : v.name}
                         d.push(v)
                         if (d.length > 4) {
-                            b.classList.replace('bc-gray','bc-theme');
+                            b.classList.replace('bc-dgray','bc-theme');
                         }
                         cat.classList.replace('b-1-s-gray','b-1-s-theme')
                     }
@@ -112,7 +112,7 @@ if (f) {
                         p = d.indexOf(v)
                         d.splice(p,1);
                         if (d.length <= 4) {
-                            b.classList.replace('bc-theme','bc-gray');
+                            b.classList.replace('bc-theme','bc-dgray');
                         }
                         cat.classList.replace('b-1-s-theme','b-1-s-gray')
                     }

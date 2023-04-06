@@ -76,7 +76,7 @@ io.on('connection', function (socket) {
 		})
 		router.get('/getprods', async (req, res) => {
 			try {
-			  database.query("SELECT products.id as prodid,products.availability, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)",(error,result)=>{
+			  database.query("SELECT products.id as prodid,products.availability, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid,products.description, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)",(error,result)=>{
 				if (error) return res.send({ success: false, message: "oops an error occured"});
 				const products = JSON.parse(JSON.stringify(result))
 				products.forEach(prods=>{
@@ -202,6 +202,33 @@ io.on('connection', function (socket) {
 
 									})
 									res.send({success:true, message: "product info updated successfully"});
+								} catch (err) {
+									res.send({success: false, message: "err"})
+								}
+							} else {
+								res.send({success: false, message: "admin not found"})
+							}
+						})
+					} catch (error) {
+						res.send({success: false, message: 'oops an error occured'})
+						
+					}
+				}else{
+					res.send({success: false, message: 'oops an error occured'})
+				}
+			})
+		})
+		router.post('/getusers',async (req,res)=>{
+			authenticateToken(req.body.token,async (tokendata)=>{
+				if (tokendata.success) {
+					try {
+						t = tokendata.token.id
+						database.query(`select * from admin where id = '${t}'`, async (error,result)=>{
+							if (error) return res.send({success: false, message: 'oops an error occured'})
+							if (result.length > 0) {
+								try {
+									r = await query('select * from users')
+									res.send({success:true, message: r});
 								} catch (err) {
 									res.send({success: false, message: "err"})
 								}
@@ -1116,7 +1143,7 @@ io.on('connection', function (socket) {
 					s = await query(`select id,name,image from families where brand='${brand.id}'`)
 					b[b.indexOf(brand)].series.push(s)
 				}
-				a = await query('select name from availability');
+				a = await query('select id,name from availability');
 				u = await query('select id,name,image from usedin');
 				res.send({success:true,message:{categories: c,brands:b,usedin:u,availability:a}})
 			} catch (error) {

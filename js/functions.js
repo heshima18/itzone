@@ -11,6 +11,8 @@ export function checkCart() {
   var cart_badge = document.querySelector('font.cart-badge');
   var cart_badge_hol = document.querySelector('span.cart-badge-hol');
 	a = getdata('cart');
+  (a == null)? localStorage.setItem('cart',JSON.stringify([])) : 0
+  a = getdata('cart');
   if(a.length > 0){
 		if (cart_badge_hol.classList.contains('hidden')) {
 			cart_badge_hol.classList.remove('hidden');
@@ -59,7 +61,8 @@ export function showCart(theshade){
 		}
     animskel()
     a = getdata('cart');
-
+    (a == null)? localStorage.setItem('cart',JSON.stringify([])) : 0
+    a = getdata('cart');
     x = document.querySelector('div.c_title');
     if (a.length == 0) {
       x.innerHTML = '<font class="verdana fs-30p capitalize black">my&nbsp;cart</font>';
@@ -1073,7 +1076,6 @@ export async function showPreview(input) {
 export async function showcontent(data,targetdiv) {
   if (targetdiv.id == 'users'){
 		window.history.pushState('','','?page=users')
-    function showusers(data) {
       var atr = document.createElement('tr');
       targetdiv.childNodes[3].childNodes[1].innerHTML = null;
       targetdiv.childNodes[3].childNodes[1].appendChild(atr);
@@ -1081,10 +1083,10 @@ export async function showcontent(data,targetdiv) {
                   <span class="fs-15p verdana p-10p">#</span>
                 </td>
                 <td class="p-10p bsbb bb-1-s-g">
-                  <span class="fs-15p verdana p-10p">First&nbsp;name</span>
+                  <span class="fs-15p verdana p-10p no-wrap">First name</span>
                 </td>
                 <td class="p-10p bsbb bb-1-s-g">
-                  <span class="fs-15p verdana p-10p">Last&nbsp;name</span>
+                  <span class="fs-15p verdana p-10p no-wrap">Last name</span>
                 </td>
                 <td class="p-10p bsbb bb-1-s-g">
                   <span class="fs-15p verdana p-10p">Email</span>
@@ -1094,10 +1096,18 @@ export async function showcontent(data,targetdiv) {
                 </td>
                 `;
       i = 1;
-      data.forEach(users=>{
-        auser = document.createElement('tr');
-        targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-        auser.innerHTML = `
+      p = postschema
+      p.body =  JSON.stringify({token :getdata('admin')});
+      r = await request('getusers',p)
+      console.log(r)
+      if (!r.success) {
+        return 0
+      }
+
+      r.message.forEach(users=>{
+        a = document.createElement('tr');
+        targetdiv.childNodes[3].childNodes[1].appendChild(a);
+        a.innerHTML = `
                 <td class="p-10p bsbb">
                   <span class="fs-14p verdana">${i}</span>
                 </td>
@@ -1110,8 +1120,9 @@ export async function showcontent(data,targetdiv) {
                 <td class="p-10p bsbb">
                   <span class="fs-14p verdana">${users.email}</span>
                 </td>
-                <td class="p-10p">
-                  <span class="fs-14p verdana red center hover-2 us-none delete" id='${users._id}'>delete</span>
+                <td class="p-10p flex jc-sb">
+                <span class="fs-14p verdana orange center hover-2 us-none banlink" id='${users.id}'>ban</span>
+                  <span class="fs-14p verdana red center hover-2 us-none deletelink" id='${users.id}'>delete</span>
                 </td>`;
                 i+=1;
       })
@@ -1147,7 +1158,6 @@ export async function showcontent(data,targetdiv) {
           })
         })
       }
-    }
   }else if (targetdiv.id == 'add-product') {
 		window.history.pushState('','','?page=add-product')
     o = {
@@ -1364,10 +1374,10 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">#</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Owner&nbsp;name</span>
+                <span class="fs-15p verdana p-10p nowrap">product id</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Title</span>
+                <span class="fs-15p verdana p-10p nowrap">product name</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
                 <span class="fs-15p verdana p-10p">description</span>
@@ -1377,30 +1387,42 @@ export async function showcontent(data,targetdiv) {
               </td>
               `;
     i = 1;
-    data.forEach(blogs=>{
-      if (blogs.blog_type == '_ADMIN_BLOG_') {
-      auser = document.createElement('tr');
-      targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-      auser.innerHTML = `
+    i = 1;
+    o = {
+      mode: 'cors',
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        'accept': '*/*'
+      }}
+    t = await request('getprods',o)
+    if (!t.success) {
+      return 0
+    }
+    console.log(t)
+    t.message.forEach(prod=>{
+      console.log(prod.pname)
+      a = document.createElement('tr');
+      targetdiv.childNodes[3].childNodes[1].appendChild(a);
+      a.innerHTML = `
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${i}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.ownr_name}</span>
+                <span class="fs-14p verdana">${prod.prodid}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.title}</span>
+                <span class="fs-14p verdana">${prod.pname}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${ellipsis(blogs.description,20)}</span>
+                <span class="fs-14p verdana">${ellipsis(prod.description,40)}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${blogs._id}'>view</span>
-                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${blogs._id}'>edit</span>
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${blogs._id}'>delete</span>
+                <span class="fs-14p verdana green center-2 hover-2 us-none adddiscountlink" id='${prod.id}'>add discount</span>
+                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${prod.id}'>edit</span>
+                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${blogs.id}'>delete</span>
               </td>`;
               i+=1;
-      }
     })
 
     const deletee = Array.from(document.querySelectorAll('span.delete'));
@@ -2275,43 +2297,46 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">#</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Owner&nbsp;name</span>
+                <span class="fs-15p verdana p-10p">id</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Title</span>
+                <span class="fs-15p verdana p-10p">name</span>
               </td>
-              <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">description</span>
-              </td>
+  
               <td class="p-10p bsbb bb-1-s-g">
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
     i = 1;
-    data.forEach(blogs=>{
-      if (blogs.blog_type == '_ADMIN_BLOG_') {
-      auser = document.createElement('tr');
-      targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-      auser.innerHTML = `
-              <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
-              </td>
-              <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.ownr_name}</span>
-              </td>
-              <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.title}</span>
-              </td>
-              <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${ellipsis(blogs.description,20)}</span>
-              </td>
-              <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${blogs._id}'>view</span>
-                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${blogs._id}'>edit</span>
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${blogs._id}'>delete</span>
-              </td>`;
-              i+=1;
-      }
+    o = {
+      mode: 'cors',
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        'accept': '*/*'
+      }}
+    t = await request('tree',o)
+    if (!t.success) {
+      return 0
+    }
+    console.log(t)
+    t.message.availability.forEach((avs)=>{
+      a = document.createElement('tr');
+      targetdiv.childNodes[3].childNodes[1].appendChild(a);
+      a.innerHTML = `
+          <td class="p-10p bsbb">
+            <span class="fs-14p verdana">${i}</span>
+          </td>
+          <td class="p-10p bsbb">
+            <span class="fs-14p verdana">${avs.id}</span>
+          </td>
+          <td class="p-10p bsbb">
+            <span class="fs-14p verdana">${avs.name}</span>
+          </td>
+          <td class="p-10p flex jc-sb">
+            <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${avs.id}'>delete</span>
+          </td>`;
+          i+=1;
     })
 
     const deletee = Array.from(document.querySelectorAll('span.delete'));
@@ -2364,43 +2389,44 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">#</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Owner&nbsp;name</span>
+                <span class="fs-15p verdana p-10p">id</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Title</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">description</span>
+                <span class="fs-15p verdana p-10p">name</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
     i = 1;
-    data.forEach(blogs=>{
-      if (blogs.blog_type == '_ADMIN_BLOG_') {
-      auser = document.createElement('tr');
-      targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-      auser.innerHTML = `
+    o = {
+      mode: 'cors',
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        'accept': '*/*'
+      }}
+    t = await request('tree',o)
+    if (!t.success) {
+      return 0
+    }
+    t.message.usedin.forEach(usability=>{
+      a = document.createElement('tr');
+      targetdiv.childNodes[3].childNodes[1].appendChild(a);
+      a.innerHTML = `
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${i}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.ownr_name}</span>
+                <span class="fs-14p verdana">${usability.id}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.title}</span>
-              </td>
-              <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${ellipsis(blogs.description,20)}</span>
+                <span class="fs-14p verdana">${usability.name}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${blogs._id}'>view</span>
-                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${blogs._id}'>edit</span>
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${blogs._id}'>delete</span>
+                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${usability.id}'>delete</span>
               </td>`;
               i+=1;
-      }
     })
 
     const deletee = Array.from(document.querySelectorAll('span.delete'));

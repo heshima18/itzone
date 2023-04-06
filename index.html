@@ -16,6 +16,8 @@
 	<script type="module" defer src="js/anim.js"></script>
 	<script type="module" defer src="js/favs.js"></script>
 	<script type="module" defer src="js/user.controller.js"></script>
+	<script type="module" defer src="js/ss.controller.js"></script>
+
 
 	<link rel="shortcut icon" href="icons/favicon.png" type="image/x-icon">
 
@@ -31,7 +33,37 @@
 				<div class="w-100 h-100 bc-gradient-white">
 					<div class="w-100 h-a m-a bsbb ovh p-r">
 						<div class="w-100 h-100 na-ss ">
-							<div class="w-100 h-300p b-1-s-gray bc-white"></div>
+							<div class="w-100 h-300p b-1-s-gray bc-white p-r">
+								<section id="controls" class="w-100 flex jc-sb h-60p cntr zi-20 p-10p bsbb">
+									<div id="slideLeft" class="w-60p h-60p br-50 bc-white center p-10p bsbb hover-2">
+										<svg version="1.1" id="Layer_1" class="w-20p h-20p" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
+											<g>
+												<polyline fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="bevel" stroke-miterlimit="10" points="37,15 20,32 
+													37,49 	"></polyline>
+											</g>
+										</svg>
+									</div>
+									<div id="slideRight" class="w-60p h-60p br-50 bc-white center p-10p bsbb hover-2">
+										<svg version="1.1" id="Layer_1" class="w-20p h-20p" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
+											<g>
+												<polyline fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="bevel" stroke-miterlimit="10" points="27,15 44,32 
+													27,49 "></polyline>
+											</g>
+										</svg>
+									</div>
+								  </section> 
+								<div class="slidesContainer nowrap bc-red w-100 h-100">
+									<div class="slideCard iblock bc-green w-100 h-100 m-0 " id="slide0" data-slide="0">
+										<span class=" w-100 h-100 p-20p bsbb center verdana white fs-30p">slide 0</span>
+									</div>
+									<div class="slideCard iblock bc-orange w-100 h-100 m-0" id="slide1" data-slide="1">	
+										<span class=" w-100 h-100 p-20p bsbb center verdana white fs-30p">slide 1</span>
+									</div>
+									<div class="slideCard iblock bc-red w-100 h-100 m-0" id="slide2" data-slide="1">	
+										<span class=" w-100 h-100 p-20p bsbb center verdana white fs-30p">slide 2</span>
+									</div>
+								  </div>
+							</div>
 						</div>
 						<div class="w-100 h-40p p-10p bsbb p-a mt--100p">
 							<div class="w-100 h-100 center-2 dots-cont">
@@ -41,8 +73,8 @@
 								<div class="dot w-10p h-10p br-50 b-1-s-gray m-5p bc-gray skel hover-2 "></div>
 							</div>
 						</div>
-						<div class="w-90 m-a h-150p p-10p bsbb">
-							<div class="w-100 h-100 bc-white card-5 br-20p mt--70p p-10p bsbb">
+						<div class="w-90 m-a h-150p p-10p bsbb ">
+							<div class="w-100 h-100 bc-white card-5 br-20p mt--70p p-10p bsbb zi-1000 p-r">
 								<div class="center-2 w-100 h-100 p-10p bsbb horizontal no-scroll">
 									<div class="hcard w-a h-100 center-2 mr-30p">
 										<div class="w-a h-100 center-2">
