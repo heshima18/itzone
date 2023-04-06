@@ -339,7 +339,7 @@ async function getrelated(conds) {
           'accept': '*/*'
     
         }}
-    var rel = await request('getprodswthcndtn',opts)
+    var rel = await request('getprodswthorcndtn',opts)
     a441618154(rel)
     
 }
@@ -351,9 +351,9 @@ export function a441618154(aa){
 			aa.message.forEach(d=>{
 				prods_cont.innerHTML+=`<div class="product w-250p h-360p bc-white br-5p ovh ml-10p mr-10p mb-15p mt-15p iblock b-1-s-gray bfull-resp bm-a-resp">
 						<div class="w-100 h-170p">
-							<div class="image p-10p bsbb w-100 h-100 bc-gray skel br-5p">
+							<div class="image p-10p bsbb w-100 h-100 bc-white br-5p">
 								<span class="w-100 h-100">
-									<img src="" class="w-100 h-100 contain">
+                                    <img src="${geturl()}/product-imgz/${d.pimgs[0]}" alt="" class="w-100 h-100 b-none cover">
 								</span>
 							</div>
 							<div class="w-100 h-180p">
