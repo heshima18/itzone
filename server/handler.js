@@ -3,12 +3,17 @@ let bodyParser = require('body-parser');
 let mysql = require('mysql');
 let app = express();
 let path = require('path');
-let connection = mysql.createConnection({
-	host : '34.135.120.157',
-	user : 'root',
-	password : '',
-	database : 'itzone'
-})
+const fs = require('fs');
+
+const connection = mysql.createConnection({
+  host: '34.135.120.157',
+  user: 'itzone',
+  password: 'itzone',
+  database: 'itzone',
+  ssl: {
+    ca: fs.readFileSync(path.join(__dirname, 'server-ca.pem')),
+  },
+});
 try {
 	connection.connect(function (error) {
 		if(error)
