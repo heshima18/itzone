@@ -3,12 +3,14 @@ let bodyParser = require('body-parser');
 let mysql = require('mysql');
 let app = express();
 let path = require('path');
-let connection = mysql.createConnection({
-	host : 'sql108.epizy.com',
-	user : 'epiz_31932252',
-	password : 'mHz5Co3utx',
-	database : 'epiz_31932252_itzone'
-})
+const fs = require('fs');
+
+const connection = mysql.createConnection({
+  host: 'mysql.freehostia.com',
+  user: 'itzsho_itzone',
+  password: 'Heshimaherbert@1',
+  database: 'itzsho_itzone'
+});
 try {
 	connection.connect(function (error) {
 		if(error)
