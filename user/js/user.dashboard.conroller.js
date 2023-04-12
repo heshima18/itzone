@@ -53,6 +53,16 @@ async  function cpgcntn(step) {
         v = postschema
         v.body = JSON.stringify({token: getdata('user')})
         r = await request('myorders',v)
+        if (!r.success) {
+            k.innerHTML = `<div class="w-100 h-a">
+            <div class="center p-10p bsbb w-100 h-100p svg-hol">
+                <span class="verdana fs-15p"><svg class="w-100p h-100p" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="removeIconTitle" stroke="#ccc" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#ccc"> <title id="removeIconTitle">Remove</title> <path d="M17,12 L7,12"/> <circle cx="12" cy="12" r="10"/> </svg></span>
+            </div>
+            <div class="center p-10p bsbb w-100 h-100">
+                <span class="verdana fs-18p ta-c dgray">there was an error while connecting to the servers</span>
+            </div>
+        </div>`
+        }
         if (r.message.length <= 0) {
             k.innerHTML = `<div class="w-100 h-a">
             <div class="center p-10p bsbb w-100 h-100p svg-hol">
