@@ -136,7 +136,7 @@ function as(info,parent) {
         })
     })
 }
-async function ai(input,parent) {
+export async function ai(input,parent) {
     let p = parent.querySelector('span.placeholder')
     if (p) {
         deletechild(p,parent)

@@ -1,12 +1,15 @@
 
+import {request,getschema,postschema, getParam} from './functions.js'
+import {sf} from './functions.js'
+let r = await request('tree',getschema)
 
-// import {showFil} from './functions.js'
 let cont = document.getElementById("bodycont");
 let filternav=document.createElement("div");
-filternav.className=`w-100 h-0 p-r  bsbb t-0 zi-0 filter-nav tr-0-3 bfull-resp ovh nowrap bp-0-resp`;
+let prodscont = document.querySelector('div.prods-cont');
+filternav.className=`w-100 h-0 p-r  bsbb t-0 zi-0 filter-nav tr-0-3 bfull-resp ovh nowrap bmb-10p`;
 let fc = cont.firstChild;
 cont.insertBefore(filternav, fc);
-filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb">
+filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
 <div class="w-100 h-a bsbb p-10p bsbb">
 <div class="w-100 h-40p ">
 <span class="capitalize verdana left fs-20 p-5p">
@@ -14,23 +17,30 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb">
 </span>
 </div>
 </div>
-<div class="w-100 h-a p-10p bsbb center-2 bblock-resp ovh">
-    <div class="w-a m-a h-100 p-5p bsbb p-r t-0">
+<div class="w-100 h-a p-10p bsbb bblock-resp horizontal">
+    <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
         <div class="w-100 h-40p ">
             <span class="capitalize verdana left fs-17 p-5p">
                 price range
             </span>
         </div>
-        <div class="theslider w-90 w-300p bfull-resp m-a p-r h-20p">
-            <div id="slider" class="p-a mt-10p h-2p w-100 bc-gray">
+                <div class="theslider w-90 bfull-resp m-a p-r h-ap">
+                    <div id="slider" class="p-r mt-10p h-ap w-100">
+                    <div class="w-100 h-60p mt-10p mb-10p p-10p bsbb flex">
+                    <div class="w-100 mr-10p left parent flex">
+                        <input type="number" min="0" name="min" placeholder="Min (0)" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input w-70">
+                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p pb-10p iblock">
+                            <div class="consolas fs-14p dgray center">RWF</div>
+                        </div>
+                    </div>
+                    <div class="p-r w-100 parent flex">
+                        <input type="number" min="1" name="max" placeholder="Max" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input w-70">
+                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p pb-10p iblock">
+                            <div class="consolas fs-14p dgray center">RWF</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="p-a w-20p hover-2 h-20p b-1-s-dgray bc-theme br-50 l-0 zi-20" id="handler1"></div>
-            <div class="p-a w-20p hover-2 h-20p b-1-s-dgray bc-theme br-50" id="handler2"></div>
-            <div class="p-a w-5 h-2p bc-theme t-50 r-0" id="range"></div>
-        </div>
-        <div class="w-100 h-a p-5p bsbb center">
-            <span class="verdana black fs-11p" id="prid"></span>
-        </div>
     </div>
     <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
         <div class="w-100 h-40p ">
@@ -40,11 +50,11 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb">
         </div>
         <div class="w-100 p-10p bsbb h-200p ovys left">
             <span class="w-100 h-100 verdana">
-                <ul class="p-5p m-0 ls-none">
-                    <li><input type="checkbox" name="" id=""> computes</li>
-                    <li><input type="checkbox" name="" id=""> phones</li>
-                    <li><input type="checkbox" name="" id=""> printers</li>
-                    <li><input type="checkbox" name="" id=""> accessories</li>
+                <ul class="p-5p m-0 ls-none categories">
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> computes</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> phones</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> printers</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> accessories</li>
                 </ul>
             </span>
         </div>
@@ -57,19 +67,19 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb">
         </div>
         <div class="w-100 p-10p bsbb h-a ovys left">
             <span class="w-100 h-100 verdana">
-                <ul class="p-5p m-0 ls-none">
-                    <li><input type="checkbox" name="" id=""> laptops</li>
-                    <li><input type="checkbox" name="" id=""> desktops</li>
-                    <li><input type="checkbox" name="" id=""> all in one</li>
-                    <li><input type="checkbox" name="" id=""> smart phones</li>
-                    <li><input type="checkbox" name="" id=""> fixed phones</li>
-                    <li><input type="checkbox" name="" id=""> laptop accessoriess</li>
-                    <li><input type="checkbox" name="" id=""> watches</li>
-                    <li><input type="checkbox" name="" id=""> phone accessories</li>
-                    <li><input type="checkbox" name="" id=""> cameras</li>
-                    <li><input type="checkbox" name="" id=""> earphones</li>
-                    <li><input type="checkbox" name="" id=""> headphones</li>
-                    <li><input type="checkbox" name="" id=""> printer accessories</li>
+                <ul class="p-5p m-0 ls-none subcategories">
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> laptops</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> desktops</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> all in one</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> smart phones</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> fixed phones</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> laptop accessoriess</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> watches</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> phone accessories</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> cameras</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> earphones</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> headphones</li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> printer accessories</li>
                 </ul>
             </span>
         </div>
@@ -80,18 +90,18 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb">
                 Brands
             </span>
         </div>
-        <div class="w-100 p-10p bsbb h-200p ovys left">
+        <div class="w-100 p-10p bsbb h-a left">
             <span class="w-100 h-100 verdana">
-                <ul class="p-5p m-0 ls-none">
-                    <li><input type="checkbox" name="" id=""> apple</li>
-                    <li><input type="checkbox" name="" id=""> samsung</li>
-                    <li><input type="checkbox" name="" id=""> nokia</li>
-                    <li><input type="checkbox" name="" id=""> google</li>
-                    <li><input type="checkbox" name="" id=""> huawei</li>
-                    <li><input type="checkbox" name="" id=""> epson</li>
-                    <li><input type="checkbox" name="" id=""> hp</li>
-                    <li><input type="checkbox" name="" id=""> dell</li>
-                    <li><input type="checkbox" name="" id=""> other</li>
+                <ul class="p-5p m-0 ls-none brands">
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
                 </ul>
             </span>
         </div>
@@ -104,68 +114,165 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb">
         </div>
         <div class="w-100 p-10p bsbb h-200p ovys left">
             <span class="w-100 h-100 verdana">
-                <ul class="p-5p m-0 ls-none">
-                    <li><input type="checkbox" name="" id=""> out of stock</li>
-                    <li><input type="checkbox" name="" id=""> in stock</li>
-                    <li><input type="checkbox" name="" id=""> product on order</li>
+                <ul class="p-5p m-0 ls-none availability">
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
                 </ul>
             </span>
         </div>
     </div>
+    <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
+        <div class="w-100 h-40p ">
+            <span class="capitalize verdana left fs-17 p-5p">
+                usability
+            </span>
+        </div>
+        <div class="w-100 p-10p bsbb h-200p ovys left">
+            <span class="w-100 h-100 verdana">
+                <ul class="p-5p m-0 ls-none usability">
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                </ul>
+            </span>
+        </div>
     </div>
-</div>`
+        <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
+            <div class="w-100 h-40p ">
+                <span class="capitalize verdana left fs-17 p-5p">
+                    sort by
+                </span>
+            </div>
+            <div class="w-100 p-10p bsbb h-200p ovys left">
+                <span class="w-100 h-100 verdana">
+                    <ul class="p-5p m-0 ls-none">
+                        <li><input type="radio" id="radio" data-zon="order-by" name="order" value="name-asc"> Name (A-Z)</li>
+                        <li><input type="radio" id="radio" data-zon="order-by" name="order" value="name-desc"> Name (Z-A)</li>
+                        <li><input type="radio" id="radio" data-zon="order-by" name="order" value="price-asc"> Price (Min-Max)</li>
+                        <li><input type="radio" id="radio" data-zon="order-by" name="order" value="price-desc"> Price (Max-Min)</li>
+                    </ul>
+                </span>
+            </div>
+        </div>
+    </div>
 
-const slider = document.getElementById("slider");
-const handler1 = document.getElementById("handler1");
-const handler2 = document.getElementById("handler2");
-const range = document.getElementById("range");
-const prrange = document.getElementById('prid');
-// Set the initial position of the handlers and range
-handler1.style.left = "0%";
-handler2.style.left = "97%";
-range.style.width = "100%";
-// Add event listeners to the handlers
-handler1.addEventListener("mousedown", startDrag);
-handler2.addEventListener("mousedown", startDrag);
-// Dragging a handler updates the range and the position of the other handler
-function startDrag(event) {
-    const handler = event.target;
-    const startX = event.clientX;
-    const handlerX = handler.offsetLeft;
-    const sliderWidth = slider.clientWidth;
-    document.addEventListener("mousemove", dragHandler);
-    document.addEventListener("mouseup", stopDrag);
-    function dragHandler(event) {
-        if (handler2.style.left != handler1.style.left && parseInt(handler2.style.left) >= parseInt(handler1.style.left)) {
-            let newHandlerX = handlerX + (event.clientX - startX);
-            if (newHandlerX < 0) {
-            newHandlerX = 0;
-            } else if (newHandlerX > sliderWidth) {
-            newHandlerX = sliderWidth;
-            }
-            range.style.width = `${parseInt(handler2.style.left)-parseInt(handler1.style.left)}%`;
-            range.style.left = `${parseInt(handler1.style.left)+2}%`;
-            handler.style.left = `${(newHandlerX / sliderWidth) * 100}%`;
-            prrange.textContent = `${parseInt(handler1.style.left)*50000}RWF - ${parseInt(handler2.style.left)*50000}RWF`
-        }else{
-            if (parseInt(handler2.style.left) == 100) {
-                handler1.style.left = `${parseInt(handler1.style.left)-2}%`
-            } else if(parseInt(handler1.style.left) == 0){
-                handler2.style.left = `${parseInt(handler2.style.left)+2}%`
-            }else{
-                handler2.style.left = `${parseInt(handler1.style.left)+2}%`
-                handler1.style.left = `${parseInt(handler1.style.left)-2}%`
-            }
-            stopDrag()
+</div>
+<div class="w-100 h-60p p-10p bsbb">
+    <div class="w-100 igrid">
+        <span class="bcenter-500p-resp iblock">
+            <button type="button" class="bc-theme br-2p hover-2 p-10p b-none w-150p center-2 right h-50p filbutton">
+                <span class="#icon filter-icon center w-40p h-40p bsbb  hover-2">
+                    <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" stroke="#fff" fill="#fff" focusable="false" class="w-20p h-20p"><g class=""><path d="M15,17h6v1h-6V17z M11,17H3v1h8v2h1v-2v-1v-2h-1V17z M14,8h1V6V5V3h-1v2H3v1h11V8z M18,5v1h3V5H18z M6,14h1v-2v-1V9H6v2H3v1 h3V14z M10,12h11v-1H10V12z" class=""></path></g></svg>
+                </span>
+                <span class="verdana white fs-15p capitalize">filter</span>
+            </button>
+        </span>
+    </div>
+</div>
+`
+
+let ins = Array.from(filternav.querySelectorAll('input.main-input'));
+ins.forEach(input=>{
+    input.addEventListener('blur',(e)=>{
+        if (input.name == 'max') {
+            let a,b
+            a=ins[0].value
+            b=ins[1].value
+            if(a > b) ins[1].value = a  
         }
+
+    })
+
+})
+let categories = filternav.querySelector('ul.categories')
+let subcategories = filternav.querySelector('ul.subcategories')
+let brands = filternav.querySelector('ul.brands')
+let availability = filternav.querySelector('ul.availability')
+let usability = filternav.querySelector('ul.usability')
+let arr = new Array(categories,subcategories,brands,availability,usability);
+if (r.success){
+    r = r.message
+    d(r)
+}
+function d(r) {
+    arr.forEach(p=>{
+        p.innerHTML = null
+    })
+    try {
+        r.categories.forEach((category)=>{
+            let lecli = document.createElement('li');
+            arr[0].appendChild(lecli)
+            lecli.innerHTML  = `<input type="radio" name="category" id="checkbox" value="${category.name}" data-zon="category"> ${category.name}`
+            category.subcategories[0].forEach(subcategory=>{
+                let lesli = document.createElement('li');
+                arr[1].appendChild(lesli)
+                lesli.innerHTML  = `<input type="radio" name="subcategory" id="checkbox" value="${subcategory.name}" data-zon="subcategory" data-parent="${category.name}"> ${subcategory.name}`
+            })
+        })
+    } catch (error) {
+        
     }
-    function stopDrag() {
-        document.removeEventListener("mousemove", dragHandler);
-        document.removeEventListener("mouseup", stopDrag);
+    try {
+        r.brands.forEach((brand)=>{
+            let lebli = document.createElement('li');
+            arr[2].appendChild(lebli)
+            lebli.innerHTML  = `<input type="radio" name="brand" id="checkbox" value="${brand.name}" data-zon="brand"> ${brand.name}`
+        })
+    } catch (error) {
+        
     }
+    try {
+        r.availability.forEach((availability)=>{
+            let leali = document.createElement('li');
+            arr[3].appendChild(leali)
+            leali.innerHTML  = `<input type="radio" name="availability" id="checkbox" value="${availability.name}" data-zon="availability"> ${availability.name}`
+        }) 
+    } catch (error) {
+        
+    }
+    try {
+        r.usedin.forEach((usedin)=>{
+            let leuli = document.createElement('li');
+            arr[4].appendChild(leuli)
+            leuli.innerHTML  = `<input type="radio" name="" id="checkbox" value="${usedin.name}" data-zon="usedin"> ${usedin.name}`
+        })
+    } catch (error) {
+        
+    }
+    
+    filnvd(getasked(window.location.href),arr)
+    let filbutton = filternav.querySelector('button.filbutton')
+    filbutton.addEventListener('click',async ()=>{
+        let ctn = []
+        let fils = Array.from(filternav.querySelectorAll('input#checkbox'))
+        let fila = Array.from(filternav.querySelectorAll('input#radio'))
+        for (const checkbox of fils) {
+           if (checkbox.checked) {
+                ctn.push({[checkbox.getAttribute('data-zon')]: checkbox.value})
+            }
+        }
+        if (ins[1].value!= '' ) {
+            (ins[0].value == '')? ins[0].value = 0 : ins[0].value = ins[0].value
+            ctn.push({range: [parseInt(ins[0].value),parseInt(ins[1].value)]})
+        }
+        for (const radio of fila) {
+            if (radio.checked) {
+                 ctn.push({[radio.getAttribute('data-zon')]: radio.value})
+             }
+         }
+        
+        if (ctn.length) {
+            let p = postschema
+            let g = getParam('q')
+            if (g) ctn.push({namelike :g})
+            p.body = JSON.stringify({cntn: ctn})
+            let res = await request('getprodswthcndtn',p)
+            sf(res,prodscont)
+        }
+    })
 }
 let filterbutt = document.querySelector('span.filter-icon');
-let pgbody = document.querySelector('div.pgbody');
 filterbutt.addEventListener('click',e=>{
     e.preventDefault();
     if(filternav.classList.contains('h-0')){
@@ -189,3 +296,72 @@ filterbutt.addEventListener('click',e=>{
     
 
 })
+export function getasked(url) {
+    let i = new URL(url)
+    let cat = {category : i.searchParams.get("category")}
+
+    let subcategory = {subcategory: i.searchParams.get("subcategory")}
+    let usedin = {usedin:i.searchParams.get("usedin")}
+    let brand = {brand: i.searchParams.get("brand")}
+    let family = {family: i.searchParams.get("serie")}
+    let availability = {availability: i.searchParams.get("availability")}
+    let ass = Array(cat,subcategory,usedin,brand,family,availability)
+    let asked = null
+    ass.forEach(as=>{
+            if (as[Object.keys(as)]) {
+                asked = as
+                return asked
+            }
+        })
+        return asked
+}
+function filnvd(asked,divs) {
+    if(!asked) return 0
+    if (Object.keys(asked) == 'category') {
+        let lelis = Array.from(divs[0].querySelectorAll('input'))
+        for (const radio of lelis) {
+            if (radio.value != asked.category) {
+                radio.parentNode.className = 'hidden'
+            }else{
+                radio.checked = true
+            }
+        }
+    }else if (Object.keys(asked) == 'subcategory') {
+        let lelis = Array.from(divs[1].querySelectorAll('input'))
+        for (const radio of lelis) {
+            if (radio.value != asked.subcategory) {
+                radio.parentNode.className = 'hidden'
+            }else{
+                radio.checked = true
+            }
+        }
+    }else if (Object.keys(asked) == 'brand') {
+        let lelis = Array.from(divs[2].querySelectorAll('input'))
+        for (const radio of lelis) {
+            if (radio.value != asked.brand) {
+                radio.parentNode.className = 'hidden'
+            }else{
+                radio.checked = true
+            }
+        }
+    }else if (Object.keys(asked) == 'usedin') {
+        let lelis = Array.from(divs[4].querySelectorAll('input'))
+        for (const radio of lelis) {
+            if (radio.value != asked.usedin) {
+                radio.parentNode.className = 'hidden'
+            }else{
+                radio.checked = true
+            }
+        }
+    }else if (Object.keys(asked) == 'availability') {
+        let lelis = Array.from(divs[4].querySelectorAll('input'))
+        for (const radio of lelis) {
+            if (radio.value != asked.availability) {
+                radio.parentNode.className = 'hidden'
+            }else{
+                radio.checked = true
+            }
+        }
+    }
+    
+}

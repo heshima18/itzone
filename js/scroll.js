@@ -12,7 +12,6 @@ if (_scl.length > 0 && _scr.length > 0) {
 			let currentDiv = scroll_l.parentNode.parentNode.parentNode.parentNode.childNodes[3];
 			let currentSpos = currentDiv.scrollLeft;
 			let m = parseInt(window.getComputedStyle(scroll_l.parentNode.parentNode.parentNode.parentNode.childNodes[3].childNodes[1]).marginLeft)+parseInt(window.getComputedStyle(scroll_l.parentNode.parentNode.parentNode.parentNode.childNodes[3].childNodes[1]).marginRight);
-			console.log(m,currentDiv)
 			currentDiv.scrollLeft = currentSpos - (scroll_l.parentNode.parentNode.parentNode.parentNode.childNodes[3].childNodes[1].clientWidth+m);
 			currentSpos = currentDiv.scrollLeft;
 		})

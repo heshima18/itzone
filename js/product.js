@@ -82,18 +82,18 @@ async function getparams(url) {
             let secimghol = document.querySelector('div.sm-img-preview');
             let conds;
             res.message.forEach(pd => {
-                getrelated(Array({category:pd.catname},{subcategory:pd.subcatname},{idnot:pd.prodid}))
+                getrelated(Array({category:pd.catname},{subcategory:pd.subcatname}))
                 secimghol.innerHTML = null;
                 pd.pimgs.forEach(src=>{
                     if (pd.pimgs.indexOf(src) == 0) {
-                        secimghol.innerHTML+=`<div class="w-100p h-100p bsbb p-10p bsbb igrid">
-                                            <div class="w-100 h-100 p-r br-5p hover-2 b-1-s-theme active sm-img">
+                        secimghol.innerHTML+=`<div class="w-100p h-100p bsbb m-10p bsbb igrid">
+                                            <div class="w-100 h-100p p-r br-5p p-5p bsbb hover-2 b-1-s-theme active sm-img">
                                                 <img src="${geturl()}/product-imgz/${src}" alt="" class="w-100 h-100 b-none contain">
                                             </div>
                                         </div>`
                     }else{
-                        secimghol.innerHTML+=`<div class="w-100p h-100p bsbb p-10p bsbb igrid">
-                                                <div class="w-100 h-100 p-r br-5p hover-2 sm-img">
+                        secimghol.innerHTML+=`<div class="w-100p h-100p bsbb m-10p bsbb igrid">
+                                                <div class="w-100 h-100p p-r br-5p p-5p bsbb hover-2 sm-img">
                                                     <img src="${geturl()}/product-imgz/${src}" alt="" class="w-100 h-100 b-none contain">
                                                 </div>
                                             </div>`
@@ -177,49 +177,66 @@ async function getparams(url) {
                         chpri(parseInt(bu.id),res.message[0].conditions,document.querySelector('span.condprice'),bu.innerText)
                     })
                 })
-                bttnshol.innerHTML = `<div class="w-a h-100 right">
-                                        <span class="buynowbutt flex w-100 h-100">
-                                            <button class="hover-2 b-none  br-5p center-2 pl-10p pr-10p bc-orange br-5p"><span class="white center-2 w-100 h-100 fs-15p">Buy now</span></button>
-                                        </span>
-                                    </div>
-                                        <div class="w-a h-100 hover-2 ml-20p mr-20p right">
-                                            <span class="add-to-cart flex w-100 h-100">
-                                                <button class="hover-2 b-none bc-theme br-5p center-2 pl-10p pr-10p _211820" id="${pd.prodid}">
-                                                    <span class="w-a h-a center-2">
-                                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="carticon hover-2" width="15px" height="15px" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512" style="stroke: #fff; fill: #fff;">
-                                                        <g>
-                                                        <g>
-                                                        <g>
-                                                            <g>
-                                                            <polygon points="311.2,365.5 63,365.5 11,126.7 250.7,126.7 250.7,146.5 36.5,146.5 79.9,345.7 296.3,345.7 416.2,11 501,11       501,31.9 431,31.9     "></polygon>
-                                                            </g>
-                                                            <g>
-                                                            <g>
-                                                            <path d="m262.4,501c-29.7,0-54.1-24-54.1-54.2 0-30.2 24.4-54.2 54.1-54.2s54.1,24 54.1,54.2c0,30.2-24.4,54.2-54.1,54.2zm0-87.6c-19.1,0-33.9,15.6-33.9,33.4 0,18.8 14.8,33.4 33.9,33.4s33.9-15.6 33.9-33.4c5.68434e-14-18.8-15.9-33.4-33.9-33.4z"></path>
-                                                            </g>
-                                                            <g>
-                                                            <path d="m108.6,501c-29.7,0-54.1-24-54.1-54.2 0-30.2 24.4-54.2 54.1-54.2s54.1,24 54.1,54.2c0,30.2-24.4,54.2-54.1,54.2zm0-87.6c-19.1,0-33.9,15.6-33.9,33.4 0,18.8 14.8,33.4 33.9,33.4s33.9-15.6 33.9-33.4c-1-18.8-15.9-33.4-33.9-33.4z"></path>
-                                                            </g>
-                                                            </g>
-                                                        </g>
-                                                        </g>
-                                                        </g>
-                                                        </svg>
-                                                    </span>
-                                                    <span class="white center-2 w-100 h-100 fs-15p capitalize">add</span></button>
-                                            </span>
-                                        </div>
-                                        <div class="w-a h-100 right">
-                                        <span class="buynowbutt flex w-100 h-100">
-                                            <button class="hover-2 b-none bc-green br-5p">
-                                                <span class="white center-2 w-100 h-100 fs-15p">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99622 12 3.99999C10.6089 4.00135 9.24248 4.36819 8.03771 5.06377C6.83294 5.75935 5.83208 6.75926 5.13534 7.96335C4.4386 9.16745 4.07046 10.5335 4.06776 11.9246C4.06507 13.3158 4.42793 14.6832 5.12 15.89L4 20L8.2 18.9C9.35975 19.5452 10.6629 19.8891 11.99 19.9C14.0997 19.9001 16.124 19.0668 17.6222 17.5816C19.1205 16.0965 19.9715 14.0796 19.99 11.97C19.983 10.9173 19.7682 9.87634 19.3581 8.9068C18.948 7.93725 18.3505 7.05819 17.6 6.31999ZM12 18.53C10.8177 18.5308 9.65701 18.213 8.64 17.61L8.4 17.46L5.91 18.12L6.57 15.69L6.41 15.44C5.55925 14.0667 5.24174 12.429 5.51762 10.8372C5.7935 9.24545 6.64361 7.81015 7.9069 6.80322C9.1702 5.79628 10.7589 5.28765 12.3721 5.37368C13.9853 5.4597 15.511 6.13441 16.66 7.26999C17.916 8.49818 18.635 10.1735 18.66 11.93C18.6442 13.6859 17.9355 15.3645 16.6882 16.6006C15.441 17.8366 13.756 18.5301 12 18.53ZM15.61 13.59C15.41 13.49 14.44 13.01 14.26 12.95C14.08 12.89 13.94 12.85 13.81 13.05C13.6144 13.3181 13.404 13.5751 13.18 13.82C13.07 13.96 12.95 13.97 12.75 13.82C11.6097 13.3694 10.6597 12.5394 10.06 11.47C9.85 11.12 10.26 11.14 10.64 10.39C10.6681 10.3359 10.6827 10.2759 10.6827 10.215C10.6827 10.1541 10.6681 10.0941 10.64 10.04C10.64 9.93999 10.19 8.95999 10.03 8.56999C9.87 8.17999 9.71 8.23999 9.58 8.22999H9.19C9.08895 8.23154 8.9894 8.25465 8.898 8.29776C8.8066 8.34087 8.72546 8.403 8.66 8.47999C8.43562 8.69817 8.26061 8.96191 8.14676 9.25343C8.03291 9.54495 7.98287 9.85749 8 10.17C8.0627 10.9181 8.34443 11.6311 8.81 12.22C9.6622 13.4958 10.8301 14.5293 12.2 15.22C12.9185 15.6394 13.7535 15.8148 14.58 15.72C14.8552 15.6654 15.1159 15.5535 15.345 15.3915C15.5742 15.2296 15.7667 15.0212 15.91 14.78C16.0428 14.4856 16.0846 14.1583 16.03 13.84C15.94 13.74 15.81 13.69 15.61 13.59Z" fill="#fff"/>
-                                                    </svg>
-                                                </span>
-                                            </button>
-                                        </span>
-                                    </div>
+                bttnshol.innerHTML = `${(pd.catname == 'services')?`
+                <div class="w-a h-100 hover-2 ml-20p mr-20p right">
+                    <span class="add-to-cart flex w-100 h-100">
+                        <a class="bc-orange td-none b-none br-5p center-2 pl-10p pr-10p" href="${geturl()}/contact/?subject=requesting for a service&message=hello i am interested in this service of yours called ${pd.pname} can i get more information about it..">
+                            <span class="white center-2 w-100 h-100 fs-15p capitalize verdana">request</span></a>
+                    </span>
+                </div>
+                <div class="w-a h-100 right">
+                <span class="buynowbutt flex w-100 h-100">
+                    <button class="hover-2 b-none bc-green br-5p">
+                        <span class="white center-2 w-100 h-100 fs-15p">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="none">
+                            <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99622 12 3.99999C10.6089 4.00135 9.24248 4.36819 8.03771 5.06377C6.83294 5.75935 5.83208 6.75926 5.13534 7.96335C4.4386 9.16745 4.07046 10.5335 4.06776 11.9246C4.06507 13.3158 4.42793 14.6832 5.12 15.89L4 20L8.2 18.9C9.35975 19.5452 10.6629 19.8891 11.99 19.9C14.0997 19.9001 16.124 19.0668 17.6222 17.5816C19.1205 16.0965 19.9715 14.0796 19.99 11.97C19.983 10.9173 19.7682 9.87634 19.3581 8.9068C18.948 7.93725 18.3505 7.05819 17.6 6.31999ZM12 18.53C10.8177 18.5308 9.65701 18.213 8.64 17.61L8.4 17.46L5.91 18.12L6.57 15.69L6.41 15.44C5.55925 14.0667 5.24174 12.429 5.51762 10.8372C5.7935 9.24545 6.64361 7.81015 7.9069 6.80322C9.1702 5.79628 10.7589 5.28765 12.3721 5.37368C13.9853 5.4597 15.511 6.13441 16.66 7.26999C17.916 8.49818 18.635 10.1735 18.66 11.93C18.6442 13.6859 17.9355 15.3645 16.6882 16.6006C15.441 17.8366 13.756 18.5301 12 18.53ZM15.61 13.59C15.41 13.49 14.44 13.01 14.26 12.95C14.08 12.89 13.94 12.85 13.81 13.05C13.6144 13.3181 13.404 13.5751 13.18 13.82C13.07 13.96 12.95 13.97 12.75 13.82C11.6097 13.3694 10.6597 12.5394 10.06 11.47C9.85 11.12 10.26 11.14 10.64 10.39C10.6681 10.3359 10.6827 10.2759 10.6827 10.215C10.6827 10.1541 10.6681 10.0941 10.64 10.04C10.64 9.93999 10.19 8.95999 10.03 8.56999C9.87 8.17999 9.71 8.23999 9.58 8.22999H9.19C9.08895 8.23154 8.9894 8.25465 8.898 8.29776C8.8066 8.34087 8.72546 8.403 8.66 8.47999C8.43562 8.69817 8.26061 8.96191 8.14676 9.25343C8.03291 9.54495 7.98287 9.85749 8 10.17C8.0627 10.9181 8.34443 11.6311 8.81 12.22C9.6622 13.4958 10.8301 14.5293 12.2 15.22C12.9185 15.6394 13.7535 15.8148 14.58 15.72C14.8552 15.6654 15.1159 15.5535 15.345 15.3915C15.5742 15.2296 15.7667 15.0212 15.91 14.78C16.0428 14.4856 16.0846 14.1583 16.03 13.84C15.94 13.74 15.81 13.69 15.61 13.59Z" fill="#fff"/>
+                            </svg>
+                        </span>
+                    </button>
+                </span>
+            </div>`: `<div class="w-a h-100 right">
+                <span class="buynowbutt flex w-100 h-100">
+                    <button class="hover-2 b-none  br-5p center-2 pl-10p pr-10p bc-orange br-5p"><span class="white center-2 w-100 h-100 fs-15p">Buy now</span></button>
+                </span>
+            </div>
+                <div class="w-a h-100 hover-2 ml-20p mr-20p right">
+                    <span class="add-to-cart flex w-100 h-100">
+                        <button class="hover-2 b-none bc-theme br-5p center-2 pl-10p pr-10p _211820" id="${pd.prodid}">
+                            <span class="w-a h-a center-2">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="carticon hover-2" width="15px" height="15px" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512" style="stroke: #fff; fill: #fff;">
+                                <g>
+                                <g>
+                                <g>
+                                    <g>
+                                    <polygon points="311.2,365.5 63,365.5 11,126.7 250.7,126.7 250.7,146.5 36.5,146.5 79.9,345.7 296.3,345.7 416.2,11 501,11       501,31.9 431,31.9     "></polygon>
+                                    </g>
+                                    <g>
+                                    <g>
+                                    <path d="m262.4,501c-29.7,0-54.1-24-54.1-54.2 0-30.2 24.4-54.2 54.1-54.2s54.1,24 54.1,54.2c0,30.2-24.4,54.2-54.1,54.2zm0-87.6c-19.1,0-33.9,15.6-33.9,33.4 0,18.8 14.8,33.4 33.9,33.4s33.9-15.6 33.9-33.4c5.68434e-14-18.8-15.9-33.4-33.9-33.4z"></path>
+                                    </g>
+                                    <g>
+                                    <path d="m108.6,501c-29.7,0-54.1-24-54.1-54.2 0-30.2 24.4-54.2 54.1-54.2s54.1,24 54.1,54.2c0,30.2-24.4,54.2-54.1,54.2zm0-87.6c-19.1,0-33.9,15.6-33.9,33.4 0,18.8 14.8,33.4 33.9,33.4s33.9-15.6 33.9-33.4c-1-18.8-15.9-33.4-33.9-33.4z"></path>
+                                    </g>
+                                    </g>
+                                </g>
+                                </g>
+                                </g>
+                                </svg>
+                            </span>
+                            <span class="white center-2 w-100 h-100 fs-15p capitalize">add</span></button>
+                    </span>
+                </div>
+                <div class="w-a h-100 right">
+                <span class="buynowbutt flex w-100 h-100">
+                    <button class="hover-2 b-none bc-green br-5p">
+                        <span class="white center-2 w-100 h-100 fs-15p">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24" fill="none">
+                            <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99622 12 3.99999C10.6089 4.00135 9.24248 4.36819 8.03771 5.06377C6.83294 5.75935 5.83208 6.75926 5.13534 7.96335C4.4386 9.16745 4.07046 10.5335 4.06776 11.9246C4.06507 13.3158 4.42793 14.6832 5.12 15.89L4 20L8.2 18.9C9.35975 19.5452 10.6629 19.8891 11.99 19.9C14.0997 19.9001 16.124 19.0668 17.6222 17.5816C19.1205 16.0965 19.9715 14.0796 19.99 11.97C19.983 10.9173 19.7682 9.87634 19.3581 8.9068C18.948 7.93725 18.3505 7.05819 17.6 6.31999ZM12 18.53C10.8177 18.5308 9.65701 18.213 8.64 17.61L8.4 17.46L5.91 18.12L6.57 15.69L6.41 15.44C5.55925 14.0667 5.24174 12.429 5.51762 10.8372C5.7935 9.24545 6.64361 7.81015 7.9069 6.80322C9.1702 5.79628 10.7589 5.28765 12.3721 5.37368C13.9853 5.4597 15.511 6.13441 16.66 7.26999C17.916 8.49818 18.635 10.1735 18.66 11.93C18.6442 13.6859 17.9355 15.3645 16.6882 16.6006C15.441 17.8366 13.756 18.5301 12 18.53ZM15.61 13.59C15.41 13.49 14.44 13.01 14.26 12.95C14.08 12.89 13.94 12.85 13.81 13.05C13.6144 13.3181 13.404 13.5751 13.18 13.82C13.07 13.96 12.95 13.97 12.75 13.82C11.6097 13.3694 10.6597 12.5394 10.06 11.47C9.85 11.12 10.26 11.14 10.64 10.39C10.6681 10.3359 10.6827 10.2759 10.6827 10.215C10.6827 10.1541 10.6681 10.0941 10.64 10.04C10.64 9.93999 10.19 8.95999 10.03 8.56999C9.87 8.17999 9.71 8.23999 9.58 8.22999H9.19C9.08895 8.23154 8.9894 8.25465 8.898 8.29776C8.8066 8.34087 8.72546 8.403 8.66 8.47999C8.43562 8.69817 8.26061 8.96191 8.14676 9.25343C8.03291 9.54495 7.98287 9.85749 8 10.17C8.0627 10.9181 8.34443 11.6311 8.81 12.22C9.6622 13.4958 10.8301 14.5293 12.2 15.22C12.9185 15.6394 13.7535 15.8148 14.58 15.72C14.8552 15.6654 15.1159 15.5535 15.345 15.3915C15.5742 15.2296 15.7667 15.0212 15.91 14.78C16.0428 14.4856 16.0846 14.1583 16.03 13.84C15.94 13.74 15.81 13.69 15.61 13.59Z" fill="#fff"/>
+                            </svg>
+                        </span>
+                    </button>
+                </span>
+            </div>`}
                                         `
                 let shbut = document.querySelector('span.shbut')
                 shbut.addEventListener('click',()=>{
@@ -260,7 +277,6 @@ function adsb(name,image,condition,price,element) {
         element.querySelector('span.shbut').classList.remove('b-1-s-gray')
         return setTimeout(()=>{element.removeChild(fc)},100)
     }
-    console.log(name,image,condition,price,element)
     thec.id = "shh"
     element.insertBefore(thec, fc);
     element.querySelector('span.shbut').classList.add('b-1-s-gray')
@@ -340,68 +356,80 @@ async function getrelated(conds) {
     
         }}
     var rel = await request('getprodswthorcndtn',opts)
-    a441618154(rel)
+    a441618154(rel,prods_cont)
     
 }
-export function a441618154(aa){
-	if (aa.success) {
-		if ( aa.message.length > 0) {
-			prods_cont.innerHTML = null;
-			
+export function a441618154(aa,parent){
+    if (aa.success) {
+        if ( aa.message.length > 0) {
+			parent.innerHTML = null;
 			aa.message.forEach(d=>{
-				prods_cont.innerHTML+=`<div class="product w-250p h-360p bc-white br-5p ovh ml-10p mr-10p mb-15p mt-15p iblock b-1-s-gray bfull-resp bm-a-resp">
+				parent.innerHTML+=`<div class="product w-250p h-380p bc-white br-20p hover-4 ovh ml-10p mr-10p mb-15p mt-15p iblock bfull-resp b-1-s-white">
 						<div class="w-100 h-170p">
-							<div class="image p-10p bsbb w-100 h-100 bc-white br-5p">
-								<span class="w-100 h-100">
-                                    <img src="${geturl()}/product-imgz/${d.pimgs[0]}" alt="" class="w-100 h-100 b-none cover">
+							<div class="image bsbb w-100 h-100 br-5p p-r">
+								<span class="#icon wish-icon h-20p w-40p p-10p  center-2 w-a p-a" data-id="${d.prodid}">
+									<svg version="1.1" class="w-20p h-20p p-r hover-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 51.997 51.997" style="enable-background:new 0 0 51.997 51.997;" xml:space="preserve">
+									<g>
+									<path d="M51.911,16.242C51.152,7.888,45.239,1.827,37.839,1.827c-4.93,0-9.444,2.653-11.984,6.905
+										c-2.517-4.307-6.846-6.906-11.697-6.906c-7.399,0-13.313,6.061-14.071,14.415c-0.06,0.369-0.306,2.311,0.442,5.478
+										c1.078,4.568,3.568,8.723,7.199,12.013l18.115,16.439l18.426-16.438c3.631-3.291,6.121-7.445,7.199-12.014
+										C52.216,18.553,51.97,16.611,51.911,16.242z M49.521,21.261c-0.984,4.172-3.265,7.973-6.59,10.985L25.855,47.481L9.072,32.25
+										c-3.331-3.018-5.611-6.818-6.596-10.99c-0.708-2.997-0.417-4.69-0.416-4.701l0.015-0.101C2.725,9.139,7.806,3.826,14.158,3.826
+										c4.687,0,8.813,2.88,10.771,7.515l0.921,2.183l0.921-2.183c1.927-4.564,6.271-7.514,11.069-7.514
+										c6.351,0,11.433,5.313,12.096,12.727C49.938,16.57,50.229,18.264,49.521,21.261z"/>
+									</g>
+								</svg>
+							</span>
+								<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="${0}">${d.conditions[0].name}
+								</span>
+								<span class="w-100 h-100 p-5p bsbb block">
+									<img src="${geturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
 								</span>
 							</div>
-							<div class="w-100 h-180p">
-								<div class="title w-100 h-30p p-5p bsbb">
+							<div class="w-100 h-a">
+								<div class="title w-100 h-30p p-5p bsbb center">
 									<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black"><span class="verdana left fs-16p p-5p bsbb black">${d.pname}</span></a>
 								</div>
-								<div class="cats w-100 pl-15p pr-5p h-40p bsbb ovh">
+								<div class="cond w-100 h-30p bsbb ovh center">
+									<span class="verdana fs-13p bsbb bc-gray p-7p br-5p dgray h-100 w-a ">${d.availability}</span>
+								</div>
+								<div class="cats w-100 pl-15p pr-5p h-40p bsbb ovh center">
 									<span class="verdana left fs-13p bsbb dgray wrap">in <a href="${geturl()}/browse/?category=${d.catname}" class="td-none ls-n"><font class="theme">${d.catname}</font></a> , <a href="${geturl()}/browse/?subcategory=${d.subcatname}" class="td-none ls-n"><font class="theme">${d.subcatname}</font></a> , <a href="${geturl()}/browse/?brand=${d.brandname}" class="td-none ls-n"><font class="theme">${d.brandname}</font></a> , <a href="${geturl()}/browse/?serie=${d.famname}" class="td-none ls-n"><font class="theme">${d.famname}</font></a> , <a href="${geturl()}/browse/?usedin=${d.usedinname}" class="td-none ls-n"><font class="theme">${d.usedinname}</font></a></span>
 								</div>
-								<div class="cond w-100 pl-15p h-20p bsbb ovh">
-									<span class="verdana left fs-14p bsbb ${cc(Object.keys(d.conditions[0])[0])} bc-gray p-3p br-3p center h-100 w-a">${Object.keys(d.conditions[0])[0]}</span>
-									<span class="verdana left fs-13p bsbb bc-gray p-3p br-3p center h-100 w-a ml-5p">${d.availability}</span>
-								</div>
 								<div class="w-100 h-a p-15p bsbb">
-									<table class="w-100">
+									<table class="w-100 h-100">
 										<tr>
-											<td colspan="2">
-												<div class="w-100 h-100 bsbb ">
-													<span class="verdana w-a left fs-15p dgray">Price:</span>
+											<td>
+												<div class="w-100 h-100 bsbb center-2 mb-10p">
+													<span class="verdana w-a  fs-14p black price 0" id="${d.conditions[0].name}">${adcm(d.conditions[0].newprice)} RWF</span>
 												</div>
 											</td>
 										</tr>
-										<tr>
+										</tr>
 											<td>
 												<div class="w-100 h-100 bsbb ">
-                                                     <span class="verdana w-a left fs-14p black price ${d.conditions.indexOf(d.conditions[0])}" id="${Object.keys(d.conditions[0])[0]}">${adcm(d.conditions[0][Object.keys(d.conditions[0])[0]].newprice)} RWF</span>
-												</div>
-											</td>
-											<td>
-												<div class="w-100 h-100 bsbb ">
-													<span class=" w-a right button">
-														<button type="button" class="w-80p h-100 bsbb p-5p white bc-theme b-none br-5p center-2 hover-2 _311820" id="${d.prodid}">
-															<span class="#icon cart-icon h-100 w-30p">
-																<svg width="20" height="20" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<g clip-path="url(#clip0_6_146)">
-																		<path d="M7.82031 9.29688C7.51562 9.29688 7.27344 9.05469 7.27344 8.75C7.27344 8.44531 7.51562 8.20312 7.82031 8.20312C8.125 8.20312 8.36719 8.44531 8.36719 8.75C8.36719 9.05469 8.11719 9.29688 7.82031 9.29688ZM3.44531 9.29688C3.14062 9.29688 2.89844 9.05469 2.89844 8.75C2.89844 8.44531 3.14062 8.20312 3.44531 8.20312C3.75 8.20312 3.99219 8.44531 3.99219 8.75C3.99219 9.05469 3.74219 9.29688 3.44531 9.29688ZM3.35937 7.73438C2.94531 7.73438 2.58594 7.40625 2.53906 6.99219L2.00781 3.25781L1.70312 1.51562C1.67969 1.32812 1.51562 1.17188 1.33594 1.17188H0.9375C0.804687 1.17188 0.703125 1.07031 0.703125 0.9375C0.703125 0.804688 0.804687 0.703125 0.9375 0.703125H1.33594C1.75 0.703125 2.11719 1.03125 2.17187 1.44531L2.47656 3.1875L3.00781 6.92969C3.02344 7.10937 3.1875 7.26562 3.35937 7.26562H8.4375C8.57031 7.26562 8.67187 7.36719 8.67187 7.5C8.67187 7.63281 8.57031 7.73438 8.4375 7.73438H3.35937ZM3.75 6.48438C3.625 6.48438 3.52344 6.39062 3.51562 6.26562C3.50781 6.20312 3.53125 6.14062 3.57031 6.09375C3.60937 6.04688 3.67187 6.01562 3.72656 6.01562L7.96875 5.70312C8.15625 5.70312 8.32031 5.55469 8.34375 5.375L8.83594 2.5625C8.85156 2.42969 8.8125 2.28906 8.73437 2.20312C8.67969 2.14062 8.60937 2.10938 8.52344 2.10938H3.125C2.99219 2.10938 2.89062 2.00781 2.89062 1.875C2.89062 1.74219 2.99219 1.64062 3.125 1.64062H8.53906C8.75781 1.64062 8.95312 1.73438 9.10156 1.89062C9.26562 2.07813 9.34375 2.35156 9.3125 2.625L8.82031 5.4375C8.77344 5.84375 8.40625 6.16406 8 6.16406L3.78125 6.47656C3.76562 6.48438 3.75781 6.48438 3.75 6.48438Z" fill="white"/>
-																	</g>
-																	<defs>
-																		<clipPath id="clip0_6_146">
-																			<rect width="10" height="10" fill="white"/>
-																		</clipPath>
-																	</defs>
-																</svg>
-															</span>
-															<span class="verdana w-a h-100 p-5p bsbb">
-																add
-															</span>
-														</button>
+													<span class=" w-100 button">
+                                                        ${(d.catname == 'services')? `<a class="w-100 h-100 bsbb p-5p white bc-orange td-none b-none br-20p center-2 hover-2 " href="${geturl()}/contact/?subject=requesting for a service&message=hello i am interested in this service of yours called ${d.pname} can i get more information about it..">
+                                                        <span class="verdana w-a h-100 p-5p bsbb">
+                                                            request
+                                                        </span>
+                                                    </a>`: `<button type="button" class="w-100 h-100 bsbb p-5p white bc-theme b-none br-20p center-2 hover-2 _311820" id="${d.prodid}">
+                                                        <span class="#icon cart-icon h-100 w-30p">
+                                                            <svg width="20" height="20" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <g clip-path="url(#clip0_6_146)">
+                                                                    <path d="M7.82031 9.29688C7.51562 9.29688 7.27344 9.05469 7.27344 8.75C7.27344 8.44531 7.51562 8.20312 7.82031 8.20312C8.125 8.20312 8.36719 8.44531 8.36719 8.75C8.36719 9.05469 8.11719 9.29688 7.82031 9.29688ZM3.44531 9.29688C3.14062 9.29688 2.89844 9.05469 2.89844 8.75C2.89844 8.44531 3.14062 8.20312 3.44531 8.20312C3.75 8.20312 3.99219 8.44531 3.99219 8.75C3.99219 9.05469 3.74219 9.29688 3.44531 9.29688ZM3.35937 7.73438C2.94531 7.73438 2.58594 7.40625 2.53906 6.99219L2.00781 3.25781L1.70312 1.51562C1.67969 1.32812 1.51562 1.17188 1.33594 1.17188H0.9375C0.804687 1.17188 0.703125 1.07031 0.703125 0.9375C0.703125 0.804688 0.804687 0.703125 0.9375 0.703125H1.33594C1.75 0.703125 2.11719 1.03125 2.17187 1.44531L2.47656 3.1875L3.00781 6.92969C3.02344 7.10937 3.1875 7.26562 3.35937 7.26562H8.4375C8.57031 7.26562 8.67187 7.36719 8.67187 7.5C8.67187 7.63281 8.57031 7.73438 8.4375 7.73438H3.35937ZM3.75 6.48438C3.625 6.48438 3.52344 6.39062 3.51562 6.26562C3.50781 6.20312 3.53125 6.14062 3.57031 6.09375C3.60937 6.04688 3.67187 6.01562 3.72656 6.01562L7.96875 5.70312C8.15625 5.70312 8.32031 5.55469 8.34375 5.375L8.83594 2.5625C8.85156 2.42969 8.8125 2.28906 8.73437 2.20312C8.67969 2.14062 8.60937 2.10938 8.52344 2.10938H3.125C2.99219 2.10938 2.89062 2.00781 2.89062 1.875C2.89062 1.74219 2.99219 1.64062 3.125 1.64062H8.53906C8.75781 1.64062 8.95312 1.73438 9.10156 1.89062C9.26562 2.07813 9.34375 2.35156 9.3125 2.625L8.82031 5.4375C8.77344 5.84375 8.40625 6.16406 8 6.16406L3.78125 6.47656C3.76562 6.48438 3.75781 6.48438 3.75 6.48438Z" fill="white"/>
+                                                                </g>
+                                                                <defs>
+                                                                    <clipPath id="clip0_6_146">
+                                                                        <rect width="10" height="10" fill="white"/>
+                                                                    </clipPath>
+                                                                </defs>
+                                                            </svg>
+                                                        </span>
+                                                        <span class="verdana w-a h-100 p-5p bsbb">
+                                                            add
+                                                        </span>
+                                                    </button>`}
 													</span>
 												</div>
 											</td>
@@ -413,7 +441,7 @@ export function a441618154(aa){
 					</div>`;
 			})
 		}else{
-			prods_cont.innerHTML = `<div class="w-100 h-a">
+			parent.innerHTML = `<div class="w-100 h-a">
 									<div class="center p-10p bsbb w-100 h-100p svg-hol">
 										<span class="verdana fs-15p"><svg class="w-100p h-100p" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="removeIconTitle" stroke="#ccc" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#ccc"> <title id="removeIconTitle">Remove</title> <path d="M17,12 L7,12"/> <circle cx="12" cy="12" r="10"/> </svg></span>
 									</div>
@@ -423,7 +451,7 @@ export function a441618154(aa){
 								</div>`;
 		}
 	}else{
-		prods_cont.innerHTML = `<div class="w-100 h-a"><div class="center p-10p bsbb w-100 h-100">
+		parent.innerHTML = `<div class="w-100 h-a"><div class="center p-10p bsbb w-100 h-100">
 											<span class="verdana fs-18p ta-c dgray">oops, an error has occured while trying to connect to the server</span>
 									</div></div>`;
 	}
