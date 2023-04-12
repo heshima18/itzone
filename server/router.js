@@ -95,7 +95,6 @@ io.on('connection', function (socket) {
 			try {
 			let c = req.body.cntn;
 			c = gnrtctn(c)
-			console.log(c)
 			  database.query(`SELECT products.id as prodid, products.name as pname,products.availability, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) ${c}`,(error,result)=>{
 				if (error) return res.send({ success: false, message: error});
 				const products = JSON.parse(JSON.stringify(result))
@@ -355,7 +354,6 @@ io.on('connection', function (socket) {
 							if (!h) return res.status(500).send({success: false, message: "internal server error"})
 							
 							if (h.length>0) {
-								console.log(h)
 								h = JSON.parse(h[0].products)
 								f = 0
 								h.forEach(prodid => {
@@ -381,7 +379,6 @@ io.on('connection', function (socket) {
 								try {
 									z = [];
 									z.push(p);
-									console.log(z)
 									database.query(`insert into wishlist values ('${generateUniqueId()}','${tokendata.token.id}','${JSON.stringify(z)}')`,(rr,result)=>{
 										if (rr) return res.send({success: false, message: 'oops an error occured'});
 										console.log(rr)
@@ -1218,7 +1215,6 @@ io.on('connection', function (socket) {
 										o = await query(`insert into orders(id,products,totalprice,uid,uaddress,status)values('${generateUniqueId()}','${JSON.stringify(c.products)}','${c.total}','${t}','${JSON.stringify(req.body.address)}','new')`);
 									}
 									if (o) {
-										console.log(o)
 										res.send({success:true,message: 'cheers!, your order has been successfully submitted our team will review it in no time'})
 									}else{
 										res.status(500).send({success:false,message: 'Oops an error occured'});
@@ -1346,7 +1342,6 @@ io.on('connection', function (socket) {
 										h[h.indexOf(order)].products = JSON.parse(order.products)
 										h[h.indexOf(order)].uaddress = JSON.parse(order.uaddress)
 									}
-									console.log(h)
 									j = [];
 									res.send({ success: true, message: h});	
 									
@@ -1386,7 +1381,6 @@ io.on('connection', function (socket) {
 										h[h.indexOf(order)].products = JSON.parse(order.products)
 										h[h.indexOf(order)].uaddress = JSON.parse(order.uaddress)
 									}
-									console.log(h)
 									j = [];
 									res.send({ success: true, message: h});	
 									
@@ -1426,7 +1420,6 @@ io.on('connection', function (socket) {
 										h[h.indexOf(order)].products = JSON.parse(order.products)
 										h[h.indexOf(order)].uaddress = JSON.parse(order.uaddress)
 									}
-									console.log(h)
 									j = [];
 									res.send({ success: true, message: h});	
 									
@@ -1466,7 +1459,6 @@ io.on('connection', function (socket) {
 										h[h.indexOf(order)].products = JSON.parse(order.products)
 										h[h.indexOf(order)].uaddress = JSON.parse(order.uaddress)
 									}
-									console.log(h)
 									j = [];
 									res.send({ success: true, message: h});	
 									
@@ -1506,7 +1498,6 @@ io.on('connection', function (socket) {
 										h[h.indexOf(order)].products = JSON.parse(order.products)
 										h[h.indexOf(order)].uaddress = JSON.parse(order.uaddress)
 									}
-									console.log(h)
 									res.send({ success: true, message: h});	
 									
 								}else{
@@ -1543,7 +1534,6 @@ io.on('connection', function (socket) {
 										h[h.indexOf(order)].products = JSON.parse(order.products)
 										h[h.indexOf(order)].uaddress = JSON.parse(order.uaddress)
 									}
-									console.log(h)
 									j = [];
 									res.send({ success: true, message: h});	
 									
@@ -1712,10 +1702,9 @@ io.on('connection', function (socket) {
 							}
 						} else {
 							if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'range' || Object.keys(table) == 'availability') {
-								console.log(Object.keys(table))
 							 	if(Object.keys(table) == 'range'){
 									s+= ` JSON_EXTRACT(products.conditions, '$[0].newprice') BETWEEN ${table[Object.keys(table)][0]} AND ${table[Object.keys(table)][1]} and`
-									console.log(s)
+								
 								}else{
 									s+= ` products.${Object.keys(table)} = '${table[Object.keys(table)]}' and`
 								}
@@ -1756,7 +1745,6 @@ io.on('connection', function (socket) {
 							}
 						} else {
 							if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'range' || Object.keys(table) == 'availability') {
-								console.log(Object.keys(table))
 							 	if(Object.keys(table) == 'range'){
 									s = s.substring(0, s.length - 2)
 									s+= 'and'
