@@ -8,7 +8,7 @@ const fs = require('fs');
 const connection = mysql.createConnection({
   host: 'mysql.freehostia.com',
   user: 'itzsho_itzone',
-  password: '',
+  password: 'Heshimaherbert@1',
   database: 'itzsho_itzone',
   connectTimeout: 60000
 
