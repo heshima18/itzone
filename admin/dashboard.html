@@ -81,6 +81,8 @@
 							</div>
 							<ul class="ls-none bc-white w-100 p-r p-0 hidden b-1-s-gray p-5p bsbb">
 								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" title="new" id="new-orders">new orders</li>
+								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" title="all" id="pending-orders">pending orders</li> 
+								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" title="all" id="delivered-orders">delivered orders</li> 
 								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" title="all" id="orders">all orders</li> 
 							</ul>
 						</li>
@@ -114,7 +116,6 @@
 							<ul class="ls-none bc-white w-100 p-r p-0 hidden b-1-s-gray p-5p bsbb">
 								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" id="add-product">add a product</li>
 								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" id="view-products">manage products</li> 
-								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" id="add-discount">add discouts</li>
 								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" id="categories">manage categories</li>
 								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" id="sub-categories">manage subcategories</li>
 								<li class="pl-10p  hover pt-10p pb-10p bsbb b-1-s-gray linkSwitcher hover-2 us-none" id="brands">manage brands</li>
@@ -366,9 +367,9 @@
 					<!-- list of new orders section -->
 					<div class="bc-white  br-5p w-100 h-100 p-a ovh ml-100 tr-0-3 pagecontentsection" id="new-orders">
 						<div class="w-100 h-50p bb-1-s-g">
-							<span class="theme capitalize left center bold fs-20p poppsins h-100 pl-10p">all orders</span>
+							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">news orders</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -411,9 +412,9 @@
 					<!-- list of orders section -->
 					<div class="bc-white  br-5p w-100 h-100 p-a ovh ml-100 tr-0-3 pagecontentsection" id="orders">
 						<div class="w-100 h-50p bb-1-s-g">
-							<span class="theme capitalize left center bold fs-20p poppsins h-100 pl-10p">all orders</span>
+							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all orders</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -453,15 +454,105 @@
 						</div>
 					</div>
 					<!-- end of list of orders section -->
+					<!-- list of pending orders section -->
+					<div class="bc-white  br-5p w-100 h-100 p-a ovh ml-100 tr-0-3 pagecontentsection" id="pending-orders">
+						<div class="w-100 h-50p bb-1-s-g">
+							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">pending orders</span>
+						</div>
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
+							<table class="w-100 h-a">
+								<tr class="">
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">#</span>
+									</td>
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">First&nbsp;name</span>
+									</td>
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">Last&nbsp;name</span>
+									</td>
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">Email</span>
+									</td>
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">action</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="p-10p bsbb">
+										<span class="fs-14p verdana">1</span>
+									</td>
+									<td class="p-10p bsbb">
+										<span class="fs-14p verdana">peter</span>
+									</td>
+									<td class="p-10p bsbb">
+										<span class="fs-14p verdana">paul</span>
+									</td>
+									<td class="p-10p bsbb">
+										<span class="fs-14p verdana">peterpaul@gmail.com</span>
+									</td>
+									<td class="p-10p">
+										<span class="fs-14p verdana red center">delete</span>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<!-- end of list of pending orders section -->
+					<!-- list of delivered orders section -->
+					<div class="bc-white  br-5p w-100 h-100 p-a ovh ml-100 tr-0-3 pagecontentsection" id="delivered-orders">
+						<div class="w-100 h-50p bb-1-s-g">
+							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">delivered orders</span>
+						</div>
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
+							<table class="w-100 h-a">
+								<tr class="">
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">#</span>
+									</td>
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">First&nbsp;name</span>
+									</td>
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">Last&nbsp;name</span>
+									</td>
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">Email</span>
+									</td>
+									<td class="p-10p bsbb bb-1-s-g">
+										<span class="fs-15p verdana p-10p">action</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="p-10p bsbb">
+										<span class="fs-14p verdana">1</span>
+									</td>
+									<td class="p-10p bsbb">
+										<span class="fs-14p verdana">peter</span>
+									</td>
+									<td class="p-10p bsbb">
+										<span class="fs-14p verdana">paul</span>
+									</td>
+									<td class="p-10p bsbb">
+										<span class="fs-14p verdana">peterpaul@gmail.com</span>
+									</td>
+									<td class="p-10p">
+										<span class="fs-14p verdana red center">delete</span>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<!-- end of list of delivered orders section -->
 					<!-- list of categories section -->
 					<div class="bc-white  br-5p w-100 h-100 p-a ovh ml-100 tr-0-3 pagecontentsection" id="categories">
 						<div class="w-100 h-50p bb-1-s-g flex jc-sb">
 							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all categories</span>
 							<span class="w-a p-10p bsbb h-100 center">
-								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton"><span class="verdana white fs-13p">Add one</span></button>
+								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton" data-type="categories"><span class="verdana white fs-13p">Add one</span></button>
 							</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -506,10 +597,10 @@
 						<div class="w-100 h-50p bb-1-s-g flex jc-sb">
 							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all subcategories</span>
 							<span class="w-a p-10p bsbb h-100 center">
-								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton"><span class="verdana white fs-13p">Add one</span></button>
+								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton" data-type="subcategories"><span class="verdana white fs-13p">Add one</span></button>
 							</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -554,10 +645,10 @@
 						<div class="w-100 h-50p bb-1-s-g flex jc-sb">
 							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all brands</span>
 							<span class="w-a p-10p bsbb h-100 center">
-								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton"><span class="verdana white fs-13p">Add one</span></button>
+								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton" data-type="brands"><span class="verdana white fs-13p">Add one</span></button>
 							</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -582,10 +673,10 @@
 						<div class="w-100 h-50p bb-1-s-g flex jc-sb">
 							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all series</span>
 							<span class="w-a p-10p bsbb h-100 center">
-								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton"><span class="verdana white fs-13p">Add one</span></button>
+								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton" data-type="families"><span class="verdana white fs-13p">Add one</span></button>
 							</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -630,10 +721,10 @@
 						<div class="w-100 h-50p bb-1-s-g flex jc-sb">
 							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all products usability</span>
 							<span class="w-a p-10p bsbb h-100 center">
-								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton"><span class="verdana white fs-13p">Add one</span></button>
+								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton" data-type="usedin"><span class="verdana white fs-13p">Add one</span></button>
 							</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -677,8 +768,11 @@
 					<div class="bc-white  br-5p w-100 h-100 p-a ovh ml-100 tr-0-3 pagecontentsection" id="availability">
 						<div class="w-100 h-50p bb-1-s-g flex jc-sb">
 							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all products availability</span>
+							<span class="w-a p-10p bsbb h-100 center">
+								<button type="button" class="w-a h-a bc-theme b-none br-2p p-5p bsbb hover-2 addparentbutton" data-type="availability"><span class="verdana white fs-13p">Add one</span></button>
+							</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -723,7 +817,7 @@
 						<div class="w-100 h-50p bb-1-s-g">
 							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all users</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -751,7 +845,7 @@
 						<div class="w-100 h-50p bb-1-s-g">
 							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all products</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -1221,10 +1315,10 @@
 					<!-- view new queries section -->
 					<div class="bc-white  br-5p w-100 h-100 p-a ovh ml-100 tr-0-3 pagecontentsection" id="new-queries">
 						<div class="w-100 h-50p bb-1-s-g">
-							<span class="theme capitalize left center bold fs-20p poppsins h-100 pl-10p">unreaded queries</span>
+							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">new queries</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
-							<table class="w-100 h-100">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
+							<table class="w-100 h-a">
 								<tr class="h-50p">
 									<td class="p-10p bsbb bb-1-s-g">
 										<span class="fs-15p verdana p-10p">#</span>
@@ -1252,9 +1346,9 @@
 					<!-- view queries section -->
 					<div class="bc-white  br-5p w-100 h-100 p-a ovh ml-100 tr-0-3 pagecontentsection" id="queries">
 						<div class="w-100 h-50p bb-1-s-g">
-							<span class="theme capitalize left center bold fs-20p poppsins h-100 pl-10p">unreaded queries</span>
+							<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">all queries</span>
 						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
+						<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left">
 							<table class="w-100 h-a">
 								<tr class="">
 									<td class="p-10p bsbb bb-1-s-g">
@@ -1301,89 +1395,6 @@
 						</div>
 					</div>
 					<!-- end of queries section -->
-					<!-- activity log section -->
-					<div class="bc-white  br-5p w-100 h-100 p-a ovh ml-100 tr-0-3 pagecontentsection" id="log">
-						<div class="w-100 h-50p bb-1-s-g">
-							<span class="theme capitalize left center bold fs-20p poppsins h-100 pl-10p">activity log</span>
-						</div>
-						<div class="pg-cntnt w-100 h-100 p-20p bsbb ovys left">
-							<div class="w-100 h-60p p-10p center bsbb mb-10p">
-								<form method="POST" action="">
-									<div class="w-100 h-60p p-10p bsbb flex">
-											<div class="w-200p bsbb  mr-10p left parent p-r">
-												<label class="capitalize fs-15p ">From:</label>
-												<input type="date" name="from" placeholder="" class=" no-outline bsbb b-1-s-dgray bc-white w-100 p-6p mt-10p">
-												<span class="p-a r-0 mt-40p mr-10p">
-													<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<circle cx="10" cy="10" r="10" fill="#FF0000"></circle>
-														<path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"></path>
-													</svg>
-													<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<circle cx="10" cy="10" r="10" fill="#68D753"></circle>
-														<line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"></line>
-														<line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"></line>
-													</svg>
-												</span>
-												<small class="red verdana hidden ml-5p">error mssg</small>
-											</div>
-											<div class="p-r w-200p bsbb  parent">
-												<label class="capitalize fs-15p left">to:</label>
-												<input type="date" name="lastname" placeholder="" class="no-outline bsbb b-1-s-dgray bc-white w-100 p-6p mt-10p">
-												<span class="p-a r-0 mt-40p mr-10p">
-													<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<circle cx="10" cy="10" r="10" fill="#FF0000"></circle>
-														<path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"></path>
-													</svg>
-													<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<circle cx="10" cy="10" r="10" fill="#68D753"></circle>
-														<line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"></line>
-														<line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"></line>
-													</svg>
-												</span>
-												<small class="red verdana left hidden ml-5p">error mssg</small>
-											</div>
-											<div class=" p-r p-10p w-100p block">
-												<label class="capitalize fs-15p left block">.</label>
-												<button class="p-7p bsbb bc-theme b-none w-100">
-													<span class="fs-14p white">generate</span>
-												</button>
-											</div>
-										</div>
-								</form>
-							</div>
-							<table class="w-100 h-a center" >
-								<tr class="">
-									<td class="p-10p bsbb bb-1-s-g">
-										<span class="fs-15p verdana p-10p">#</span>
-									</td>
-									<td class="p-10p bsbb bb-1-s-g">
-										<span class="fs-15p verdana p-10p">activity type</span>
-									</td>
-									<td class="p-10p bsbb bb-1-s-g">
-										<span class="fs-15p verdana p-10p">attender</span>
-									</td>
-									<td class="p-10p bsbb bb-1-s-g">
-										<span class="fs-15p verdana p-10p">time</span>
-									</td>
-								</tr>
-								<tr>
-									<td class="p-10p bsbb">
-										<span class="fs-14p verdana">1</span>
-									</td>
-									<td class="p-10p bsbb">
-										<span class="fs-14p verdana">login</span>
-									</td>
-									<td class="p-10p bsbb">
-										<span class="fs-14p verdana">user</span>
-									</td>
-									<td class="p-10p bsbb">
-										<span class="fs-14p verdana">21-1-2022</span>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-					<!-- end of activity log section -->
 				</div>
 			</div>
 

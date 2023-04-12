@@ -1,9 +1,42 @@
 @media screen and (max-width: 800px){
+    .bflex-resp{
+        display: flex;
+    }
+    .bh-100-resp{
+        height: 100%;
+    }
+    .bh-a-resp{
+        height: auto;
+    }
+    .bh-100p-resp{
+        height: 100px;
+    }
+    .bh-50p-resp{
+        height: 50px;
+    }
+    .bh-70p-resp{
+        height: 70px;
+    }
     .bblock-resp{
         display: block;
     }
+    .bt-0{
+        top: 0;
+    }
+    .bmt--30p{
+        margin-top: -30px;
+    }
+    .bmt-10p{
+        margin-top: 10px;
+    }
+    .bmt--20p{
+        margin-top: -20px;
+    }
     .bmt--10p{
         margin-top: -10px;
+    }
+    .bmt--5p{
+        margin-top: -5px;
     }
     .bfull-resp{
         width: 100%;
@@ -17,6 +50,9 @@
     .hidden-resp{
         display: none;
     }
+    div.step.prev span.dv{
+        color: #fff;
+    }
     .gob-resp{
         position: absolute;
     }
@@ -27,21 +63,15 @@
         width: 70%;
     }
     .gob-resp.search-sec{
-        height: 50px;
-        margin-top: 44px;
+        margin-top: 47px;
         width: 100%;
-        margin-left: 15%;
+        padding-left: 25px;
     }
     .gob-resp.search-sec .bfull-resp{
         width: 100%;
     }
-    .gob-resp.ics{
-        margin-top: 80px;
-        margin-right: -10px;
-    }
     .bp-a-resp{
         position: absolute;
-        margin-top: -10px;
 
     }
     .bcntr-resp{
@@ -84,6 +114,12 @@
 }
 
 @media screen and (max-width: 599px){
+    .bcntr-500p-resp{
+        position: absolute;
+        transform: translate(-50%,-50%);
+        top: 50%;
+        left: 50%;
+    }
     .b-mgc-resp{
         width: 100%;
         bottom: 0px;

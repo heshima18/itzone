@@ -121,8 +121,12 @@ thef.innerHTML = `<div class="bc-white w-90 m-a bfull-resp h-100 black pt-20p bs
             </div>
             <div class="w-100 h-a">
                 <ul class=" ls-none grid pl-20p bsbb w-100">
+                    
                     <li class="capitalize w-100 p-10p">
                         <span class="left verdana us-none hover-6 l-0 fs-14p"><a href="${geturl()}/" class="td-none ls-n"><span class="nowrap hover-6 black">home</span></a></span>
+                    </li>
+                    <li class="capitalize w-100 p-10p">
+                        <span class="left verdana us-none hover-6 l-0 fs-14p"><a href="${geturl()}/user/" class="td-none ls-n"><span class="nowrap hover-6 black">my account</span></a></span>
                     </li>
                     <li class="capitalize w-100 p-10p">
                         <span class="left verdana us-none hover-6 l-0 fs-14p"><a href="${geturl()}/about/" class="td-none ls-n"><span class="nowrap hover-6 black">About us</span></a></span>
@@ -131,11 +135,8 @@ thef.innerHTML = `<div class="bc-white w-90 m-a bfull-resp h-100 black pt-20p bs
                         <span class="left verdana us-none hover-6 l-0 fs-14p"><a href="${geturl()}/contact/" class="td-none ls-n"><span class="nowrap hover-6 black">contact us</span></a></span>
                     </li>
                     <li class="capitalize w-100 p-10p">
-                        <span class="left verdana us-none hover-6 l-0 fs-14p"><a href="${geturl()}/login/" class="td-none ls-n"><span class="nowrap hover-6 black">login</span></a></span>
+                        <span class="left verdana us-none hover-6 l-0 fs-14p"><a href="${geturl()}/terms/" class="td-none ls-n"><span class="nowrap hover-6 black">terms</span></a></span>
                     </li>
-                    <li class="capitalize w-100 p-10p">
-                    <span class="left verdana us-none hover-6 l-0 fs-14p"><a href="${geturl()}/signup/" class="td-none ls-n"><span class="nowrap hover-6 black">signup</span></a></span>
-                </li>
                 </ul>
             </div>
         </div>

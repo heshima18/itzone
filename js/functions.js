@@ -1,12 +1,11 @@
 
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m;
 (()=>{
-  x = localStorage.getItem('cart');
+  x = getdata('cart');
   if (x == null) {
-    localStorage.setItem('cart',null);
+    localStorage.setItem('cart',JSON.stringify([]));
   }
 })
-
 export function checkCart() {
   var cart_badge = document.querySelector('font.cart-badge');
   var cart_badge_hol = document.querySelector('span.cart-badge-hol');
@@ -95,20 +94,20 @@ function shwcrtcntn(a,x,items) {
   p = ()=>{
     z = 0
     a.forEach(pr=>{
-      z+= pr.price
+      z+= pr.price*pr.qty
     })
     return z
   }
-  x.innerHTML = `<span class="shol left w-a center igrid h-100 ml-10p"><div class="w-100 h-100"><font class="black capitalize verdana left w-50p igrid">total:&nbsp;</font><font class="theme verdana fs-15p capitalize igrid p-2p">${adcm(p())} rwf</font></div></span><span class="igrid right center h-100 mr-10p"><a href="${geturl()}/checkout/?" class="td-none ls-none ls-n td-none"><button class="button bc-theme white br-2p pb-5p verdana b-none p-5p bsbb"><font class="fs-15p">Check out</font></button></a></span>`;
+  x.innerHTML = `<span class="shol left w-a center igrid h-100 ml-10p"><div class="w-100 h-100"><font class="black capitalize verdana left w-50p igrid">total:&nbsp;</font><font class="theme verdana fs-15p capitalize igrid p-2p">${adcm(p())} rwf</font></div></span><span class="igrid right center h-100 mr-10p"><a href="${geturl()}/checkout/?" class="td-none ls-none ls-n td-none"><button class="button bc-theme white br-2p verdana b-none p-10p hover-2 bsbb"><font class="fs-15p">Check out</font></button></a></span>`;
   items.innerHTML = "";
    a.forEach(d=>{
     items.innerHTML += `<div class="w-100 h-80p p-r mt-5p bb-1-s-g">
     <table class="w-100 bsbb">
       <tr>
         <td rowspan="2">
-          <div class="left w-60p h-60p bc-gray skel iblock">
+          <div class="left w-60p h-60p bc-white iblock">
             <span class="w-100 h-100 p-r">
-              <img src="${geturl()}/product-imgz/${d.image}" class="w-100 h-100 cover">
+              <img src="${geturl()}/product-imgz/${d.image}" class="w-100 h-100 contain">
             </span>
           </div>
         </td>
@@ -126,9 +125,9 @@ function shwcrtcntn(a,x,items) {
         <td>
           <div class="w-80  h-25p bc-white">
             <span class="w-100 h-100 p-4p bc-white right">
-              <font class="fs-16p black verdana capitalize">
-              ${adcm(d.price)}&nbsp;rwf
-              </font>	
+              <span class="fs-16p black verdana capitalize nowrap">
+              ${adcm(d.price)} <span class="fs-14p dgray consolas capitalize nowrap">RWF</span>
+              </span>	
             </span>
           </div>
         </td>
@@ -141,7 +140,7 @@ function shwcrtcntn(a,x,items) {
               <div class="inhol w-100 h-a p-5p">
                 <div class="left br-1p h-20p w-20p center igrid b-1-s-gray">
                   <span class="w-100 h-100 center">
-                    <span class="center fs-16p us-none minus hover-2 black consolas" id="'.$result[0]['id'].'">
+                    <span class="center fs-16p us-none minus hover-2 black consolas" id="${d.prodid}">
                       -
                     </span>
                   </span>
@@ -153,7 +152,7 @@ function shwcrtcntn(a,x,items) {
                 </div>
                 <div class=" br-1p h-20p w-20p center igrid b-1-s-gray">
                   <span class="w-100 h-100 center">
-                    <span class="center fs-16p us-none plus hover-2 black consolas" id="'.$result[0]['id'].'">
+                    <span class="center fs-16p us-none plus hover-2 black consolas" id="${d.prodid}">
                       +
                     </span>
                   </span>
@@ -182,6 +181,9 @@ function shwcrtcntn(a,x,items) {
     </table>
   </div>`;
   });
+  var plus = Array.from(items.querySelectorAll('span.plus'));
+  var minus = Array.from(items.querySelectorAll('span.minus'));
+
   var removeb = Array.from(document.querySelectorAll('font.removeb'));
   removeb.forEach(xc=>{
     xc.addEventListener('click',e=>{
@@ -191,10 +193,44 @@ function shwcrtcntn(a,x,items) {
       checkCart()
     })
   })
+  plus.forEach(plus=>{
+    plus.addEventListener('click',e=>{
+      e.preventDefault();
+      addcrtqty(plus.id,a);
+      l = getdata('cart')
+      shwcrtcntn(l,x,items)
+      checkCart()
+    })
+  })
+  minus.forEach(minus=>{
+    minus.addEventListener('click',e=>{
+      e.preventDefault();
+      mnuscrtqty(minus.id,a);
+      l = getdata('cart')
+      shwcrtcntn(l,x,items)
+      checkCart()
+    })
+  })
+}
+function  addcrtqty(prodid,cart) {
+  cart.forEach(item=>{
+    if (item.prodid == prodid) {
+      cart[cart.indexOf(item)].qty+= 1
+      localStorage.setItem('cart',JSON.stringify(cart))
+    }
+  })
+}
+function  mnuscrtqty(prodid,cart) {
+  cart.forEach(item=>{
+    if (item.prodid == prodid &&  cart[cart.indexOf(item)].qty > 1) {
+      cart[cart.indexOf(item)].qty-= 1
+      localStorage.setItem('cart',JSON.stringify(cart))
+    }
+  })
 }
 export async function request(url,options){
   try {
-    z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+    z = await fetch('http://localhost:8080/api/'+url,options);
     y = await z.json();
     return y;
   } catch (error) {
@@ -206,11 +242,11 @@ export async function request(url,options){
 
 }
 export function addshade(){
-  v = document.querySelector('div#body');
-  n = document.querySelector('div.navigation'); 
-  s = document.querySelector('div.sidenav');  
-  a = new Array(v,n,s)
-  a.forEach(el=>{
+  let body = document.querySelector('div#body');
+  let nav = document.querySelector('div.navigation'); 
+  let sidenav = document.querySelector('div.sidenav');  
+  let thea = new Array(body,nav,sidenav)
+  thea.forEach(el=>{
     if (el != null) {
       el.classList.add('tr-0-4')
       el.classList.add('blur')
@@ -226,8 +262,7 @@ export function addshade(){
   shaddow.appendChild(close)
   close.addEventListener('click',e=>{
 	  e.preventDefault();
-    a = new Array(v,n,s)
-    a.forEach(el=>{
+    thea.forEach(el=>{
       if (el != null) {
         el.classList.remove('blur')
       }
@@ -246,13 +281,17 @@ export function closetab(element,parent){
   }
 }
 export function getdata(item){
-  return JSON.parse(localStorage.getItem(item));
+  try {
+    return JSON.parse(localStorage.getItem(item));
+  } catch (error) {
+    return null 
+  }
 }
 export function alertMessage(message){
   q =  addshade();
   a = document.createElement('div')
   q.appendChild(a)
-  a.className = "w-300p h-200p p-20p bsbb bc-white cntr zi-10000 br-5p" 
+  a.className = "w-300p h-200p p-20p bsbb bc-white cntr zi-10000 br-10p card-5" 
   a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg"><span class="fs-18p black capitalize igrid center h-100 verdana">message</span></div><div class="body w-100 h-a p-5p grid center mt-10p"><span class="fs-15p dgray capitalize left verdana">${message}</span></div>`;
 }
 export function showsidemenu(){
@@ -602,30 +641,39 @@ export function geturl() {
    i = new URL(window.location.href)
    return i.origin
 }
-export function dcrtmgc(elem,aa,index,cond) {
+export async function dcrtmgc(elem,aa,index,cond) {
+  aa = await request('getprods',getschema)
+  if (!aa.success) {
+    return 0
+  }
 	let cart = JSON.parse(localStorage.getItem('cart'))
 	let added = false; 
 	let f = false
-	aa.message.forEach(prod=>{
-		if(prod.prodid == elem.id){
-			cart.forEach(prodc=>{
-				if (prodc.prodid == elem.id) {
-					f = true;
-					return false;
-				}
-			})
-			if (f == false) {
-  
-				cart.push({prodid: prod.prodid,pname: prod.pname,condition: cond,price:prod.conditions[index].newprice ,qty: 1,image: prod.pimgs[0]})
-				localStorage.setItem('cart',JSON.stringify(cart));
-				added = true
-        checkCart()
-			}else{
-				return added
-			}
-		}
-	})
-	return added
+  try {
+    aa.message.forEach(prod=>{
+      if(prod.prodid == elem.id){
+        cart.forEach(prodc=>{
+          if (prodc.prodid == elem.id) {
+            f = true;
+            return false;
+          }
+        })
+        if (f == false) {
+          cart.push({prodid: prod.prodid,pname: prod.pname,condition: cond,price:prod.conditions[index].newprice ,qty: 1,image: prod.pimgs[0]})
+          localStorage.setItem('cart',JSON.stringify(cart));
+          added = true
+          addsCard('item added to cart',true)
+          checkCart()
+        }else{
+          addsCard('item is already in the cart',false)
+        }
+      }
+    })
+    return added
+  } catch (error) {
+    
+  }
+	
 }
 
 export function adcm(n) {
@@ -657,7 +705,12 @@ export function cc(cond) {
 	}else if (cond == "refubrished") {
 		return 'green'
 		
-	}
+	}else if (cond == "available") {
+		return 'dgray'
+		
+	}else{
+    return 'red'
+  }
 }
 export function removecartitem(id) {
   a = getdata('cart');
@@ -721,6 +774,185 @@ export function setSuccessFor(input) {
   const small = rep.querySelector('small');
   small.classList.add('hidden');
 }
+export function vdtins(type,value) {
+  if (type == 'phonenumber') {
+    if (value.length > 9 || value.length < 9) return 0;
+    if (value.charAt(0) != 7) return 0;
+    if (value.charAt(1) != 8 && value.charAt(1) != 9 && value.charAt(1) != 3 && value.charAt(1) != 2) return 0;
+    return 1;
+  }else if (type == 'email') {
+    p =  /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if(value.match(p)){
+      return 1
+    }else{
+      return 0
+    }
+  }
+}
+
+export function chaastep(step) {
+  h = document.querySelector('div.sthol')
+  s = Array.from(h.querySelectorAll('div.step'));
+  c = document.querySelector('div','the-chkout-b');
+  d = Array.from(c.querySelectorAll('div.form-hol'));
+  d.forEach(phol=>{
+    if (phol.classList.contains('active')) {
+        if(d.indexOf(phol)> step){
+          phol.classList.replace('l-0','l-100')
+        }else{
+          phol.classList.replace('l-0','l--100')
+        }
+        phol.classList.remove('active')
+    }
+  })
+  s.forEach(stp=>{
+    if (s.indexOf(stp)<step) {
+      stp.querySelector('div.stinit').classList.replace('bc-dgray','bc-theme')
+      stp.querySelector('div.stinit').classList.replace('bc-tr-theme','bc-theme')
+      stp.classList.add('prev')
+    }else{
+      stp.querySelector('div.stinit').classList.replace('bc-theme','bc-dgray')
+      stp.querySelector('div.stinit').classList.replace('bc-tr-theme','bc-dgray')
+      stp.classList.remove('prev')
+    }
+  })
+  try {
+    d[step].classList.remove('l--100')
+    d[step].classList.remove('l-100')
+    d[step].classList.add('l-0')
+    d[step].classList.add('active')
+    initadstpfrm(d[step],step);
+  } catch (error) {
+    
+  }
+  try {
+    s[step].classList.add('active')
+    s[step].querySelector('div.stinit').classList.replace('bc-dgray','bc-tr-theme')
+  } catch (error) {
+
+  }
+}
+function initadstpfrm(container,step) {
+  if (step == 1) {
+    a = container.querySelector('div.adhol')
+    l = getdata('address')
+    a.innerHTML = null
+    if (l) {
+      for (const location of l) {
+        a.innerHTML+= `<div class="w-a h-a p-5p bsbb igrid bfull-resp va-t">
+          <div class="b-1-s-dgray w-100 br-5p h-100 hover-2 p-5p bsbb loc" id="${l.indexOf(location)}">
+            <ul class="p-0 m-0 ls-none h-a">
+              <li class="w-100 p-5p bsbb flex">
+                  <span class="w-100 h-a fs-12p bold verdana capitalize dgray">Names : </span>
+                  <span class="w-100 h-a fs-12p bold consolas capitalize">${location.firstname} ${location.lastname}</span>
+              </li>
+              <li class="w-100 p-5p bsbb flex">
+                <span class="w-100 h-a fs-12p bold verdana capitalize dgray">Phone : </span>
+                <span class="w-100 h-a fs-12p bold consolas capitalize">${location.phonenumber}</span>
+              </li>
+              <li class="w-100 p-5p bsbb flex">
+                  <span class="w-100 h-a fs-12p bold verdana capitalize dgray">address : </span>
+                  <span class="w-100 h-a fs-12p consolas capitalize">${location.address}</span>
+              </li>
+              <li class="w-100 p-5p bsbb flex">
+                  <span class="w-100 h-a fs-12p bold verdana capitalize dgray">street : </span>
+                  <span class="w-100 h-a fs-12p  consolas capitalize">${location.street} </span>
+              </li>
+              <li class="w-100 p-5p bsbb flex">
+                  <span class="w-100 h-a fs-12p bold verdana capitalize dgray">Apartment : </span>
+                  <span class="w-100 h-a fs-12p  consolas capitalize">${location.apartment}</span>
+              </li>
+            </ul>
+          </div>
+        </div>`
+      }
+    }
+      a.innerHTML+= `<div class="w-200p h-150p p-5p bsbb igrid bfull-resp">
+      <div class="b-1-s-dgray w-100 br-5p h-100 hover-2 p-5p bsbb" id="add">
+        <div class="center h-100 w-100">
+          <span class="fs-30p dgray center us-none">
+            +
+          </span>
+          <span class="fs-20p dgray verdana center us-none">
+            Add
+          </span>
+        </div>
+      </div>
+    </div>`
+    h = Array.from(a.querySelectorAll('div.loc'))
+    b = a.querySelector('div#add')
+
+    b.addEventListener('click',(e)=>{
+      e.preventDefault();
+      chaastep(0)
+    })
+    h.forEach((address)=>{
+      address.addEventListener('click',(e)=>{
+        h.forEach((a)=>{
+          a.classList.replace('b-1-s-theme','b-1-s-dgray')
+          a.classList.remove('active')
+        })
+        address.classList.replace('b-1-s-dgray','b-1-s-theme')
+        address.classList.add('active')
+        localStorage.setItem('_act41',address.id)
+        l=getdata('address')
+        shaddr(l[getdata('_act41')])
+        chaastep(2)
+      })
+    })
+  }else if(step == 2){
+    let cpcards = Array.from(container.querySelectorAll('span.cpcards'))
+    cpcards.forEach((changepaymentmethodcard)=>{
+      changepaymentmethodcard.addEventListener('click',()=>{
+        cpcards.forEach((cp)=>{
+          cp.classList.remove('active','bb-1-s-theme','bc-tr-theme','theme')
+        })
+        changepaymentmethodcard.classList.add('active','bb-1-s-theme','bc-tr-theme','theme')
+        chpform(cpcards.indexOf(changepaymentmethodcard))
+      })
+    })
+    function chpform(step) {
+      let pform = Array.from(container.querySelectorAll('div.pform'));
+      if (step == 1) {
+        pform[0].classList.replace('l-0','l--100')
+        pform[1].classList.replace('l-100','l-0')
+
+      }else if(step == 0){
+        pform[1].classList.replace('l-0','l-100')
+        pform[0].classList.replace('l--100','l-0')
+      }
+    }
+  }
+}
+export function shaddr(address) {
+  n = document.querySelector('div#act-addr-hol')
+  n.innerHTML = `<div class="w-a h-a p-5p bsbb igrid bfull-resp">
+      <div class="b-1-s-dgray w-100 br-5p h-100 hover-2 p-5p bsbb">
+      <ul class="p-0 m-0 ls-none h-a">
+          <li class="w-100 p-5p bsbb flex">
+              <span class="w-100 h-a fs-12p bold verdana capitalize dgray">Names : </span>
+              <span class="w-100 h-a fs-12p bold consolas capitalize nowrap">${address.firstname} ${address.lastname}</span>
+          </li>
+          <li class="w-100 p-5p bsbb flex">
+          <span class="w-100 h-a fs-12p bold verdana capitalize dgray">Phone : </span>
+          <span class="w-100 h-a fs-12p bold consolas capitalize">${address.phonenumber}</span>
+          </li>
+          <li class="w-100 p-5p bsbb flex">
+              <span class="w-100 h-a fs-12p bold verdana capitalize dgray">address : </span>
+              <span class="w-100 h-a fs-12p consolas capitalize nowrap">${address.address}</span>
+          </li>
+          <li class="w-100 p-5p bsbb flex">
+              <span class="w-100 h-a fs-12p bold verdana capitalize dgray">street : </span>
+              <span class="w-100 h-a fs-12p  consolas capitalize">${address.street} </span>
+          </li>
+          <li class="w-100 p-5p bsbb flex">
+              <span class="w-100 h-a fs-12p bold verdana capitalize dgray">Apartment : </span>
+              <span class="w-100 h-a fs-12p  consolas capitalize">${address.apartment}</span>
+          </li>
+      </ul>
+      </div>
+  </div>`
+}
 export async function validateForm(form,inputs,formdata) {
   let val = 1;
   if (form.name == "contact_form") {
@@ -739,6 +971,9 @@ export async function validateForm(form,inputs,formdata) {
         if (inp.value == "") {
           setErrorFor(inp,"please enter your email");
           val = 0;
+        }else{
+          val = vdtins('email',inp.value)
+          if(!val) setErrorFor(inp,"invalid email");
         }
       }else if (inp.name == "subject") {
         if (inp.value == "") {
@@ -749,6 +984,14 @@ export async function validateForm(form,inputs,formdata) {
         if (inp.value == "") {
           setErrorFor(inp,"your message is required!");
           val = 0;
+        }
+      }else if (inp.name == "phonenumber") {
+        if (inp.value == "") {
+          setErrorFor(inp," enter your phone number");
+          val = 0;
+        }else{
+          val = vdtins('phonenumber',inp.value)
+          if(!val) setErrorFor(inp,"invalid phone number");
         }
       }
     })
@@ -859,6 +1102,132 @@ export async function validateForm(form,inputs,formdata) {
     if(val == 1){
       sendmessage(inputs,'adminlogin',form,formdata);
     }
+  }else if (form.name == 'add-address-form') {
+    inputs.forEach(inp=>{
+      if (inp.name == "email") {
+            if (inp.value == "") {
+              setErrorFor(inp,"enter your email");
+              val = 0;
+            }else{
+              val = vdtins('email',inp.value)
+              if (val == 0) setErrorFor(inp,'invalid email')
+            }
+      }else if (inp.name == "apartment") {
+            if (inp.value == "") {
+              setErrorFor(inp,"enter your apartment");
+              val = 0;
+            }
+      }else if (inp.name == "address") {
+        if (inp.value == "") {
+          setErrorFor(inp,"enter your address");
+          val = 0;
+        }
+      }else if (inp.name == "street") {
+        if (inp.value == "") {
+          setErrorFor(inp,"enter your street");
+          val = 0;
+        }
+      }else if (inp.name == "phonenumber") {
+        if (inp.value == "") {
+          setErrorFor(inp,"enter your phone number");
+          val = 0;
+        }else{
+          val = vdtins('phonenumber',inp.value)
+          if (val == 0) setErrorFor(inp,'invalid phone number')
+        }
+      }else if (inp.name == "firstname") {
+        if (inp.value == "") {
+          setErrorFor(inp,"enter your firstname");
+          val = 0;
+        }
+      }else if (inp.name == "lastname") {
+        if (inp.value == "") {
+          setErrorFor(inp,"enter your lastname");
+          val = 0;
+        }
+      }
+    })
+    v = {}
+    if(val == 1){
+      inputs.forEach(inm=>{
+        Object.assign(v,{[inm.name]: inm.value})
+      })
+      v.phonenumber = '+250'+v.phonenumber
+      a = getdata('address');
+      if (a){
+        a.push(v);
+        localStorage.setItem('address',JSON.stringify(a))
+      }else{
+        localStorage.setItem('address',JSON.stringify([v]))
+      }
+      chaastep(1) 
+    }
+  }else if (form.name == 'card-payment-form') {
+    inputs.forEach(inp=>{
+      if (inp.name == "fullname") {
+            if (inp.value == "") {
+              setErrorFor(inp,"enter the names  on the card");
+              val = 0;
+            }
+      }else if (inp.name == "exprityyear") {
+            if (inp.value == "") {
+              setErrorFor(inp,"enter expirity year");
+              val = 0;
+            }
+      }else if (inp.name == "expritymonth") {
+        if (inp.value == "") {
+          setErrorFor(inp,"enter expirity month");
+          val = 0;
+        }
+      }else if (inp.name == "cvv") {
+        if (inp.value == "") {
+          setErrorFor(inp,"enter cvv");
+          val = 0;
+        }
+      }else if (inp.name == "cardnumber") {
+        if (inp.value == "") {
+          setErrorFor(inp,"enter card number");
+          val = 0;
+        }
+      }
+    })
+    v = {}
+    if(val == 1){
+      inputs.forEach(inm=>{
+        Object.assign(v,{[inm.name]: inm.value})
+      })
+      sendmessage(inputs,'placeorder',form,v);
+    }
+  }else if (form.name == 'mobile-money-form') {
+    inputs.forEach(inp=>{
+      if (inp.name == "isp") {
+            if (inp.value == "") {
+              setErrorFor(inp,"select your ISP");
+              val = 0;
+            }
+      }else if (inp.name == "payphonenumber") {
+            if (inp.value == "") {
+              setErrorFor(inp,"enter phone number");
+              val = 0;
+            }else{
+              v=vdtins('phonenumber',inp.value)
+              if (v == 0) {
+                  setErrorFor(inp,'invalid phone number')
+                  val = 0;
+              }else{
+                  setSuccessFor(inp)
+              }
+          }
+      }
+    })
+    v = {}
+    if(val == 1){
+      inputs.forEach(inm=>{
+        Object.assign(v,{[inm.name]: inm.value})
+        v.payphonenumber = '+250'+v.payphonenumber
+      })
+      sendmessage(inputs,'placeorder',form,v);
+    }
   }
 }
 export async function sendmessage(inputs,type,form,formdata) {
@@ -877,6 +1246,10 @@ export async function sendmessage(inputs,type,form,formdata) {
           if (inp.value != "") {
             Object.assign(values,{email: inp.value});
           }
+        }else if (inp.name == "phonenumber") {
+          if (inp.value != "") {
+            Object.assign(values,{phonenumber: '+250'+inp.value});
+          }
         }else if (inp.name == "subject") {
           if (inp.value != "") {
             Object.assign(values,{subject: inp.value});
@@ -887,25 +1260,11 @@ export async function sendmessage(inputs,type,form,formdata) {
           }
         }
     })
-    var data = JSON.parse(localStorage.getItem("database"));
-    Object.assign(values,{status: "new"});
-    data.queries.push(values);
-    localStorage.database = JSON.stringify(data);
-    fetch('http://localhost:6060/api/addquery/',{
-      mode: 'cors',
-      method: "POST",
-      body : JSON.stringify(formdata),
-      headers: {
-        "content-type": "application/json",
-        'accept': '*/*'
-
-      }
-    }).then(response => response.json())
-      .then(data => {
-        alertMessage(data.message);
-    }).catch(error=>{
-      alertMessage(error);
-    })
+    p = postschema
+    p.body = JSON.stringify(values)
+    r = await request('addquery',p)
+    if (!r.success) return 0
+    alertMessage(r.message)
     form.reset();
   }else if (type == 'signup') {
     var values = {};
@@ -972,7 +1331,7 @@ export async function sendmessage(inputs,type,form,formdata) {
       localStorage.setItem("user",JSON.stringify(r.message.token));
       alertMessage("you have been successfully logged in");
       form.reset();
-      window.location.refresh;
+      window.location.href = localStorage.getItem('next');
     }
   }else if(type == 'adminlogin'){
     var values = {};
@@ -1011,42 +1370,41 @@ export async function sendmessage(inputs,type,form,formdata) {
         localStorage.setItem("admin",JSON.stringify(r.message.token));
         window.location.href = 'dashboard.html'
       }
-  }else if (type == 'contact') {
-    var values = {};
-    var data = JSON.parse(localStorage.getItem("database"));
-    Object.assign(values,{blog_type: "user_blog"});
-    i = getdata('user');
-    if (i == null) {
-      i = getdata('admin');
+  }else if (type == 'placeorder') {
+    m = form.name;
+    d = formdata;
+    p = getdata('cart')
+    a = getdata('_act41');
+    l = getdata('address');
+    if (!l || a == null) {
+      return alertMessage('select or add an address to continue')
     }
-    Object.assign(values,{token: i});
-    values = JSON.stringify(values)
-    var leFull = document.querySelector('div.shade');
-    let body = document.getElementById('body');
-    var divs = Array.from(document.querySelectorAll('div.content'));
-    
-    fetch('http://localhost:6060/api/addblog',{
-      mode: 'cors',
-      method: "POST",
-      body : values,
-      headers: {
-        "content-type": "application/json",
-        'accept': '*/*'
+    l = l[a]
+    u = getdata('user')
+    if(!u){ 
+      initiatelogin();
+      alertMessage('login to add an order'); 
+    }else{
+      if (p.length > 0) {
+        s = postschema
+        s.body = JSON.stringify({payment: {method: m,data: d},products: p, address: l,token: u})
+        r = await request('addorder',s)
+        if (r.success) {
+          form.reset();
+          localStorage.setItem('cart',JSON.stringify([]))
+          p = await request('getprods',getschema)
+          c = getdata('cart')
+          getcinfo(p.message)
+          alertMessage(r.message)
+          checkCart()
+        }else{
+          alertMessage(r.message)
+        }
+      }else{
+        alertMessage('add items to your cart to add an order')
       }
-    }).then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            if (form.classList[2] != 'adminform') {
-              closeTab(body,leFull,divs);
-              chkBlgCntnt();
-            }
-            alertMessage(data.message);
-          }else{
-            alertMessage(data.message);
-          }
-        }).catch(error=>{
-        alertMessage(error);
-      })
+    } 
+    
   }
 }
 export function chagecontent(newactive,prevactive) {
@@ -1099,7 +1457,6 @@ export async function showcontent(data,targetdiv) {
       p = postschema
       p.body =  JSON.stringify({token :getdata('admin')});
       r = await request('getusers',p)
-      console.log(r)
       if (!r.success) {
         return 0
       }
@@ -1160,13 +1517,7 @@ export async function showcontent(data,targetdiv) {
       }
   }else if (targetdiv.id == 'add-product') {
 		window.history.pushState('','','?page=add-product')
-    o = {
-      mode: 'cors',
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        'accept': '*/*'
-      }}
+    o = getschema
     t= await request('tree',o)
     s = Array.from(document.querySelectorAll('select.main-input'))
     for (const select of s) {
@@ -1271,100 +1622,16 @@ export async function showcontent(data,targetdiv) {
               'accept': '*/*'
           }
         }
-        console.log(o)
         r = await request('addproduct',l)
+        if (r.success) {
+          alertMessage(r.message)
+          f.reset()
+        }else{
+          alertMessage(r.message)
+        }
       }else{
-        console.log('not yet')
       }
     })
-  }else if (targetdiv.id == 'add-discount') {
-		window.history.pushState('','','?page=add-discount')
-    var atr = document.createElement('tr');
-    targetdiv.childNodes[3].childNodes[1].innerHTML = null;
-    targetdiv.childNodes[3].childNodes[1].appendChild(atr);
-    atr.innerHTML = ` <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">#</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Owner&nbsp;name</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Title</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">description</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g center">
-                <span class="fs-15p verdana p-10p center">action</span>
-              </td>
-              `;
-    i = 1;
-    data.forEach(blogs=>{
-      if (blogs.blog_type == '_USER_BLOG_') {
-      auser = document.createElement('tr');
-      targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-      auser.innerHTML = `
-              <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
-              </td>
-              <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.ownr_name}</span>
-              </td>
-              <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.title}</span>
-              </td>
-              <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${ellipsis(blogs.description,20)}</span>
-              </td>
-              <td class="p-10p flex w-150p jc-sb right">
-                <span class="fs-14p verdana green center hover-2 us-none viewlink" id='${blogs._id}'>view</span>
-                <span class="fs-14p verdana orange center hover-2 us-none editlink" id='${blogs._id}'>edit</span>
-                <span class="fs-14p verdana red center hover-2 us-none deletelink" id='${blogs._id}'>delete</span>
-              </td>`;
-              i+=1;
-      }
-    })
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
-        s.addEventListener('click',async(e)=>{
-          e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
-        })
-      })
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-      deletelink.forEach(s=>{
-        s.addEventListener('click',async(e)=>{
-          e.preventDefault();
-          i = await deleteBlog(s.id, getdata('admin'));
-          if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-          }
-        })
-      })
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
-      })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
-    }
   }else if (targetdiv.id == 'view-products') {
 		window.history.pushState('','','?page=view-products')
     var atr = document.createElement('tr');
@@ -1387,7 +1654,6 @@ export async function showcontent(data,targetdiv) {
               </td>
               `;
     i = 1;
-    i = 1;
     o = {
       mode: 'cors',
       method: "GET",
@@ -1399,9 +1665,7 @@ export async function showcontent(data,targetdiv) {
     if (!t.success) {
       return 0
     }
-    console.log(t)
     t.message.forEach(prod=>{
-      console.log(prod.pname)
       a = document.createElement('tr');
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
@@ -1418,56 +1682,51 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-14p verdana">${ellipsis(prod.description,40)}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana green center-2 hover-2 us-none adddiscountlink" id='${prod.id}'>add discount</span>
-                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${prod.id}'>edit</span>
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${blogs.id}'>delete</span>
+                <span class="fs-14p verdana green center-2 hover-2 us-none adddiscountlink" id='${prod.prodid}'>add discount</span>
+                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${prod.prodid}'>edit</span>
+                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${prod.prodid}'>delete</span>
               </td>`;
               i+=1;
     })
 
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
+    const adddiscount = Array.from(document.querySelectorAll('span.adddiscountlink'));
     var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
     var editlink = Array.from(document.querySelectorAll('span.editlink'));
     editlink.forEach(s=>{
-        s.addEventListener('click',async(e)=>{
-          e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
-        })
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        i = await editBlog(s.id, getdata('admin'));
+        // if (i.success) {
+        //   alertMessage(i.message);
+        //   showcontent('data',targetdiv)
+        // }
       })
-      deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
-          e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
-        })
+    })
+    adddiscount.forEach(s=>{
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({id:s.id})
+        v = await request('getproduct',p)
+        if (v.success) {
+          shadddiscountform(v.message)
+        }
       })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
+    })
+    deletelink.forEach(s=>{
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({prodid:s.id,token: getdata('admin')})
+        v = await request('deleteprod',p)
+        if (v.success) {
+          showcontent(null,targetdiv)
+          alertMessage(v.message);
+        }
       })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
-    }
+    })
   }else if (targetdiv.id == 'new-queries') {
-		window.history.pushState('','','?page=queries')
+		window.history.pushState('','','?page=new-queries')
     var atr = document.createElement('tr');
     targetdiv.childNodes[3].childNodes[1].innerHTML = null;
     targetdiv.childNodes[3].childNodes[1].appendChild(atr);
@@ -1475,10 +1734,10 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">#</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Contactor&nbsp;name</span>
+                <span class="fs-15p verdana p-10p nowrap">Contactor name</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Email</span>
+                <span class="fs-15p verdana p-10p nowrap">phone number</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
                 <span class="fs-15p verdana p-10p">subject</span>
@@ -1488,39 +1747,38 @@ export async function showcontent(data,targetdiv) {
               </td>
               `;
     i = 1;
-    data.forEach(queries=>{
-      if (queries.status == 'new') {
-      auser = document.createElement('tr');
-      targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-      auser.innerHTML = `
+    p = postschema
+    p.body = JSON.stringify({token: getdata('admin')})
+    r = await request('getnewqueries',p)
+    if (!r.success) return 0
+
+    r.message.forEach(queries=>{
+      a = document.createElement('tr');
+      targetdiv.childNodes[3].childNodes[1].appendChild(a);
+      a.innerHTML = `
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${i}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${queries.firstname}&nbsp;${queries.lastname}</span>
+                <span class="fs-14p verdana">${queries.fullname}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${queries.email}</span>
+                <span class="fs-14p verdana">${queries.phone}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${queries.subject}</span>
               </td>
               <td class="p-10p">
-              <span class="fs-14p verdana green  hover-2 us-none view" id='${data.indexOf(queries)}'>view</span>
-                <span class="fs-14p verdana orange right hover-2 us-none seen" id='${data.indexOf(queries)}'>mark&nbsp;as&nbsp;seen</span>
+              <span class="fs-14p verdana green  hover-2 us-none view" id='${queries.id}'>view</span>
+                <span class="fs-14p verdana orange right hover-2 us-none seen nowrap" id='${queries.id}'>mark as seen</span>
               </td>`;
               i+=1;
-      }
     })
-    const deletee = Array.from(document.querySelectorAll('span.seen'));
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.queries[parseInt(del.id)].status = "seen";
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.queries,targetdiv);
+    const view = Array.from(document.querySelectorAll('span.view'));
+    if (view.length > 0) {
+      view.forEach(vl=>{
+        vl.addEventListener('click',e=>{
+         
         })
       })
     }
@@ -1533,10 +1791,10 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">#</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Contactor&nbsp;name</span>
+                <span class="fs-15p verdana p-10p nowrap">Contactor name</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Email</span>
+                <span class="fs-15p verdana p-10p nowrap">phone number</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
                 <span class="fs-15p verdana p-10p">subject</span>
@@ -1546,39 +1804,37 @@ export async function showcontent(data,targetdiv) {
               </td>
               `;
     i = 1;
-    data.forEach(queries=>{
-      if (queries.status == 'seen') {
-      auser = document.createElement('tr');
-      targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-      auser.innerHTML = `
+    p = postschema
+    p.body = JSON.stringify({token: getdata('admin')})
+    r = await request('getqueries',p)
+    if (!r.success) return 0
+
+    r.message.forEach(queries=>{
+      a = document.createElement('tr');
+      targetdiv.childNodes[3].childNodes[1].appendChild(a);
+      a.innerHTML = `
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${i}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${queries.firstname}&nbsp;${queries.lastname}</span>
+                <span class="fs-14p verdana">${queries.fullname}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${queries.email}</span>
+                <span class="fs-14p verdana">${queries.phone}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${queries.subject}</span>
               </td>
               <td class="p-10p">
-              <span class="fs-14p verdana green center hover-2 us-none view" id='${data.indexOf(queries)}'>view</span>
-                <span class="fs-14p verdana red center hover-2 us-none seen" id='${data.indexOf(queries)}'>delete</span>
+              <span class="fs-14p verdana green  hover-2 us-none view" id='${queries.id}'>view</span>
               </td>`;
               i+=1;
-      }
     })
-    const deletee = Array.from(document.querySelectorAll('span.seen'));
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.queries.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.queries,targetdiv);
+    const view = Array.from(document.querySelectorAll('span.view'));
+    if (view.length > 0) {
+      view.forEach(vl=>{
+        vl.addEventListener('click',e=>{
+         
         })
       })
     }
@@ -1646,86 +1902,215 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">#</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Owner&nbsp;name</span>
+                <span class="fs-15p verdana p-10p nowrap">id</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Title</span>
+                <span class="fs-15p verdana p-10p nowrap">Owner name</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">description</span>
+                <span class="fs-15p verdana p-10p">total price</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">total products</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
     i = 1;
-    data.forEach(blogs=>{
-      if (blogs.blog_type == '_ADMIN_BLOG_') {
-      auser = document.createElement('tr');
-      targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-      auser.innerHTML = `
+    o = postschema
+    o.body = JSON.stringify({token: getdata('admin')})
+    t = await request('getneworders',o)
+    if (!t.success) {
+      return 0
+    }
+    t.message.forEach(order=>{
+      a = document.createElement('tr');
+      targetdiv.childNodes[3].childNodes[1].appendChild(a);
+      a.innerHTML = `
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${i}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.ownr_name}</span>
+                <span class="fs-14p verdana">${order.id}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.title}</span>
+                <span class="fs-14p verdana norwap">${order.firstname} ${order.lastname}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${ellipsis(blogs.description,20)}</span>
+                <span class="fs-14p verdana nowrap">${adcm(order.totalprice)} <small class="dgray consolas">RWF</small></span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana">${order.products.length}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${blogs._id}'>view</span>
-                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${blogs._id}'>edit</span>
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${blogs._id}'>delete</span>
+                <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${order.id}'>view</span>
               </td>`;
               i+=1;
-      }
     })
-
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
+    var viewlink = Array.from(targetdiv.querySelectorAll('span.viewlink'));
+      viewlink.forEach(s=>{
         s.addEventListener('click',async(e)=>{
           e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
+          p = postschema
+          postschema.body = JSON.stringify({token: getdata('admin'),orderid: s.id})
+          r = await request('getorder',p)
+          if (!r.success) {
+            return 0
+          }
+          postschema.body = JSON.stringify({token: getdata('admin'),orderid: s.id,status: 'pending'})
+          c = await request('chorst',p)
+          showOrder(r.message);
         })
       })
-      deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
-          e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
-        })
-      })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
-      })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
+    
+  }else if (targetdiv.id == 'pending-orders') {
+		window.history.pushState('','','?page=pending-orders')
+    var atr = document.createElement('tr');
+    targetdiv.childNodes[3].childNodes[1].innerHTML = null;
+    targetdiv.childNodes[3].childNodes[1].appendChild(atr);
+    atr.innerHTML = ` <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">#</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p nowrap">id</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p nowrap">Owner name</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">total price</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">total products</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">action</span>
+              </td>
+              `;
+    i = 1;
+    o = postschema
+    o.body = JSON.stringify({token: getdata('admin')})
+    t = await request('getpendingorders',o)
+    if (!t.success) {
+      return 0
     }
+    t.message.forEach(order=>{
+      a = document.createElement('tr');
+      targetdiv.childNodes[3].childNodes[1].appendChild(a);
+      a.innerHTML = `
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana">${i}</span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana">${order.id}</span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana norwap">${order.firstname} ${order.lastname}</span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana nowrap">${adcm(order.totalprice)} <small class="dgray consolas">RWF</small></span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana">${order.products.length}</span>
+              </td>
+              <td class="p-10p flex jc-sb">
+                <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${order.id}'>view</span>
+                <span class="fs-14p verdana theme center-2 hover-2 us-none deliverlink" id='${order.id}'>deliver</span>
+              </td>`;
+              i+=1;
+    })
+    var viewlink = Array.from(targetdiv.querySelectorAll('span.viewlink'));
+    var deliverlink = Array.from(targetdiv.querySelectorAll('span.deliverlink'));
+      viewlink.forEach(s=>{
+        s.addEventListener('click',async(e)=>{
+          e.preventDefault();
+          p = postschema
+          postschema.body = JSON.stringify({token: getdata('admin'),orderid: s.id})
+          r = await request('getorder',p)
+          if (!r.success) {
+            return 0
+          }
+          showOrder(r.message);
+        })
+      })
+      deliverlink.forEach(d=>{
+        d.addEventListener('click',async(e)=>{
+          e.preventDefault();
+          p=postschema
+          postschema.body = JSON.stringify({token: getdata('admin'),orderid: d.id,status: 'delivered'})
+          c = await request('chorst',p)
+          if(c.success) alertMessage('order status changed successfully')
+        })
+      })
+  }else if (targetdiv.id == 'delivered-orders') {
+		window.history.pushState('','','?page=delivered-orders')
+    var atr = document.createElement('tr');
+    targetdiv.childNodes[3].childNodes[1].innerHTML = null;
+    targetdiv.childNodes[3].childNodes[1].appendChild(atr);
+    atr.innerHTML = ` <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">#</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p nowrap">id</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p nowrap">Owner name</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">total price</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">total products</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">action</span>
+              </td>
+              `;
+    i = 1;
+    o = postschema
+    o.body = JSON.stringify({token: getdata('admin')})
+    t = await request('getdeliveredorders',o)
+    if (!t.success) {
+      return 0
+    }
+    t.message.forEach(order=>{
+      a = document.createElement('tr');
+      targetdiv.childNodes[3].childNodes[1].appendChild(a);
+      a.innerHTML = `
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana">${i}</span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana">${order.id}</span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana norwap">${order.firstname} ${order.lastname}</span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana nowrap">${adcm(order.totalprice)} <small class="dgray consolas">RWF</small></span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana">${order.products.length}</span>
+              </td>
+              <td class="p-10p flex jc-sb">
+                <span class="fs-14p verdana green center-2 hover-2 us-none viewlink capitalize" id='${order.id}'>view</span>
+              </td>`;
+              i+=1;
+    })
+    var viewlink = Array.from(targetdiv.querySelectorAll('span.viewlink'));
+      viewlink.forEach(s=>{
+        s.addEventListener('click',async(e)=>{
+          e.preventDefault();
+          p = postschema
+          postschema.body = JSON.stringify({token: getdata('admin'),orderid: s.id})
+          r = await request('getorder',p)
+          if (!r.success) {
+            return 0
+          }
+          showOrder(r.message);
+        })
+      })
   }else if (targetdiv.id == 'orders') {
 		window.history.pushState('','','?page=orders')
     var atr = document.createElement('tr');
@@ -1735,175 +2120,65 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">#</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Owner&nbsp;name</span>
+                <span class="fs-15p verdana p-10p nowrap">id</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Title</span>
+                <span class="fs-15p verdana p-10p nowrap">Owner name</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">description</span>
+                <span class="fs-15p verdana p-10p">total price</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">total products</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
     i = 1;
-    data.forEach(blogs=>{
-      if (blogs.blog_type == '_ADMIN_BLOG_') {
-      auser = document.createElement('tr');
-      targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-      auser.innerHTML = `
+    o = postschema
+    o.body = JSON.stringify({token: getdata('admin')})
+    t = await request('getorders',o)
+    if (!t.success) {
+      return 0
+    }
+    t.message.forEach(order=>{
+      a = document.createElement('tr');
+      targetdiv.childNodes[3].childNodes[1].appendChild(a);
+      a.innerHTML = `
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${i}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.ownr_name}</span>
+                <span class="fs-14p verdana">${order.id}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${blogs.title}</span>
+                <span class="fs-14p verdana norwap">${order.firstname} ${order.lastname}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${ellipsis(blogs.description,20)}</span>
+                <span class="fs-14p verdana nowrap">${adcm(order.totalprice)} <small class="dgray consolas">RWF</small></span>
+              </td>
+              <td class="p-10p bsbb">
+                <span class="fs-14p verdana">${order.products.length}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${blogs._id}'>view</span>
-                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${blogs._id}'>edit</span>
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${blogs._id}'>delete</span>
+                <span class="fs-14p verdana green center-2 hover-2 us-none viewlink capitalize" id='${order.id}'>view</span>
               </td>`;
               i+=1;
-      }
     })
-
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
+    var viewlink = Array.from(targetdiv.querySelectorAll('span.viewlink'));
+      viewlink.forEach(s=>{
         s.addEventListener('click',async(e)=>{
           e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
+          p = postschema
+          postschema.body = JSON.stringify({token: getdata('admin'),orderid: s.id})
+          r = await request('getorder',p)
+          if (!r.success) {
+            return 0
+          }
+          showOrder(r.message);
         })
       })
-      deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
-          e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
-        })
-      })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
-      })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
-    }
-  }else if (targetdiv.id == 'log') {
-		window.history.pushState('','','?page=log')
-    var atr = document.createElement('tr');
-    targetdiv.childNodes[3].childNodes[1].innerHTML = null;
-    targetdiv.childNodes[3].childNodes[1].appendChild(atr);
-    atr.innerHTML = ` <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">#</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Owner&nbsp;name</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">Title</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">description</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">action</span>
-              </td>
-              `;
-    i = 1;
-    // data.forEach(blogs=>{
-    //   if (blogs.blog_type == '_ADMIN_BLOG_') {
-    //   auser = document.createElement('tr');
-    //   targetdiv.childNodes[3].childNodes[1].appendChild(auser);
-    //   auser.innerHTML = `
-    //           <td class="p-10p bsbb">
-    //             <span class="fs-14p verdana">${i}</span>
-    //           </td>
-    //           <td class="p-10p bsbb">
-    //             <span class="fs-14p verdana">${blogs.ownr_name}</span>
-    //           </td>
-    //           <td class="p-10p bsbb">
-    //             <span class="fs-14p verdana">${blogs.title}</span>
-    //           </td>
-    //           <td class="p-10p bsbb">
-    //             <span class="fs-14p verdana">${ellipsis(blogs.description,20)}</span>
-    //           </td>
-    //           <td class="p-10p flex jc-sb">
-    //             <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${blogs._id}'>view</span>
-    //             <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${blogs._id}'>edit</span>
-    //             <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${blogs._id}'>delete</span>
-    //           </td>`;
-    //           i+=1;
-    //   }
-    // })
-
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
-        s.addEventListener('click',async(e)=>{
-          e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
-        })
-      })
-      deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
-          e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
-        })
-      })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
-      })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
-    }
   }else if (targetdiv.id == 'add-user') {
 		window.history.pushState('','','?page=add-user')
   }else if (targetdiv.id == 'categories') {
@@ -1950,53 +2225,52 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-14p verdana">${category.name}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${category._id}'>pin</span>
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${category._id}'>delete</span>
+                ${(category.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${category.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${category.id}'>pin</span>`}
+                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${category.id}'>delete</span>
               </td>`;
               i+=1;
     })
 
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
+    const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
+    var deletelink = Array.from(targetdiv.querySelectorAll('span.deletelink'));
+    var unpinlink = Array.from(targetdiv.querySelectorAll('span.unpinlink'));
+    pinlink.forEach(s=>{
         s.addEventListener('click',async(e)=>{
           e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
+          p = postschema
+          p.body = JSON.stringify({type: 'categories',id:s.id,token: getdata('admin')})
+          r = await request('pin',p)
+          if (r.success) {
+            showcontent(null,targetdiv)
+            alertMessage(r.message);
+          }
+        })
+      })
+      unpinlink.forEach(s=>{
+        s.addEventListener('click',async(e)=>{
+          e.preventDefault();
+          p = postschema
+          p.body = JSON.stringify({type: 'categories',id:s.id,token: getdata('admin')})
+          r = await request('unpin',p)
+          if (r.success) {
+            showcontent(null,targetdiv)
+            alertMessage(r.message);
+          }
         })
       })
       deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
+        s.addEventListener('click',async(e)=>{
           e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
+          p = postschema
+          p.body = JSON.stringify({catid:s.id,token: getdata('admin')})
+          v = await request('deletecategory',p)
+          if (v.success) {
+            showcontent(null,targetdiv)
+            alertMessage(v.message);
+          }
         })
       })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
-      })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
-    }
+     
   }else if (targetdiv.id == 'sub-categories') {
 		window.history.pushState('','','?page=sub-categories')
     var atr = document.createElement('tr');
@@ -2048,54 +2322,52 @@ export async function showcontent(data,targetdiv) {
                   <span class="fs-14p verdana">${category.name}</span>
                 </td>
                 <td class="p-10p flex jc-sb">
-                  <span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${subcategories.idd}'>pin</span>
-                  <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${subcategories.idd}'>delete</span>
-                </td>`;
-                i+=1;
-      })
+                ${(subcategories.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${subcategories.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${subcategories.id}'>pin</span>`}
+                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${subcategories.id}'>delete</span>
+              </td>`;
+              i+=1;
     })
+  })
 
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
+    const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
+    var deletelink = Array.from(targetdiv.querySelectorAll('span.deletelink'));
+    var unpinlink = Array.from(targetdiv.querySelectorAll('span.unpinlink'));
+    pinlink.forEach(s=>{
         s.addEventListener('click',async(e)=>{
           e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
+          p = postschema
+          p.body = JSON.stringify({type: 'subcategories',id:s.id,token: getdata('admin')})
+          r = await request('pin',p)
+          if (r.success) {
+            showcontent(null,targetdiv)
+            alertMessage(r.message);
+          }
+        })
+      })
+      unpinlink.forEach(s=>{
+        s.addEventListener('click',async(e)=>{
+          e.preventDefault();
+          p = postschema
+          p.body = JSON.stringify({type: 'subcategories',id:s.id,token: getdata('admin')})
+          r = await request('unpin',p)
+          if (r.success) {
+            showcontent(null,targetdiv)
+            alertMessage(r.message);
+          }
         })
       })
       deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
+        s.addEventListener('click',async(e)=>{
           e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
+          p = postschema
+          p.body = JSON.stringify({subcatid:s.id,token: getdata('admin')})
+          v = await request('deletesubcategory',p)
+          if (v.success) {
+            showcontent(null,targetdiv)
+            alertMessage(v.message);
+          }
         })
       })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
-      })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
-    }
   }else if (targetdiv.id == 'brands') {
 		window.history.pushState('','','?page=brands')
     var atr = document.createElement('tr');
@@ -2140,54 +2412,52 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-14p verdana">${brands.name}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${brands.id}'>pin</span>
-                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${brands.id}'>edit</span>
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${brands.id}'>delete</span>
-              </td>`;
-              i+=1;
-    })
+              ${(brands.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${brands.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${brands.id}'>pin</span>`}
+              <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${brands.id}'>delete</span>
+            </td>`;
+            i+=1;
+  })
 
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
-        s.addEventListener('click',async(e)=>{
-          e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
-        })
+  const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
+  var deletelink = Array.from(targetdiv.querySelectorAll('span.deletelink'));
+  var unpinlink = Array.from(targetdiv.querySelectorAll('span.unpinlink'));
+  pinlink.forEach(s=>{
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({type: 'brands',id:s.id,token: getdata('admin')})
+        r = await request('pin',p)
+        if (r.success) {
+          showcontent(null,targetdiv)
+          alertMessage(r.message);
+        }
       })
-      deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
-          e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
-        })
+    })
+    unpinlink.forEach(s=>{
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({type: 'brands',id:s.id,token: getdata('admin')})
+        r = await request('unpin',p)
+        if (r.success) {
+          showcontent(null,targetdiv)
+          alertMessage(r.message);
+        }
       })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
+    })
+    deletelink.forEach(s=>{
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({brandid:s.id,token: getdata('admin')})
+        v = await request('deletebrand',p)
+        if (v.success) {
+          showcontent(null,targetdiv)
+          alertMessage(v.message);
+        }
       })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
-    }
+    })
+   
   }else if (targetdiv.id == 'series') {
 		window.history.pushState('','','?page=series')
     var atr = document.createElement('tr');
@@ -2239,55 +2509,52 @@ export async function showcontent(data,targetdiv) {
                   <span class="fs-14p verdana">${brand.name}</span>
                 </td>
                 <td class="p-10p flex jc-sb">
-                  <span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${series.id}'>pin</span>
-                  <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${series.id}'>edit</span>
-                  <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${series.id}'>delete</span>
-                </td>`;
-                i+=1;
-      })
+                ${(series.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${series.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${series.id}'>pin</span>`}
+                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${series.id}'>delete</span>
+              </td>`;
+              i+=1;
     })
+  })
 
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
+    const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
+    var deletelink = Array.from(targetdiv.querySelectorAll('span.deletelink'));
+    var unpinlink = Array.from(targetdiv.querySelectorAll('span.unpinlink'));
+    pinlink.forEach(s=>{
         s.addEventListener('click',async(e)=>{
           e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
+          p = postschema
+          p.body = JSON.stringify({type: 'families',id:s.id,token: getdata('admin')})
+          r = await request('pin',p)
+          if (r.success) {
+            showcontent(null,targetdiv)
+            alertMessage(r.message);
+          }
+        })
+      })
+      unpinlink.forEach(s=>{
+        s.addEventListener('click',async(e)=>{
+          e.preventDefault();
+          p = postschema
+          p.body = JSON.stringify({type: 'families',id:s.id,token: getdata('admin')})
+          r = await request('unpin',p)
+          if (r.success) {
+            showcontent(null,targetdiv)
+            alertMessage(r.message);
+          }
         })
       })
       deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
+        s.addEventListener('click',async(e)=>{
           e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
+          p = postschema
+          p.body = JSON.stringify({famid:s.id,token: getdata('admin')})
+          v = await request('deletefamily',p)
+          if (v.success) {
+            showcontent(null,targetdiv)
+            alertMessage(v.message);
+          }
         })
       })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
-      })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
-    }
   }else if (targetdiv.id == 'availability') {
 		window.history.pushState('','','?page=availability')
     var atr = document.createElement('tr');
@@ -2319,7 +2586,6 @@ export async function showcontent(data,targetdiv) {
     if (!t.success) {
       return 0
     }
-    console.log(t)
     t.message.availability.forEach((avs)=>{
       a = document.createElement('tr');
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
@@ -2334,52 +2600,52 @@ export async function showcontent(data,targetdiv) {
             <span class="fs-14p verdana">${avs.name}</span>
           </td>
           <td class="p-10p flex jc-sb">
-            <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${avs.id}'>delete</span>
-          </td>`;
-          i+=1;
-    })
+          ${(avs.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${avs.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${avs.id}'>pin</span>`}
+          <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${avs.id}'>delete</span>
+        </td>`;
+        i+=1;
+})
 
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
-        s.addEventListener('click',async(e)=>{
-          e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
-        })
-      })
-      deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
-          e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
-        })
-      })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
-      })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
+const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
+var deletelink = Array.from(targetdiv.querySelectorAll('span.deletelink'));
+var unpinlink = Array.from(targetdiv.querySelectorAll('span.unpinlink'));
+pinlink.forEach(s=>{
+  s.addEventListener('click',async(e)=>{
+    e.preventDefault();
+    p = postschema
+    p.body = JSON.stringify({type: 'availability',id:s.id,token: getdata('admin')})
+    r = await request('pin',p)
+    if (r.success) {
+      showcontent(null,targetdiv)
+      alertMessage(r.message);
     }
+  })
+})
+unpinlink.forEach(s=>{
+  s.addEventListener('click',async(e)=>{
+    e.preventDefault();
+    p = postschema
+    p.body = JSON.stringify({type: 'availability',id:s.id,token: getdata('admin')})
+    r = await request('unpin',p)
+    if (r.success) {
+      showcontent(null,targetdiv)
+      alertMessage(r.message);
+    }
+  })
+})
+deletelink.forEach(s=>{
+  s.addEventListener('click',async(e)=>{
+    e.preventDefault();
+    p = postschema
+    p.body = JSON.stringify({avid:s.id,token: getdata('admin')})
+    v = await request('deleteavailability',p)
+    if (v.success) {
+      showcontent(null,targetdiv)
+      alertMessage(v.message);
+    }
+  })
+})
+
   }else if (targetdiv.id == 'usability') {
 		window.history.pushState('','','?page=usability')
     var atr = document.createElement('tr');
@@ -2424,54 +2690,52 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-14p verdana">${usability.name}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${usability.id}'>delete</span>
-              </td>`;
-              i+=1;
+              ${(usability.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${usability.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${usability.id}'>pin</span>`}
+              <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${usability.id}'>delete</span>
+            </td>`;
+            i+=1;
+  })
+
+  const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
+  var deletelink = Array.from(targetdiv.querySelectorAll('span.deletelink'));
+  var unpinlink = Array.from(targetdiv.querySelectorAll('span.unpinlink'));
+  pinlink.forEach(s=>{
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({type: 'usedin',id:s.id,token: getdata('admin')})
+        r = await request('pin',p)
+        if (r.success) {
+          showcontent(null,targetdiv)
+          alertMessage(r.message);
+        }
+      })
     })
-
-    const deletee = Array.from(document.querySelectorAll('span.delete'));
-    var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
-    var editlink = Array.from(document.querySelectorAll('span.editlink'));
-    editlink.forEach(s=>{
-        s.addEventListener('click',async(e)=>{
-          e.preventDefault();
-          i = await editBlog(s.id, getdata('admin'));
-          // if (i.success) {
-          //   alertMessage(i.message);
-          //   showcontent('data',targetdiv)
-          // }
-        })
+    unpinlink.forEach(s=>{
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({type: 'usedin',id:s.id,token: getdata('admin')})
+        r = await request('unpin',p)
+        if (r.success) {
+          showcontent(null,targetdiv)
+          alertMessage(r.message);
+        }
       })
-      deletelink.forEach(s=>{
-        s.addEventListener('click',async (e)=>{
-          e.preventDefault();
-           i = await deleteBlog(s.id, getdata('admin'))
-           if (i.success) {
-            alertMessage(i.message);
-            showcontent('data',targetdiv)
-           }
-        })
+    })
+    deletelink.forEach(s=>{
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({usedinid:s.id,token: getdata('admin')})
+        v = await request('deleteusedin',p)
+        if (v.success) {
+          showcontent(null,targetdiv)
+          alertMessage(v.message);
+        }
       })
-    var viewlink = Array.from(document.querySelectorAll('span.viewlink'));
-      viewlink.forEach(s=>{
-        s.addEventListener('click',e=>{
-          e.preventDefault();
-          showBlog(s.id,'admin');
-        })
-      })
-    if (deletee.length > 0) {
-      deletee.forEach(del=>{
-        del.addEventListener('click',e=>{
-          e.preventDefault();
-          database = JSON.parse(localStorage.getItem('database'));
-          database.blogs.splice(parseInt(del.id),1);
-          localStorage.setItem('database',JSON.stringify(database));
-          showcontent(database.blogs,targetdiv);
-        })
-      })
-    }
+    })
   }
-
 }
 export function swtchcntnt(extra,newdiv) {
   var content = newdiv.id;
@@ -2488,12 +2752,21 @@ export function swtchcntnt(extra,newdiv) {
     case 'new-queries':
       showcontent("database.blogs",newdiv);
       break;
+    case 'queries':
+        showcontent("database.blogs",newdiv);
+        break;
     case 'add-product':
       showcontent("addBlog",newdiv);
       break;
     case 'new-orders':
       showcontent("addUser",newdiv);
       break;
+    case 'pending-orders':
+      showcontent("addUser",newdiv);
+        break;
+    case 'delivered-orders':
+        showcontent("addUser",newdiv);
+        break;
     case 'add-discount':
       showcontent("addUser",newdiv);
       break;
@@ -2653,4 +2926,715 @@ export const getschema =  {
       'accept': '*/*'
 
     }
+}
+export function initiatelogin() {
+  s = addshade();
+  c = document.createElement('div')
+  c.className = `w-80 h-70 bc-white cntr br-5p card-6 b-mgc-resp`
+  s.appendChild(c)
+  c.innerHTML = `<div class="data-cont w-100 h-100  bsbb p-10p ovh p-r" id="login">
+  <div class="w-45 h-100 p-40p bsbb igrid t-0 hidden-resp">
+      <div class="text w-90  bsbb p-20p bsbb">
+          <span class="mixed big-title fs-50p capitalize black bold-2 nowrap">
+              welcome back.
+          </span>
+      </div>
+      <div class="block w-70  ml-40p bsbb">
+          <span class="verdana dgray fs-25p">
+              log into your account. Get personalized functionalities of the site
+          </span>
+      </div>
+  </div>
+  <div class="w-50 h-100 p-a bsbb p-r r-0 p-20p igrid bp-0-resp bfull-resp">
+      <div class="text w-100  bsbb bsbb p-r  ">
+          <span class="right w-100 h-100 p-r ovh">
+              <div class="w-100 h-100 p-10p bsbb  igrid m-0 user-form  tr-0-3 l-0 p-r">
+                  <form method="post" name="login-form" onsubmit="function f(e) {e.preventDefault();}" class="p-10p bsbb" id="login-form">
+                      <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
+                          <div class="w-100 igrid mr-10p left parent p-r">
+                              <label class="capitalize fs-15p verdana">email</label>
+                              <input type="email" name="email" placeholder="" class="p-15p no-outline bsbb b-1-s-dgray bc-white mt-10p">
+                              <span class="p-a r-0 mt-43p mr-10p center">
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                                      <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                                  </svg>
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                                      <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                                      <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                                  </svg>
+                              </span>
+                              <small class="red verdana hidden ml-5p">error mssg</small>
+                          </div>
+                      </div>
+                      <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
+                          <div class="w-100 igrid mr-10p left parent p-r">
+                              <label class="capitalize fs-15p verdana">password</label>
+                              <input type="password" name="password" placeholder="" class="p-15p no-outline bsbb b-1-s-dgray bc-white mt-10p">
+                              <span class="p-a r-0 mt-43p mr-10p center">
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                                      <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                                  </svg>
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                                      <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                                      <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                                  </svg>
+                              </span>
+                              <small class="red verdana hidden ml-5p">error mssg</small>
+                          </div>
+                      </div>
+                      
+                      <div class="w-100  h-60p mt-60p p-r right mb-10p p-10p bsbb">
+                          <div class="w-100 h-100">
+                              <span class="iblock left h-100">
+                                      <span class="verdana black h-100 fs-13p center capitalize">not yet a member<a href="signup" id="signup" class="td-none theme switch-link">signup</a></span>
+                              </span>
+                              <span class="iblock right h-100">
+                                  <button class="bc-theme p-10p b-none w-100p br-2p">
+                                      <span class="verdana white fs-15p capitalize">login</span>
+                                  </button>
+                              </span>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+              <div class="w-100 h-100 p-10p bsbb bc-trgray igrid m-0 user-form  p-a t-0 tr-0-3 l-100">
+                  <form method="post" name="signup-form" onsubmit="function f(e) {e.preventDefault();}" class="p-10p bsbb" id="signup-form">
+                      <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
+                          <div class="w-50 bsbb igrid mr-10p left parent p-r">
+                              <label class="verdana capitalize fs-15p ">first name</label>
+                              <input type="text" name="firstname" placeholder="" class=" no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
+                              <span class="p-a r-0 mt-43p mr-10p center">
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                                      <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                                  </svg>
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                                      <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                                      <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                                  </svg>
+                              </span>
+                              <small class="red verdana hidden ml-5p">error mssg</small>
+                          </div>
+                          <div class="p-r w-45 bsbb igrid parent">
+                              <label class="verdana capitalize fs-15p left">last name</label>
+                              <input type="text" name="lastname" placeholder="" class="no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
+                              <span class="p-a r-0 mt-43p mr-10p center">
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                                      <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                                  </svg>
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                                      <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                                      <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                                  </svg>
+                              </span>
+                              <small class="red verdana left hidden ml-5p">error mssg</small>
+                          </div>
+                      </div>
+                      <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
+                          <div class="w-100 igrid mr-10p left parent p-r">
+                              <label class="verdana capitalize fs-15p ">email</label>
+                              <input type="text" name="email" placeholder="" class="p-15p no-outline bsbb b-1-s-dgray bc-white mt-10p" id="emailsignup">
+                              <span class="p-a r-0 mt-43p mr-10p center">
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                                      <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                                  </svg>
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                                      <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                                      <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                                  </svg>
+                              </span>
+                              <small class="red verdana left hidden ml-5p">error mssg</small>
+
+                          </div>
+                      </div>
+                      <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
+                          <div class="w-50 bsbb igrid mr-10p left parent p-r">
+                              <label class="verdana capitalize fs-15p ">password</label>
+                              <input type="text" name="password" placeholder="" class=" no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
+                              <span class="p-a r-0 mt-43p mr-10p center">
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                                      <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                                  </svg>
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                                      <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                                      <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                                  </svg>
+                              </span>
+                              <small class="red verdana hidden ml-5p">error mssg</small>
+                          </div>
+                          <div class="p-r w-45 bsbb igrid parent">
+                              <label class="verdana capitalize fs-15p left">confirm password</label>
+                              <input type="text" name="confirm" placeholder="" class="no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
+                              <span class="p-a r-0 mt-43p mr-10p center">
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                                      <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                                  </svg>
+                                  <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                                      <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                                      <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                                  </svg>
+                              </span>
+                              <small class="red verdana left hidden ml-5p">error mssg</small>
+                          </div>
+                      </div>
+                      
+                      <div class="w-100  h-60p mt-20p p-r right mb-10p p-10p bsbb">
+                          <div class="w-100 h-100">
+                              <span class="iblock left h-100">
+                                      <span class="verdana black h-100 fs-13p center capitalize">already a member<a href="login" id="login" class="td-none theme switch-link">login</a></span>
+                              </span>
+                              <span class="iblock right h-100">
+                                  <button class="bc-theme p-10p b-none w-100p br-2p">
+                                      <span class="verdana white fs-15p capitalize">signup</span>
+                                  </button>
+                              </span>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </span>
+      </div>
+  </div>
+  </div>`
+  var input = Array.from(c.getElementsByTagName('input'));
+  var login_form = document.getElementById('login-form');
+  var signup_form = document.getElementById('signup-form');
+  var sL = Array.from(document.querySelectorAll("a.switch-link"));
+  signup_form.addEventListener('submit',e=>{
+    e.preventDefault();
+    var ins = Array.from(signup_form.querySelectorAll('input'));
+    let data = {};
+      ins.forEach(inputs=>{
+          Object.assign(data,{ [inputs.name]:inputs.value.trim()});
+        })
+    validateForm(signup_form,ins,data);
+    
+  })
+  login_form.addEventListener('submit',e=>{
+    e.preventDefault();
+      var ins = Array.from(login_form.querySelectorAll('input'));
+      let data = {};
+      ins.forEach(inputs=>{
+          Object.assign(data,{ [inputs.name]:inputs.value.trim()});
+        })
+      validateForm(login_form,ins,data);
+    
+  })
+  input.forEach(inp=>{
+    inp.addEventListener('focus',e=>{
+      inp.parentNode.classList.add('focus');
+    })
+  })
+  input.forEach(inp=>{
+    inp.addEventListener('blur',e=>{
+      inp.parentNode.classList.remove('focus');
+      if (inp.value == "") {
+        setBlurFor(inp);
+      }else{
+        setSuccessFor(inp);
+      }
+    })
+    if (inp.id == 'emailsignup') {
+      inp.addEventListener('keyup',e=>{
+        vdtemail(inp.value,inp);
+      })
+    }
+  })
+  sL.forEach(swl=>{
+    swl.addEventListener("click",e=>{
+      e.preventDefault();
+        showForm(swl.id);
+    })
+  })
+}
+export function showForm(form) {
+var forms = Array.from(document.querySelectorAll("div.user-form"));
+if (form == "signup") {
+  forms[0].classList.replace('l-0','l--100');
+  forms[1].classList.replace('l-100','l-0');
+}else if (form == "login"){
+  forms[0].classList.replace('l--100','l-0');
+  forms[1].classList.replace('l-0','l-100');
+}
+}
+export function getcinfo(prods) {
+  p = document.querySelector('div.p-cont')
+  c = getdata('cart')
+  p.innerHTML= null
+  if (c.length > 0) {
+      t=0
+      prods.forEach(product => {
+          for (const cartitem of c) {
+              if (cartitem.prodid == product.prodid) {
+                 for(const c of  product.conditions){
+                      if (c.name == cartitem.condition) {
+                          i = product.conditions.indexOf(c)
+                      }
+                  }
+                  t+= product.conditions[i].newprice * cartitem.qty;
+                  if (c.indexOf(cartitem) == c.length - 1) {
+                      p.innerHTML += `<div class="item w-100 h-a p-5p bsbb">
+                          <div class="w-100 h-100 flex">
+                              <div class="w-90p h-90p">
+                                  <div class="w-100 h-100 br-5p">
+                                      <img src="${geturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
+                                  </div>
+                              </div>
+                              <div class="w-100 h-100 pl-20p bsbb">
+                                  <div class="w-100 h-100">
+                                      <div class="w-100 h-a br-3p  mb-10p">
+                                      <a href="${geturl()}/product/?id=${product.prodid}" class="td-none ls-n black">
+                                          <span class="w-100 h-a fs-18p bold verdana capitalize">${product.pname}</span>
+                                      </a>
+                                      </div>
+                                      <div class="w-100 h-a br-3p  mb-10p">
+                                              <ul class="p-0 m-0 ls-none h-a">
+                                                  <li class="w-100 p-5p bsbb flex">
+                                                      <span class="w-100 h-a fs-16p bold verdana capitalize dgray">quantity : </span>
+                                                      <span class="w-100 h-a fs-16p bold consolas capitalize">${cartitem.qty}</span>
+                                                  </li>
+                                                  <li class="w-100 p-5p bsbb flex">
+                                                      <span class="w-100 h-a fs-16p bold verdana capitalize dgray">condition : </span>
+                                                      <span class="w-100 h-a fs-16p ${cc(cartitem.condition)} consolas capitalize">${cartitem.condition}</span>
+                                                  </li>
+                                                  <li class="w-100 p-5p bsbb flex">
+                                                      <span class="w-100 h-a fs-16p bold verdana capitalize dgray">price per piece : </span>
+                                                      <span class="w-100 h-a fs-16p  consolas capitalize">${adcm(product.conditions[i].newprice)} <span class"dgray capitalize fs-14p pl-5p"> RWF</span></span>
+                                                  </li>
+                                                  <li class="w-100 p-5p bsbb flex">
+                                                      <span class="w-100 h-a fs-16p bold verdana capitalize dgray">sub total : </span>
+                                                      <span class="w-100 h-a fs-16p  consolas capitalize">${adcm(product.conditions[i].newprice * cartitem.qty)} <span class"dgray capitalize fs-14p pl-5p"> RWF</span></span>
+                                                  </li>
+                                              </ul>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>` 
+                  }else{
+                      p.innerHTML += `<div class="item w-100 h-a p-5p bsbb bb-1-s-g mb-10p">
+                 <div class="w-100 h-100 flex">
+                     <div class="w-90p h-90p">
+                         <div class="w-100 h-100 br-5p">
+                          <img src="${geturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
+                         </div>
+                     </div>
+                     <div class="w-100 h-100 pl-20p bsbb">
+                         <div class="w-100 h-100">
+                             <div class="w-100 h-a br-3p  mb-10p">
+                             <a href="${geturl()}/product/?id=${product.prodid}" class="td-none ls-n black">
+                              <span class="w-100 h-a fs-18p bold verdana capitalize">${product.pname}</span>
+                             </a>
+                             </div>
+                             <div class="w-100 h-a br-3p  mb-10p">
+                                  <ul class="p-0 m-0 ls-none h-a">
+                                      <li class="w-100 p-5p bsbb flex">
+                                          <span class="w-100 h-a fs-16p bold verdana capitalize dgray">quantity : </span>
+                                          <span class="w-100 h-a fs-16p bold consolas capitalize">${cartitem.qty}</span>
+                                      </li>
+                                      <li class="w-100 p-5p bsbb flex">
+                                          <span class="w-100 h-a fs-16p bold verdana capitalize dgray">condition : </span>
+                                          <span class="w-100 h-a fs-16p ${cc(cartitem.condition)} consolas capitalize">${cartitem.condition}</span>
+                                      </li>
+                                      <li class="w-100 p-5p bsbb flex">
+                                          <span class="w-100 h-a fs-16p bold verdana capitalize dgray">price per piece : </span>
+                                          <span class="w-100 h-a fs-16p  consolas capitalize">${adcm(product.conditions[i].newprice)} <span class"dgray capitalize fs-14p pl-5p"> RWF</span></span>
+                                      </li>
+                                      <li class="w-100 p-5p bsbb flex">
+                                          <span class="w-100 h-a fs-16p bold verdana capitalize dgray">sub total : </span>
+                                          <span class="w-100 h-a fs-16p  consolas capitalize">${adcm(product.conditions[i].newprice * cartitem.qty)} <span class"dgray capitalize fs-14p pl-5p"> RWF</span></span>
+                                      </li>
+                                  </ul>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>` 
+                  }
+                 
+              }
+          }
+      });
+      m.innerHTML = adcm(t)
+  }else{
+      
+  }
+
+}
+
+export function addsCard(message,dec) {
+  let sCard = document.createElement('div');
+  let thenav
+     thenav = document.querySelector('div.thenav');
+     thenav.appendChild(sCard);
+	sCard.className = "success-card p-a nwecard";
+	c = Array.from(document.querySelectorAll('div.success-card'));
+	if (c.length <= 1) {
+		sCard.className = "card success-card w-a h-20p p-a mt-100p bc-white br-20p p-10p cntr t-0 zi-0 tr-0-4  ovh";
+		var scard_hol = document.createElement('div');
+		sCard.appendChild(scard_hol);
+		scard_hol.classList.add('w-a');
+		scard_hol.classList.add('h-a');
+    if (dec) {
+      d=`<svg version="1.1" class="w-20p h-20p" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="fill: var(--green);" xml:space="preserve"><g><g id="check_x5F_alt"><path style="fill: var(--green);"d="M16,0C7.164,0,0,7.164,0,16s7.164,16,16,16s16-7.164,16-16S24.836,0,16,0z M13.52,23.383 L6.158,16.02l2.828-2.828l4.533,4.535l9.617-9.617l2.828,2.828L13.52,23.383z"/></g></g></svg>`
+    }else{
+      d=`<svg version="1.1" fill="#ff0000" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30" height="30" viewBox="0 0 64 64" fill="#ff0000" enable-background="new 0 0 64 64" xml:space="preserve"><g><line fill="none" stroke="#ff0000" stroke-width="2" stroke-miterlimit="10" x1="18.947" y1="17.153" x2="45.045" y2="43.056"></line></g><g><line fill="none" stroke="#ff0000" stroke-width="2" stroke-miterlimit="10" x1="19.045" y1="43.153" x2="44.947" y2="17.056"></line></g></svg>`
+    }
+		scard_hol.innerHTML = `<span class='left center w-40p l-0 h-100 bc-white p-a green igrid t-0  '>${d}</span><span class=' horizontal fs-14p igrid right w-a  h-100 mt--1p zi--1 p-r black verdana ml-30p mr-5p'>${message}</span>`;
+		setTimeout(removecard,2000,sCard);	
+	}else{
+    c = document.querySelectorAll('div.nwecard')
+    c.forEach(card=>{
+      card.parentNode.removeChild(card)
+    })
+	}
+	
+}
+
+function removecard(sCard) {
+	sCard.classList.remove('add-success');
+	setTimeout(deleteCard,1000,sCard); 
+}
+function deleteCard(sCard) {
+  let navbar = document.querySelector('div.thenav')
+	navbar.removeChild(sCard);
+}
+export function showOrder(orderinfo) {
+    orderinfo = orderinfo[0]
+    let address = orderinfo.uaddress
+    s = addshade();
+    c = document.createElement('div')
+    c.className = `w-80 h-80 bc-white cntr br-5p card-6 b-mgc-resp`
+    s.appendChild(c)
+    c.innerHTML = `<div class="p-r w-100 h-100">
+                    <div class="w-100 h-70p p-5p bsbb the-h bb-1-s-g">
+                        <div class="w-100 h-100 p-20p bsbb">
+                            <span class="verdana helvetica fs-20p capitalize">Order information</span>
+                        </div>
+                    </div>
+                    <div class="w-100 h-76 p-5p bsbb ovys">
+                        <div class="w-a h-a p-20p bsbb">
+                        <p class="verdana"><span class="fs-16p capitalize">date added</span></p>
+                        <span class="w-100 h-a fs-16p bold verdana capitalize dgray">date : </span>
+                                    <span class="w-100 h-a fs-16p bold consolas capitalize nowrap">${orderinfo.date}</span>
+                        <p class="verdana"><span class="fs-16p capitalize">order address</span></p>
+                        <div class="w-a h-a p-5p bsbb igrid bfull-resp">
+                            <div class="w-100 br-5p h-100 hover-2 p-5p bsbb">
+                            <ul class="p-0 m-0 ls-none h-a">
+                                <li class="w-100 p-5p bsbb flex">
+                                    <span class="w-100 h-a fs-16p bold verdana capitalize dgray">Names : </span>
+                                    <span class="w-100 h-a fs-16p bold consolas capitalize nowrap">${address.firstname} ${address.lastname}</span>
+                                </li>
+                                <li class="w-100 p-5p bsbb flex">
+                                <span class="w-100 h-a fs-16p bold verdana capitalize dgray">Phone : </span>
+                                <span class="w-100 h-a fs-16p bold consolas capitalize">${address.phonenumber}</span>
+                                </li>
+                                <li class="w-100 p-5p bsbb flex">
+                                    <span class="w-100 h-a fs-16p bold verdana capitalize dgray">address : </span>
+                                    <span class="w-100 h-a fs-16p consolas capitalize nowrap">${address.address}</span>
+                                </li>
+                                <li class="w-100 p-5p bsbb flex">
+                                    <span class="w-100 h-a fs-16p bold verdana capitalize dgray">street : </span>
+                                    <span class="w-100 h-a fs-16p  consolas capitalize">${address.street} </span>
+                                </li>
+                                <li class="w-100 p-5p bsbb flex">
+                                    <span class="w-100 h-a fs-16p bold verdana capitalize dgray">Apartment : </span>
+                                    <span class="w-100 h-a fs-16p  consolas capitalize">${address.apartment}</span>
+                                </li>
+                            </ul>
+                            </div>
+                        </div
+                    </div>
+                      <div class=" w-100 h-70 ovys p-10p bsbb">
+                        <table class="w-100 h-a theb">
+                          <tr class="">
+                              <td class="p-10p bsbb bb-1-s-g">
+                                <span class="fs-15p verdana p-10p">#</span>
+                              </td>
+                              <td class="p-10p bsbb bb-1-s-g">
+                                <span class="fs-15p verdana p-10p">Product name</span>
+                              </td>
+                              <td class="p-10p bsbb bb-1-s-g">
+                                <span class="fs-15p verdana p-10p">condition</span>
+                              </td>
+                              <td class="p-10p bsbb bb-1-s-g">
+                                <span class="fs-15p verdana p-10p">quantity</span>
+                              </td>
+                              <td class="p-10p bsbb bb-1-s-g">
+                                <span class="fs-15p verdana p-10p">unit price</span>
+                              </td>
+                              <td class="p-10p bsbb bb-1-s-g">
+                                <span class="fs-15p verdana p-10p">total price</span>
+                              </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="w-100 h-60p p-10p bsbb p-a b-0 l-0">
+                      <span class="p-7p bsbb white bc-theme capiatilze br-2p verdana right hover-2" onlick="()=>{window.print()}">print</span>
+                    </div>
+                    </div>
+                    `
+  let theb = c.querySelector('table');
+  let products = orderinfo.products
+  i = 1
+  products.forEach(pinfo=>{
+    t = document.createElement('tr');
+    t.innerHTML = 
+      `<td class="p-10p bsbb">
+        <span class="fs-14p verdana">${i}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${pinfo.pname}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${pinfo.condition}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${pinfo.qty}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${adcm(pinfo.unitprice)} <small class="consolas dgray">RWF</small></span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${adcm(pinfo.totalprice)} <small class="consolas dgray">RWF</small></span>
+      </td>
+      `;
+      theb.appendChild(t)
+      i+=1;
+  })
+  v = document.createElement('tr')
+  theb.appendChild(v);
+  v.innerHTML =`<td class="h-50p">
+                  <span class="fs-14p verdana p-5p bsbb">Total</span>
+                </td>
+                <td colspan="5">
+                  <span class="fs-14p verdana right p-10p bsbb">${adcm(orderinfo.totalprice)} <small class="consolas dgray">RWF</small></span>
+                </td>`
+}
+export function sf(aa,parent) {
+  if (aa.success) {
+  if ( aa.message.length > 0) {
+    parent.innerHTML = null;
+    aa.message.forEach(d=>{
+                  parent.innerHTML+=  `<div class="product w-100 h-a bc-white  p-10p bsbb ovh mr-10p mb-15p mt-15p iblock hover-2 ${(aa.message.indexOf(d) == (aa.message.length-1))? '': 'bb-1-s-g'}">
+                      <div class="w-100 h-100 p-10p bsbb flex">
+                          <div class="image p-10p bsbb iblock w-100p h-100p br-5p">
+                              <span class="w-100 h-100">
+                               <img src="${geturl()}/product-imgz/${d.pimgs[0]}" alt="" class="w-100 h-100 b-none contain">
+                              </span>
+                          </div>
+                          <div class="w-80 h-100 iblock pl-20p bsbb">
+                              <div class="title w-100 h-a p-5p bsbb">
+                              <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black w-100 h-100 flex"><span class="verdana left fs-16p bsbb black capitalize ">${d.pname}</span></a>
+                              </div>
+                              <div class="desc w-100 h-a p-5p bsbb ">
+                              <span class="verdana left fs-13p bsbb dgray wrap">in <a href="${geturl()}/browse/?category=${d.catname}" class="td-none ls-n"><font class="theme">${d.catname}</font></a> , <a href="${geturl()}/browse/?subcategory=${d.subcatname}" class="td-none ls-n"><font class="theme">${d.subcatname}</font></a> , <a href="${geturl()}/browse/?brand=${d.brandname}" class="td-none ls-n"><font class="theme">${d.brandname}</font></a> , <a href="${geturl()}/browse/?serie=${d.famname}" class="td-none ls-n"><font class="theme">${d.famname}</font></a> , <a href="${geturl()}/browse/?usedin=${d.usedinname}" class="td-none ls-n"><font class="theme">${d.usedinname}</font></a></span>
+                              </div>
+                              <div class="av w-100 h-a p-5p bsbb ">
+                              <span class="verdana left fs-13p bsbb bc-gray pb-3p pl-10p pr-10p pt-1p br-3p center h-100 w-a ml-5p dgray">${d.availability}</span>
+                              <span class="verdana left fs-13p bsbb bc-gray pb-3p pl-10p pr-10p pt-1p br-3p center h-100 w-a ml-5p ${cc(d.conditions[0].name)}">${d.conditions[0].name}</span>
+                              <span class="verdana left fs-14p bsbb center-2 ml-20p h-100"><span class="condprice" id="">${adcm(d.conditions[0].newprice)}</span> <span class="fs-11p pl-10p pt-2p dgray consolas">RWF</span></span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>`
+              
+    })
+  }else{
+    parent.innerHTML = `<div class="w-100 h-a">
+                <div class="center p-10p bsbb w-100 h-a svg-hol">
+                  <span class="verdana fs-15p"><svg class="w-100p h-100p" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="removeIconTitle" stroke="#ccc" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#ccc"> <title id="removeIconTitle">Remove</title> <path d="M17,12 L7,12"/> <circle cx="12" cy="12" r="10"/> </svg></span>
+                </div>
+                <div class="center p-40p bsbb w-100 h-100">
+                  <span class="verdana fs-18p ta-c dgray">it seems like there are <br> no products in your selection</span>
+                </div>
+              </div>`;
+    }
+  }else{
+    parent.innerHTML = `<div class="w-100 h-a"><div class="center p-10p bsbb w-100 h-100">
+                    <span class="verdana fs-18p ta-c dgray">oops, an error has occured while trying to connect to the server</span>
+                </div></div>`;
+  }
+}
+async function shadddiscountform(product) {
+  s = addshade();
+  a = document.createElement('div')
+	s.appendChild(a)
+  a.className = "w-500p h-a p-20p bsbb bc-white cntr zi-10000 br-5p b-mgc-resp"
+  a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg">
+							<span class="fs-18p black capitalize igrid center h-100 verdana">add a discount</span>
+						</div>
+						<div class="body w-100 h-a p-5p grid mt-10p">
+              <div class="avdisc w-100 h-a p-10p bsbb">
+                
+              </div>
+							<form method="post" id="add-discount-form" name="add-discount-form">
+								<div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
+									<div class="w-100 parent bsbb p-r">
+										<label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">condition</label>
+										<select type="text" id="condition" name="product-condition" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input">
+												<option></option>
+										</select>
+										<span class="p-a r-0 t-0 mr-10p mt-10p">
+											<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="10" cy="10" r="10" fill="#FF0000"/>
+												<path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+											</svg>
+											<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="10" cy="10" r="10" fill="#68D753"/>
+												<line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+												<line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+											</svg>
+										</span>
+										<small class="red verdana left hidden ml-5p">error mssg</small>				
+									</div>
+								</div>
+								<div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
+									<div class="p-r w-100 mr-10p left parent flex">
+										<input type="number" name="newprice" placeholder="New price" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input w-40" id="newprice">
+                    <div class="no-outline bsbb b-1-s-dgray bc-gray w-60 pt-10p pb-10p iblock">
+                        <div class="consolas fs-14p dgray p-5p bsbb cprihol">current price: </div>
+                    </div>
+										<span class="p-a r-0 mt-10p mr-5p">
+											<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="10" cy="10" r="10" fill="#FF0000"></circle>
+												<path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"></path>
+											</svg>
+											<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="10" cy="10" r="10" fill="#68D753"></circle>
+												<line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"></line>
+												<line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"></line>
+											</svg>
+										</span>
+										<small class="red verdana hidden ml-5p p-a mt-50p w-100 ">error mssg</small>
+									</div>
+								</div>
+								<div class="w-a  h-60p mt-10p p-r right mb-10p p-10p bsbb">
+                  <div class="w-100 igrid">
+                          <span class="center iblock">
+                              <button type="submit" class="bc-theme br-2p hover-2 p-10p b-none w-100">
+                                  <span class="verdana white fs-15p capitalize">add discount</span>
+                              </button>
+                          </span>
+                      </div>
+                  </div>
+							</form>
+						</div>`
+		f = a.querySelector('form#add-discount-form')
+		j = a.querySelector('div.avdisc')
+		s = Array.from(f.querySelectorAll('select.main-input'))
+		s.forEach(select=>{
+			select.addEventListener('focus',e=>{
+				setFocusFor(select);
+			})
+			select.addEventListener('blur',e=>{
+				if (select.value == '') {
+					setBlurFor(select);
+				}
+			})
+      let cprihol = a.querySelector('div.cprihol')
+      select.addEventListener('change',e=>{
+        if (select.value !='') {
+          console.log(cprihol)
+          cprihol.textContent = `current price: ${adcm(product[0].conditions[select.value].newprice)} RWF`
+        }
+			})
+		})
+		o = getschema
+		t= await request('tree',o)
+		if (!t.success) {
+			return 0
+		}
+    let avdisc = a.querySelector('div.avdisc')
+		for (const condition of product[0].conditions) {
+      if (!condition.promotion) {
+        o = document.createElement('option')
+        o.value = product[0].conditions.indexOf(condition)
+        o.className = 'p-10p bsbb'
+        o.setAttribute('data-price',condition.newprice)
+        o.innerHTML = `<div class="w-100 h-100 block verdana black">${condition.name}</div>`
+        s[0].appendChild(o)
+        
+      }else{
+        avdisc.innerHTML+=`<span class="w-100 p-5p bsbb remdisc hover-2 block dgray consolas fs-24p mb-10p b-1-s-dgray br-1p" data-id="${product[0].conditions.indexOf(condition)}">click to remove promotion on "${condition.name}"</span>`
+      }
+		}
+		let remdisc = Array.from(avdisc.querySelectorAll('span.remdisc'))
+    for (const removediscount of remdisc) {
+      removediscount.addEventListener('click',async e=>{
+        p=postschema
+        p.body = JSON.stringify({ 
+          product: product[0].prodid,
+          condition: removediscount.getAttribute('data-id'),
+          token: getdata('admin')})
+       
+          r = await request('remdiscount',p)
+          if (r.success) {
+          alertMessage(r.message)
+          removediscount.parentNode.removeChild(removediscount)
+          f.reset()
+          }else{
+          alertMessage(r.message)
+          }
+      })
+      
+    }
+		f.addEventListener('submit',async (e)=>{
+			e.preventDefault()
+			i = Array.from(f.querySelectorAll('.main-input'))
+			let newprice,condition
+			for(const input of i){
+			  if (input.value == '') {
+				setErrorFor(input,'this is a required field')
+			  }else(
+				setSuccessFor(input)
+			  )
+			  if (input.id == 'newprice') {
+				 newprice = input.value
+			  }
+			  if (input.id == 'condition') {
+				condition = input.value
+			 }
+			}
+			if(newprice != '' && condition != ''){
+			  o = {
+        product: product[0].prodid,
+				newprice: newprice,
+				condition: condition,
+				token: getdata('admin')
+			  }
+        console.log(o)
+				l = {
+				  mode: 'cors',
+				  method: "POST",
+				  body: JSON.stringify(o),
+				  headers: {
+					"content-type": "application/json",
+					'accept': '*/*'
+				}
+			  }
+			  r = await request('adddiscount',l)
+			  if (r.success) {
+				alertMessage(r.message)
+				f.reset()
+			  }else{
+				alertMessage(r.message)
+			  }
+			}else{
+			}
+		})
 }

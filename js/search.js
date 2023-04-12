@@ -1,7 +1,8 @@
-import { request,geturl,cc,adcm } from "./functions.js";
+import { request,geturl,cc,adcm,sf } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 let catscont = document.querySelector('div.cats')
 let prodscont = document.querySelector('div.prods')
+
 try {
     i = new URL(window.location.href)
     q = i.searchParams.get("q")
@@ -16,6 +17,7 @@ try {
         }
       } 
     if(q.length > 0) {
+      document.title =  `${q.substring(0,1).toUpperCase()+q.substring(1,q.length)} | ITZONE +`
         r = await request(`search?b=${q}`,v);
         if(r.success) showprods(r.message);
     }
@@ -26,7 +28,7 @@ try {
 function showprods(aa) {
     let ctitle = catscont.querySelector('div.title')
     let ptitle = prodscont.querySelector('div.title')
-    let prodsbody = prodscont.querySelector('div.prodsbody')
+    let prodsbody = prodscont.querySelector('div.prods-cont')
     let catsbody = catscont.querySelector('div.catsbody')
     catsbody.innerHTML = null
     prodsbody.innerHTML = null
@@ -37,8 +39,6 @@ function showprods(aa) {
     ptitle.innerHTML = `<div class="w-100 h-a p-5p bsbb ">
         <span class="w-100 h-100 left block black verdana capitalize fs-20p">products</span>
     </div>`
-
-    console.log(aa)
     aa.categories.forEach(cat=>{
         l = document.createElement('div');
         l.className = 'w-100 h-a p-5p bsbb mb-20p';
@@ -115,61 +115,7 @@ function showprods(aa) {
                       </div> `
         catsbody.appendChild(l)
       }
-      aa.prods.forEach(prod=>{
-        l = document.createElement('div');
-        l.className = 'w-100';
-        l.innerHTML = `<div class="w-100 h-100 flex p-10p bsbb ${(aa.prods.indexOf(prod) != (aa.prods.length-1))? 'bb-1-s-g':''}">
-                        <div class="the-thumb w-100p h-100p m-5p iblock">
-                          <div class="w-100 h-100 br-10p bc-gray">
-                            <img src="" class="w-100 h-100 contain">
-                          </div>
-                        </div>
-                        <div class="the-desc w-80 h-100 p-5p bsbb m-5p iblock">
-                            <div class="w-100 h-15p">
-                                <a href="${geturl()}/product/?id=${prod.prodid}" class="td-none black ls-n">
-                                    <span class='w-100 h-100 verdana  fs-16p'>${prod.pname}</span> 
-                                </a>
-                            </div>
-                            <div class="w-100 h-a br-5 m-5p">
-                                <span class='w-100 h-100 verdana dgray  fs-12p'>
-                                    in <a href="${geturl()}/browse/?category=${prod.catname}" class="td-none black ls-n">
-                                        <font class="theme hover-2">${prod.catname}</font>
-                                    </a> , 
-                                    <a href="${geturl()}/browse/?subcategory=${prod.subcatname}" class="td-none black ls-n">
-                                        <font class="theme hover-2">${prod.subcatname}</font>
-                                    </a>, 
-                                    <a href="${geturl()}/browse/?brand=${prod.brandname}" class="td-none black ls-n"><font class="theme hover-2">${prod.brandname}</font></a>, <a href="${geturl()}/browse/?usedin=${prod.usedinname}" class="td-none black ls-n"><font class="theme hover-2">${prod.usedinname}</font></a>, <a href="${geturl()}/browse/?serie=${prod.famname}" class="td-none black ls-n"><font class="theme hover-2">${prod.famname}</font></a>
-                                    </span>
-                            </div>
-                            <div class="w-100 h-100 p-10p bsbb condshol"></div>
-                        </div>
-                      </div> `
-                    prodsbody.appendChild(l)
-                    i = l.querySelector('div.condshol')
-                    d = document.createElement('div')
-                    d.className = 'w-100 h-a p-10p bp-0-resp bsbb'
-                    d.innerHTML = `<div class=" left m-5p bsbb w-100"><span class="verdana left m-5p  fs-18p bsbb center-2 pt-2p pb-4p  h-100"><span class="fs-13p pr-10p pt-2p"></span><span class="condprice" id="">${adcm(prod.conditions[0][Object.keys(prod.conditions[0])[0]].newprice)}</span> <span class="fs-11p pl-10p pt-2p dgray">RWF</span></span></div>`
-                    prod.conditions.forEach(cond=>{
-                        Object.keys(cond).forEach(ccc=>{
-                            i.innerHTML +=`<span class="conds hover-2 verdana left m-5p  fs-14p bsbb ${cc(ccc)} bc-gray pr-15p pl-15p br-3p center pt-2p pb-4p w-a" id="${prod.conditions.indexOf(cond)}">${ccc}</span>`
-                            
-                        })
-                    })
-                    i.appendChild(d)
-      })
-      if (aa.prods.length == 0) {
-        l = document.createElement('div');
-        l.className = 'w-100';
-        l.innerHTML = `<div class="w-100 h-100 flex">
-                        <div class="the-desc w-100 h-100p p-5p bsbb m-5p iblock">
-                          <div class="w-100 h-100 br-5  m-5p center">
-                            <span class='w-100 h-100 verdana  fs-18p dgray'>no products found</span>
-                          </div>
-                        </div>
-                      </div> `
-        k.appendChild(l)
-      }
-
-
+      d = {success: true, message: aa.prods}
+      sf(d, prodsbody)
     
 }

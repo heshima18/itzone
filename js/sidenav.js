@@ -1,4 +1,4 @@
-import {showsidemenu} from './functions.js'
+import {geturl, showsidemenu} from './functions.js'
 import {menubutt} from './navigation.js'
 import {thecont} from './navigation.js'
 
@@ -66,7 +66,7 @@ sidenav.innerHTML = `<div class="w-100 h-100 ovys #thebody">
         </li>
       </ul>
     </div>
-    <div class="w-100 h-24 ovh thesidenavfooter">
+    <div class="w-100 h-a ovh thesidenavfooter">
       <ul class="w-100 ls-none p-0 m-0">
         <li class="#thetitle h-40p">
           <div class="w-100 h-100 p-10p bsbb">
@@ -77,19 +77,16 @@ sidenav.innerHTML = `<div class="w-100 h-100 ovys #thebody">
         </li>
         <li class="#thetitle p-5p bsbb">
           <div class="w-100 h-100 p-10p bsbb bb-1-s-g hover-2">
-            <span class="thetitle black verdana fs-14p pl-10p bsbb ">
-              signup
-            </span>
-          </div>
-          <div class="w-100 h-100 p-10p bsbb bb-1-s-g hover-2">
-            <span class="thetitle black verdana fs-14p pl-10p bsbb ">
-              login
-            </span>
+            <a href="${geturl()}/user/" class="td-none  ls-n">
+              <span class="thetitle black verdana fs-14p pl-10p bsbb capitalize hover-6">
+                my account
+              </span>
+            </a>
           </div>
         </li>
       </ul>
     </div>
-    <div class="w-100 h-24 ovh thesidenavfooter">
+    <div class="w-100 h-a ovh thesidenavfooter">
       <ul class="w-100 ls-none p-0 m-0">
         <li class="#thetitle h-40p">
           <div class="w-100 h-100 p-10p bsbb">
@@ -100,21 +97,43 @@ sidenav.innerHTML = `<div class="w-100 h-100 ovys #thebody">
         </li>
         <li class="#thetitle p-5p bsbb">
           <div class="w-100 h-100 p-10p bsbb bb-1-s-g hover-2">
-            <span class="thetitle black verdana fs-14p pl-10p bsbb ">
-              My cart
-            </span>
+              <a href="${geturl()}/" class="td-none  ls-n">
+                <span class="thetitle black verdana fs-14p pl-10p bsbb capitalize hover-6">
+                  home
+                </span>
+              </a>
           </div>
         </li>
         <li class="#thetitle p-5p bsbb">
-        <div class="w-100 h-100 p-10p bsbb bb-1-s-g hover-2">
-          <span class="thetitle black verdana fs-14p pl-10p bsbb ">
-            home
-          </span>
-        </div>
-      </li>
+          <div class="w-100 h-100 p-10p bsbb bb-1-s-g hover-2">
+              <a href="${geturl()}/about/" class="td-none  ls-n">
+                <span class="thetitle black verdana fs-14p pl-10p bsbb capitalize hover-6">
+                  about us
+                </span>
+              </a>
+          </div>
+        </li>
+        <li class="#thetitle p-5p bsbb">
+          <div class="w-100 h-100 p-10p bsbb bb-1-s-g hover-2">
+              <a href="${geturl()}/contact/" class="td-none  ls-n">
+                <span class="thetitle black verdana fs-14p pl-10p bsbb capitalize hover-6">
+                  contact us
+                </span>
+              </a>
+          </div>
+        </li>
+        <li class="#thetitle p-5p bsbb">
+          <div class="w-100 h-100 p-10p bsbb bb-1-s-g hover-2">
+              <a href="${geturl()}/terms/" class="td-none  ls-n">
+                <span class="thetitle black verdana fs-14p pl-10p bsbb capitalize hover-6">
+                 policy
+                </span>
+              </a>
+          </div>
+        </li>
       </ul>
     </div>
-    <div class="w-100 h-20 ovh thesidenavfooter">
+    <div class="w-100 h-a ovh thesidenavfooter">
       <ul class="w-100 ls-none p-0 m-0">
         <li class="#thetitle h-40p">
           <div class="w-100 h-100 p-10p bsbb">
@@ -124,7 +143,7 @@ sidenav.innerHTML = `<div class="w-100 h-100 ovys #thebody">
           </div>
         </li>
         <li class="#thetitle p-5p bsbb">
-          <div class="w-100 h-100 p-10p bsbb bb-1-s-g hover-2 center">
+          <div class="w-100 h-100 p-10p bsbb hover-2 center">
             <span class="thetitle black verdana bsbb dgray">
               <span class="fs-10p">
                 &copy; ${new Date().getFullYear()} ITZONE PLUS 
