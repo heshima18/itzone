@@ -230,7 +230,7 @@ function  mnuscrtqty(prodid,cart) {
 }
 export async function request(url,options){
   try {
-    z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+    z = await fetch('http://localhost:8080/api/'+url,options);
     y = await z.json();
     return y;
   } catch (error) {

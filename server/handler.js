@@ -9,7 +9,9 @@ const connection = mysql.createConnection({
   host: 'mysql.freehostia.com',
   user: 'itzsho_itzone',
   password: 'Heshimaherbert@1',
-  database: 'itzsho_itzone'
+  database: 'itzsho_itzone',
+  connectTimeout: 60000
+
 });
 try {
 	connection.connect(function (error) {
