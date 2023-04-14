@@ -13,39 +13,19 @@ let connection = mysql.createConnection({
   	multipleStatements: true,
   	max_allowed_packet: 64 * 1024 * 1024,
 })
-try {
-	connection.connect(function (error) {
-		if(error)
-		 console.log(error)
-			else
-				console.log('connected to my sql')
-	})
-	
-} catch (error) {
-	console.log(error)
+let v = ()=> {connection.connect(function (error) {
+	if(error)
+		console.log(error)
+	else
+		console.log('connected to my sql')
+})
 }
+v()
+
 connection.on('error', function(err) {
   console.error('Database connection error:', err.stack);
-	let connection = mysql.createConnection({
-	host : 'sql.freedb.tech',
-	user : 'freedb_itzone',
-	password : 'X6$Xn#JnTEW7z@w',
-	database : 'freedb_itzone',
-	insecureAuth: true,
-  	multipleStatements: true,
-  	max_allowed_packet: 64 * 1024 * 1024,
-})
-try {
-	connection.connect(function (error) {
-		if(error)
-		 console.log(error)
-			else
-				console.log('connected to my sql')
-	})
+	v()
 	
-} catch (error) {
-	console.log(error)
-}
 });
 const server = app.listen(8080,()=>{
 		
