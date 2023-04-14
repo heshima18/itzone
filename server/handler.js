@@ -7,7 +7,10 @@ let connection = mysql.createConnection({
 	host : 'sql12.freemysqlhosting.net',
 	user : 'sql12612894',
 	password : 'vnWJVIBZTS',
-	database : 'sql12612894'
+	database : 'sql12612894',
+	waitForConnections: true,
+  	connectionLimit: 10,
+  	queueLimit: 0
 })
 try {
 	connection.connect(function (error) {
