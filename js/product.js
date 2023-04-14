@@ -1,5 +1,5 @@
 
-import { alertMessage, geturl,cc,request,adcm,checkCart,dcrtmgc } from "./functions.js";
+import { alertMessage, geturl,cc,request,adcm,checkCart,dcrtmgc,geimgturl } from "./functions.js";
 let prods_cont = document.querySelector('div.related-prods-cont')
 for (let i = 0; i < 20; i++) {
     prods_cont.innerHTML+= `<div class="product w-250p h-350p bc-white br-5p ovh ml-10p mr-10p mb-15p mt-15p iblock hover-4 bfull-500-resp bm-a-resp">
@@ -89,13 +89,13 @@ async function getparams(url) {
                     if (pd.pimgs.indexOf(src) == 0) {
                         secimghol.innerHTML+=`<div class="w-100p h-100p bsbb m-10p bsbb igrid">
                                             <div class="w-100 h-100p p-r br-5p p-5p bsbb hover-2 b-1-s-theme active sm-img">
-                                                <img src="${geturl()}/product-imgz/${src}" alt="" class="w-100 h-100 b-none contain">
+                                                <img src="${geimgturl()}/product-imgz/${src}" alt="" class="w-100 h-100 b-none contain">
                                             </div>
                                         </div>`
                     }else{
                         secimghol.innerHTML+=`<div class="w-100p h-100p bsbb m-10p bsbb igrid">
                                                 <div class="w-100 h-100p p-r br-5p p-5p bsbb hover-2 sm-img">
-                                                    <img src="${geturl()}/product-imgz/${src}" alt="" class="w-100 h-100 b-none contain">
+                                                    <img src="${geimgturl()}/product-imgz/${src}" alt="" class="w-100 h-100 b-none contain">
                                                 </div>
                                             </div>`
                     }
@@ -111,7 +111,7 @@ async function getparams(url) {
                         <span class="black nowrap h-20p w-100p block verdana capitalize fs-13p">${feedback.firstname} ${feedback.lastname}</span>
                     </div>
                     <div class="message flex p-10p bsbb">
-                        ${(feedback.image != 'null') ? `<div class="img w-70p h-70p br-5p bc-gray skel"><img src="${geturl()}/feedback-imgz/${feedback.image}" class="w-100 h-100 cover"></div>` : ''}
+                        ${(feedback.image != 'null') ? `<div class="img w-70p h-70p br-5p bc-gray skel"><img src="${geimgturl()}/feedback-imgz/${feedback.image}" class="w-100 h-100 cover"></div>` : ''}
                         
                         <div class="mssg w-80 h-a">
                             <span class="w-80 h-a m-5p block bsbb dgray verdana fs-12p">${feedback.message}</span>
@@ -139,7 +139,7 @@ async function getparams(url) {
                     })
                 })
                 imghol.innerHTML = `<div class="w-100 h-100 p-5p bsbb br-5p">
-                                        <img src="${geturl()}/product-imgz/${pd.pimgs[0]}" alt="" class="w-100 h-100 b-none contain">
+                                        <img src="${geimgturl()}/product-imgz/${pd.pimgs[0]}" alt="" class="w-100 h-100 b-none contain">
                                         <span class="verdana h-40p w-40p bsbb center br-50 p-3p right shbut us-none hover-2 p-a t-0 r-0 m-10p">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" class="mt--5p">
                                                 <path d="M9.71 6.71L11 5.41V14C11 14.2652 11.1054 14.5196 11.2929 14.7071C11.4804 14.8946 11.7348 15 12 15C12.2652 15 12.5196 14.8946 12.7071 14.7071C12.8946 14.5196 13 14.2652 13 14V5.41L14.29 6.71C14.383 6.80373 14.4936 6.87812 14.6154 6.92889C14.7373 6.97966 14.868 7.0058 15 7.0058C15.132 7.0058 15.2627 6.97966 15.3846 6.92889C15.5064 6.87812 15.617 6.80373 15.71 6.71C15.8037 6.61704 15.8781 6.50644 15.9289 6.38458C15.9797 6.26272 16.0058 6.13201 16.0058 6C16.0058 5.86799 15.9797 5.73728 15.9289 5.61542C15.8781 5.49356 15.8037 5.38296 15.71 5.29L12.71 2.29C12.617 2.19627 12.5064 2.12188 12.3846 2.07111C12.2627 2.02034 12.132 1.9942 12 1.9942C11.868 1.9942 11.7373 2.02034 11.6154 2.07111C11.4936 2.12188 11.383 2.19627 11.29 2.29L8.29 5.29C8.1017 5.4783 7.99591 5.7337 7.99591 6C7.99591 6.2663 8.1017 6.5217 8.29 6.71C8.47831 6.8983 8.7337 7.00409 9 7.00409C9.2663 7.00409 9.5217 6.8983 9.71 6.71Z" fill="#0F1111"/>
@@ -424,7 +424,7 @@ export function a441618154(aa,parent){
 								<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="${0}">${d.conditions[0].name}
 								</span>
 								<span class="w-100 h-100 p-5p bsbb block">
-									<img src="${geturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
+									<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
 								</span>
 							</div>
 							<div class="w-100 h-a">

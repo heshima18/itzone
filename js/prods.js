@@ -1,5 +1,5 @@
 var prods_cont = document.querySelector('div.ts-cont');
-import { cc,request,v_,geturl,adcm, dcrtmgc, checkCart} from "./functions.js";
+import { cc,request,v_,geturl,adcm, dcrtmgc, checkCart,geimgturl} from "./functions.js";
 let ts = document.querySelector('div.ts-cont');
 let ctscont = document.querySelector('div.cats-cont');
 let brndscont = document.querySelector('div.brands-cont')
@@ -65,7 +65,7 @@ export function a441618154(aa,parent){
 								<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="${0}">${d.conditions[0].name}
 								</span>
 								<span class="w-100 h-100 p-5p bsbb block">
-									<img src="${geturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
+									<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
 								</span>
 							</div>
 							<div class="w-100 h-a">
@@ -167,7 +167,7 @@ export function sdisc(aa,parent){
 					<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="0">${d.conditions[0].name}
 					</span>
 					<span class="w-100 h-100 block">
-						<img src="${geturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
+						<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
 					</span>
 				</div>
 				<div class="w-100 h-180p">
@@ -273,7 +273,7 @@ function brnd(brands) {
 		brndscont.innerHTML+= `<a href="${geturl()}/browse/?brand=${brand.name}" class="td-none ls-n black hover-6">
 								<div class="brand w-250p h-100 p-5p bsbb iblock m-a">
 									<div class="the-img center mb-10p">
-										<div class="img w-200p h-100p"><img src="${geturl()}/brands/${brand.image}" alt="${brand.name}" class="w-100 h-100 contain"></div>
+										<div class="img w-200p h-100p"><img src="${geimgturl()}/brands/${brand.image}" alt="${brand.name}" class="w-100 h-100 contain"></div>
 									</div>
 								</div>
 						    </a>`

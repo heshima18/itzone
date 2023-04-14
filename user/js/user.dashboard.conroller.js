@@ -1,5 +1,5 @@
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
-import { getParam, postschema, request,getdata, adcm, geturl,showOrder,addshade,setErrorFor,setSuccessFor,alertMessage,getschema,setFocusFor,setBlurFor,checkFileType,checkFileSize,ai,getcips } from "../../js/functions.js";
+import { getParam, postschema, request,getdata, adcm, geturl,showOrder,addshade,setErrorFor,setSuccessFor,alertMessage,getschema,setFocusFor,setBlurFor,checkFileType,checkFileSize,ai,getcips,geimgturl } from "../../js/functions.js";
 import{ initiatewishlist } from '../../js/wishlist.controller.js'
 let pages = new Array(0,1,2);
 a = getParam('page')
@@ -144,7 +144,7 @@ async  function cpgcntn(step) {
             for (const product of order.products) {
 
                 i.innerHTML+= `<div class="w-60p h-60p br-5p bc-white b-1-s-gray p-a ml-${q}p bcntr-resp">
-                    <img src="${geturl()}/product-imgz/${product.image}" class="contain w-100 h-100">
+                    <img src="${geimgturl()}/product-imgz/${product.image}" class="contain w-100 h-100">
                 </div>`
                 q+=5
             }

@@ -34,7 +34,75 @@ io.on('connection', function (socket) {
     });
 
 	
-})
+})		
+		router.get('/images/:filename', (req, res) => {
+			const { filename } = req.params;
+			const path = `../images/${filename}`; // replace with your own path
+			
+			fs.readFile(path, (err, data) => {
+			if (err) {
+				res.status(404).send('File not found');
+				return;
+			}
+			
+			res.writeHead(200, {
+				'Content-Type': 'image/jpeg', // set the content type based on your file type
+				'Content-Length': data.length
+			});
+			res.end(data);
+			});
+		});
+		router.get('/feedback-imgz/:filename', (req, res) => {
+			const { filename } = req.params;
+			const path = `../feedback-imgz/${filename}`; // replace with your own path
+			
+			fs.readFile(path, (err, data) => {
+			if (err) {
+				res.status(404).send('File not found');
+				return;
+			}
+			
+			res.writeHead(200, {
+				'Content-Type': 'image/jpeg', // set the content type based on your file type
+				'Content-Length': data.length
+			});
+			res.end(data);
+			});
+		});
+		router.get('/product-imgz/:filename', (req, res) => {
+			const { filename } = req.params;
+			const path = `../product-imgz/${filename}`; // replace with your own path
+			
+			fs.readFile(path, (err, data) => {
+			if (err) {
+				res.status(404).send('File not found');
+				return;
+			}
+			
+			res.writeHead(200, {
+				'Content-Type': 'image/jpeg', // set the content type based on your file type
+				'Content-Length': data.length
+			});
+			res.end(data);
+			});
+		});
+		router.get('/brands/:filename', (req, res) => {
+			const { filename } = req.params;
+			const path = `../brands/${filename}`; // replace with your own path
+			
+			fs.readFile(path, (err, data) => {
+			if (err) {
+				res.status(404).send('File not found');
+				return;
+			}
+			
+			res.writeHead(200, {
+				'Content-Type': 'image/jpeg', // set the content type based on your file type
+				'Content-Length': data.length
+			});
+			res.end(data);
+			});
+		});
 		router.post('/search', async (req, res) => {
 			try {
 				n = req.body.needle;
@@ -1274,13 +1342,19 @@ io.on('connection', function (socket) {
 				for (const category of c) {	
 					Object.assign(c[c.indexOf(category)],{subcategories: []})
 					s = await query(`select id,name,pinned from subcategories where category='${category.id}'`)
+				
+				if(!s) return res.send({success:false,message:'internal server error'})
 					c[c.indexOf(category)].subcategories.push(s)
 				}
 				b = await query('select id,name,image,pinned from brands');
+				if(!b) return res.send({success:false,message:'internal server error'})
+
 				try {
 					for (const brand of b) {	
 						Object.assign(b[b.indexOf(brand)],{series: []})
 						s = await query(`select id,name,image,pinned from families where brand='${brand.id}'`)
+						if(!s) return res.send({success:false,message:'internal server error'})
+
 						b[b.indexOf(brand)].series.push(s)
 					}	
 				} catch (error) {
@@ -1288,7 +1362,11 @@ io.on('connection', function (socket) {
 				}
 				
 				a = await query('select id,name,pinned from availability');
+				if(!a) return res.send({success:false,message:'internal server error'})
+
 				u = await query('select id,name,image from usedin');
+				if(!u) return res.send({success:false,message:'internal server error'})
+
 				res.send({success:true,message:{categories: c,brands:b,usedin:u,availability:a}})
 			} catch (error) {
 				console.log(error)
