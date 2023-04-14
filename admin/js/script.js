@@ -1,7 +1,8 @@
 var activepg,dec,q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
-import {chagecontent,validateForm,geturl,setSuccessFor,setErrorFor,getParam,vdtemail, addshade,getcips,getschema,checkFileType,getdata,request,alertMessage, setFocusFor,setBlurFor} from '../../js/functions.js'
-import { ai } from "./litbuts.js";
+import {chagecontent,validateForm,geturl,setSuccessFor,setErrorFor,getParam,vdtemail, addshade,getcips,getschema,checkFileType,getdata,request,alertMessage, setFocusFor,setBlurFor, showcontent,ai, postschema} from '../../js/functions.js'
 var signup_form = document.getElementById('signup-form');
+var editadminform = document.getElementById('myaccount-form');
+
 localStorage.setItem('next',`${geturl()}/admin/dashboard.html`)
 var titles = Array.from(document.querySelectorAll('li.titles'));
 let menuBut = document.querySelector('span.menu-icon');
@@ -39,12 +40,16 @@ if(a != null){
 	if(t){
 		v = document.querySelector('div.active');
 		p = document.querySelector(`div#${t}`);
-		(v!=p)? chagecontent(p,v) : null
+		(v!=p)? chagecontent(p,v) : showcontent(null,p)
 	}else{
 		window.history.pushState('','','?page=home')
+		p = document.querySelector(`div#home`);
+		showcontent(null,p)
 	}
 }else{
 	window.history.pushState('','','?page=home')
+	p = document.querySelector(`div#home`);
+		showcontent(null,p)
 }
 
 // ======================================================= FOR LINK SWITCHERS IN THE SIDENAV ==============================================
@@ -54,6 +59,10 @@ if(a != null){
 linkSwitcher.forEach(e=>{
 	e.addEventListener('click',d=>{
 		d.preventDefault();
+		if (e.id == 'logout') {
+			localStorage.removeItem('admin')
+			window.location.replace(`${geturl()}/admin/`) 
+		}
 		pagesection.forEach(pgsec=>{
 			if (pgsec.id == e.id) {
 				let activepg = document.querySelector('div.active');
@@ -65,6 +74,7 @@ linkSwitcher.forEach(e=>{
 
 	})
 })
+
 titles.forEach(ttl=>{
 	ttl.addEventListener('click',e=>{
 		e.preventDefault();
@@ -130,6 +140,20 @@ signup_form.addEventListener('submit',e=>{
           Object.assign(data,{ [inputs.name]:inputs.value.trim()});
         })
 	validateForm(signup_form,ins,data); 
+  })
+  editadminform.addEventListener('submit',async e=>{
+	e.preventDefault();
+	var ins = Array.from(editadminform.querySelectorAll('input'));
+    let data = {};
+       ins.forEach(inputs=>{
+          Object.assign(data,{ [inputs.name]:inputs.value.trim()});
+        })
+		Object.assign(data,{ token: getdata('admin')});
+	o = postschema
+	postschema.body = JSON.stringify(data)
+	r = await request('editadmin',o)
+	if (!r.success) return 0
+	alertMessage(r.message)
   })
 
 // ===========================================================	ADDING EVENTS ON ADDPARENT BUTTONS =======================================
@@ -918,5 +942,4 @@ async function addparentfunc(type) {
 			}
 		})
 	})
-	console.log(type)
 }

@@ -3,16 +3,12 @@ let bodyParser = require('body-parser');
 let mysql = require('mysql');
 let app = express();
 let path = require('path');
-const fs = require('fs');
-
-const connection = mysql.createConnection({
-  host: 'mysql.freehostia.com',
-  user: 'itzsho_itzone',
-  password: 'Heshimaherbert@1',
-  database: 'itzsho_itzone',
-  connectTimeout: 60000
-
-});
+let connection = mysql.createConnection({
+	host : 'localhost',
+	user : 'root',
+	password : '',
+	database : 'itzone'
+})
 try {
 	connection.connect(function (error) {
 		if(error)

@@ -46,7 +46,7 @@ export function a441618154(aa,parent){
 		if ( aa.message.length > 0) {
 			parent.innerHTML = null;
 			aa.message.forEach(d=>{
-				parent.innerHTML+=`<div class="product w-250p h-380p bc-white br-20p hover-4 ovh ml-10p mr-10p mb-15p mt-15p iblock b-70-resp bml-7-resp bmr-6-resp b-1-s-white">
+				parent.innerHTML+=`<div class="product w-250p h-380p bc-white br-20p hover-4 ovh ml-10p mr-10p mb-15p mt-15p iblock b-80-resp bml-7-resp bmr-6-resp b-1-s-white">
 						<div class="w-100 h-170p">
 							<div class="image bsbb w-100 h-100 br-5p p-r">
 								<span class="#icon wish-icon h-20p w-40p p-10p  center-2 w-a p-a" data-id="${d.prodid}">

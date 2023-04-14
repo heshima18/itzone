@@ -129,7 +129,7 @@ io.on('connection', function (socket) {
 		});
 		router.post('/getproduct', async (req, res) => {
 			try {
-			  database.query("SELECT products.id as prodid,products.availability,products.description, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)  where products.id = ?",[req.body.id],(error,result)=>{
+			  database.query("SELECT products.id as prodid,products.availability,products.description, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)  where products.id = ?",[req.body.id],async (error,result)=>{
 				if (error) return res.send({ success: false, message: "oops an error occured"});
 				const products = JSON.parse(JSON.stringify(result))
 				products.forEach(prods=>{
@@ -138,6 +138,11 @@ io.on('connection', function (socket) {
 					products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
 				})
 				if (products.length > 0) {
+						f = await query(`select users.firstname,users.lastname,feedbacks.image,feedbacks.message,feedbacks.product from ((feedbacks inner join users on feedbacks.user = users.id)inner join products on products.id = feedbacks.product) where users.status = 'active' and feedbacks.product = '${products[0].prodid}'`)
+						if (f) {
+							(f.length)? Object.assign(products[0],{feedbacks:f}): Object.assign(products[0],{feedbacks:[]})
+							Object.assign(products[0],{feedbacks:f})
+						}
 						res.send({ success: true, message: products});	
 				} else {
 					res.status(404).json({ success: false, message: "product not found" });
@@ -198,7 +203,7 @@ io.on('connection', function (socket) {
 									c.forEach(cond=>{
 										database.query(`UPDATE products SET conditions = JSON_SET(conditions, '$[${cond.condid}].price', ${cond.price}, '$[${cond.condid}].newprice', ${cond.price}, '$[${cond.condid}].promotion', null)
 										WHERE id = '${p}'`,(error,result)=>{
-											if (error) return res.send({success: false, message: error})
+											if (error) return res.send({success: false, message: 'oops an error occured'})
 											
 										})
 
@@ -318,13 +323,14 @@ io.on('connection', function (socket) {
 			d = req.body.email
 			e = req.body.password
 			try {
-				database.query(`SELECT id,firstname,lastname,email FROM users  WHERE email = '${d}' AND password = '${e}'`,(error,result,fields)=>{
-					if (error) return res.send({success: false, message: error})
+				database.query(`SELECT id,firstname,lastname,email,status FROM users  WHERE email = '${d}' AND password = '${e}'`,(error,result,fields)=>{
+					if (error) return res.send({success: false, message: 'oops an error occured'})
 					if (result.length > 0) {
 						t = addToken(JSON.parse(JSON.stringify(result[0])));
+						if (result[0].status == 'banned') return res.status(403).json({success: false, message : {content: "user was banned"}})
 						res.send({success: true, message : {content: "logged in successfully", token: t}})
 					} else {
-						res.status(401).json({success: false, message : {content: "user not found"}}).header(null)
+						res.status(404).json({success: false, message : {content: "user not found"}})
 					}
 				})
 			} catch (error) {
@@ -416,6 +422,17 @@ io.on('connection', function (socket) {
 					}
 				}
 			})
+		})
+		router.post('/editadmin', async(req,res)=>{
+					u = req.body.username
+					p = req.body.password
+					try {
+						x = await query(`update admin set username = '${u}', password='${p}'`)
+						if (!x) return res.send({success: false, message: "oops an error occured"});
+						res.send({success: true, message: "admin info changed successfully"});
+					} catch (error) {
+						res.send({success: false, message: "Oops, an error occured"});
+					}
 		})
 		router.post('/adminlogin', async(req,res)=>{
 			u = req.body.username
@@ -1169,7 +1186,7 @@ io.on('connection', function (socket) {
 				if (tokendata.success) {
 					try {
 						t = tokendata.token.id
-						database.query(`select * from users where id = '${t}'`,async (error,result)=>{
+						database.query(`select * from users where id = '${t}' and status = 'active'`,async (error,result)=>{
 							if (error) return res.send({success: false, message: error})
 							if (result.length > 0) {
 								try {
@@ -1284,7 +1301,7 @@ io.on('connection', function (socket) {
 						try {
 							t = tokendata.token.id
 							
-							r = await query(`select * from users where id = '${t}'`)
+							r = await query(`select * from users where id = '${t}' and status = 'active'`)
 								if (!r) return res.status(500).send({success: false, message: 'oops an error occured'})
 							if (r.length > 0) {
 								h = await query(`select products from wishlist where uid = '${tokendata.token.id}'`)
@@ -1311,10 +1328,10 @@ io.on('connection', function (socket) {
 								}
 									
 							}else{
-								res.status(403).send({ success: false, message: "authorization error"});
+								res.status(403).send({ success: false, message: "authentication error"});
 							}
 						}catch(error){
-							res.status(500).send({ success: false, message: error});
+							res.status(500).send({ success: false, message: 'Oops an error occured'});
 						}
 					}else{
 						res.status(500).send({ success: false, message: tokendata.message});
@@ -1350,7 +1367,7 @@ io.on('connection', function (socket) {
 								}
 									
 							}else{
-								res.status(403).send({ success: false, message: "authorization error"});
+								res.status(403).send({ success: false, message: "authentication error"});
 							}
 						}catch(error){
 							res.status(500).send({ success: false, message: error});
@@ -1389,7 +1406,7 @@ io.on('connection', function (socket) {
 								}
 									
 							}else{
-								res.status(403).send({ success: false, message: "authorization error"});
+								res.status(403).send({ success: false, message: "authentication error"});
 							}
 						}catch(error){
 							res.status(500).send({ success: false, message: error});
@@ -1428,7 +1445,7 @@ io.on('connection', function (socket) {
 								}
 									
 							}else{
-								res.status(403).send({ success: false, message: "authorization error"});
+								res.status(403).send({ success: false, message: "authentication error"});
 							}
 						}catch(error){
 							res.status(500).send({ success: false, message: error});
@@ -1467,7 +1484,7 @@ io.on('connection', function (socket) {
 								}
 									
 							}else{
-								res.status(403).send({ success: false, message: "authorization error"});
+								res.status(403).send({ success: false, message: "authentication error"});
 							}
 						}catch(error){
 							res.status(500).send({ success: false, message: error});
@@ -1487,7 +1504,7 @@ io.on('connection', function (socket) {
 					if (tokendata.success) {
 						try {
 							t = tokendata.token.id
-							r = await query(`select * from users where id = '${t}'`)
+							r = await query(`select * from users where id = '${t}' and status='active'`)
 								if (!r) return res.status(500).send({success: false, message: 'oops an error occured'})
 							if (r.length > 0) {
 								h = await query(`select orders.products,orders.status,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.uid = '${t}' order by date asc`)
@@ -1505,7 +1522,7 @@ io.on('connection', function (socket) {
 								}
 									
 							}else{
-								res.status(403).send({ success: false, message: "authorization error"});
+								res.status(403).send({ success: false, message: "authentication error"});
 							}
 						}catch(error){
 							res.status(500).send({ success: false, message: error});
@@ -1538,7 +1555,7 @@ io.on('connection', function (socket) {
 									res.send({ success: true, message: h});	
 									
 								}else{
-									res.send({ success: true, message: []});
+									res.send({ success: false, message: []});
 								}
 						}catch(error){
 							res.status(500).send({ success: false, message: 'internal server error'});
@@ -1567,7 +1584,7 @@ io.on('connection', function (socket) {
 								res.status(200).send({success: true, message: "status changed"})
 									
 							}else{
-								res.status(403).send({ success: false, message: "authorization error"});
+								res.status(403).send({ success: false, message: "authentication error"});
 							}
 						}catch(error){
 							res.status(500).send({ success: false, message: error});
@@ -1653,7 +1670,7 @@ io.on('connection', function (socket) {
 								res.status(200).send({success: true, message: "status changed"})
 									
 							}else{
-								res.status(403).send({ success: false, message: "authorization error"});
+								res.status(403).send({ success: false, message: "authentication error"});
 							}
 						}catch(error){
 							res.status(500).send({ success: false, message: error});
@@ -1667,6 +1684,205 @@ io.on('connection', function (socket) {
 			  res.send({ success: false, message: "oops an error occured" });
 			}
 		});
+		router.post('/ftchnbrs',async (req,res)=>{
+			authenticateToken(req.body.token,async (tokendata)=>{
+				if (tokendata.success) {
+					try {
+						t = tokendata.token.id
+						database.query(`select * from admin where id = '${t}'`,async (error,result)=>{
+							if (error) return res.send({success: false, message: 'oops an error occured'})
+							if (result.length > 0) {
+								try {
+									o = await query(`select COUNT(id) as orders from orders`);
+									if (!o) return res.send({success: false, message: 'internal server error'})
+									let newo = await query(`select COUNT(id) as neworders from orders where status = 'new'`);
+									if (!newo) return res.send({success: false, message: 'internal server error'})
+									let devo = await query(`select COUNT(id) as deliveredorders from orders where status = 'delivered'`);
+									if (!devo) return res.send({success: false, message: 'internal server error'})
+									q = await query(`select COUNT(id) as queries from queries`)
+									if (!q) return res.send({success: false, message: 'internal server error'})
+									let nq = await query(`select COUNT(id) as newqueries from queries where status = 'new'`)
+									if (!nq) return res.send({success: false, message: 'internal server error'})
+									u = await query(`select COUNT(id) as users from users`)
+									if (!u) return res.send({success: false, message: 'internal server error'})
+									p = await query(`select COUNT(id) as products from products`)
+									if (!u) return res.send({success: false, message: 'internal server error'})
+									let response = [newo[0],devo[0],q[0],nq[0],u[0],o[0],p[0]]
+									res.send({success: true,message: response})
+									
+								} catch (err) {
+									res.send({success: false, message: "oops an error occured"})
+								}
+							} else {
+								res.send({success: false, message: "admin not found"})
+							}
+						})
+					} catch (error) {
+						res.send({success: false, message: 'oops an error occured'})
+						
+					}
+				}else{
+					res.send({success: false, message: 'oops an error occured'})
+				}
+			})
+		})
+		router.post('/deleteuser',async(req,res)=>{
+			authenticateToken(req.body.token,async (tokendata)=>{
+				if (tokendata.success) {
+					try {
+						t = tokendata.token.id
+						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+							if (error) return res.send({success: false, message: 'oops an error occured'})
+							if (result.length > 0) {
+								try {
+									database.query(`delete from  users where id = '${req.body.userid}'`,(error,result)=>{
+										if (error) return res.send({success: false, message: "Oops an error occured"})
+										if (result.affectedRows > 0) {
+											res.send({success:true, message: "user deleted"})
+										} else {
+											res.send({success:false, message: "user not found"})
+										}
+									})
+								} catch (error) {
+									res.send({success: false, message: 'oops an error occured'})
+									
+								}
+							} else {
+								res.send({success: false, message: "admin not found"})
+							}
+						})
+					} catch (error) {
+						res.send({success: false, message: 'oops an error occured'})
+						
+					}
+				}else{
+					res.send({success: false, message: 'oops an error occured'})
+				}
+			})
+		})
+		router.post('/ban',async(req,res)=>{
+			authenticateToken(req.body.token,async (tokendata)=>{
+				if (tokendata.success) {
+					try {
+						t = tokendata.token.id
+						database.query(`select * from admin where id = '${t}'`,async (error,result)=>{
+							if (error) return res.send({success: false, message: 'oops an error occured'})
+							if (result.length > 0) {
+								try {
+									u = await query(`select status from users where id = '${req.body.userid}'`)
+									if (!u) return res.status(500).send({success: false, message: 'oops an error occured'})
+									if (!u.length) return res.status(404).send({success: false, message: 'user not found'})
+									s = u[0].status
+									if (s == 'active') {
+										b = await query(`update users set status = 'banned' where id = '${req.body.userid}'`)
+										return res.status(200).send({success: true, message: 'user banned successfully'})
+									} else {
+										b = await query(`update users set status = 'active' where id = '${req.body.userid}'`)
+										return res.status(200).send({success: true, message: 'user un-banned successfully'})
+									}
+								} catch (error) {
+									res.send({success: false, message: 'oops an error occured'})
+									
+								}
+							} else {
+								res.send({success: false, message: "admin not found"})
+							}
+						})
+					} catch (error) {
+						res.send({success: false, message: 'oops an error occured'})
+						
+					}
+				}else{
+					res.send({success: false, message: 'oops an error occured'})
+				}
+			})
+		})
+		router.post('/edituser',async(req,res)=>{
+			authenticateToken(req.body.token,async (tokendata)=>{
+				if (tokendata.success) {
+					try {
+						t = tokendata.token.id
+						database.query(`select * from users where id = '${t}' and status='active'`,async (error,result)=>{
+							if (error) return res.send({success: false, message: 'oops an error occured'})
+							if (result.length > 0) {
+								try {
+									p = await query(`select password from users where id = '${t}' and status = 'active'`)
+									if (!p) return res.status(500).send({success: false, message: 'oops an error occured'})
+									if (!p.length) return res.status(404).send({success: false, message: 'user not found'})
+									passwordMatch = (p[0].password == req.body.password)
+									if (!passwordMatch)  return res.status(403).send({success: false, message: 'incorrect password'})
+									s = req.body.reqtype
+									if (s == 'names') {
+										b = await query(`update users set firstname = '${req.body.firstname}' ,lastname = '${req.body.lastname}' where id = '${t}'`)
+										if (!b) return res.status(500).send({success: false, message: 'internal server error'})
+										return res.status(200).send({success: true, message: 'names changed successfully'})
+									} else if(s == 'password'){
+										b = await query(`update users set password = '${req.body.newpassword}' where id = '${t}'`)
+										if (!b) return res.status(500).send({success: false, message: 'internal server error'})
+										return res.status(200).send({success: true, message: 'password changed successfully'})
+									}
+								} catch (error) {
+									res.send({success: false, message: 'oops an error occured'})
+									
+								}
+							} else {
+								res.send({success: false, message: "user not found"})
+							}
+						})
+					} catch (error) {
+						res.send({success: false, message: 'oops an error occured'})
+						
+					}
+				}else{
+					res.send({success: false, message: 'oops an error occured'})
+				}
+			})
+		})
+		router.post('/addfeedback',async(req,res)=>{
+			authenticateToken(req.body.token,async (tokendata)=>{
+				if (tokendata.success) {
+					try {
+						t = tokendata.token.id
+						database.query(`select * from users where id = '${t}' and status='active'`,async (error,result)=>{
+							if (error) return res.send({success: false, message: 'oops an error occured'})
+							if (result.length > 0) {
+								try {
+									u = t
+									m = req.body.message
+									p = req.body.product
+									i = req.body.image[0]
+									if (i) {
+										e = gfxt(i)
+										n = `${generateUniqueId()}.${e}`
+										const base64Data = i.replace(/^data:image\/\w+;base64,/, '');
+										const bufferData = Buffer.from(base64Data, 'base64');
+										const filePath = path.join(__dirname,'..','feedback-imgz', n);
+										fs.writeFileSync(filePath, bufferData);
+									}else{
+										n = null
+									}
+									q = await query(`insert into feedbacks(id,user,product,image,message) values ('${generateUniqueId()}','${u}','${p}','${n}','${m}')`)
+									if (!q) return res.send({success: false, message: 'oops an error occured'})
+									res.send({success: true, message: 'feedback sent successfully'})
+
+								} catch (error) {
+									res.send({success: false, message: 'oops an error occured'})
+									
+								}
+							} else {
+								res.send({success: false, message: "user not found"})
+							}
+						})
+					} catch (error) {
+						res.send({success: false, message: 'oops an error occured'})
+						
+					}
+				}else{
+					res.send({success: false, message: 'oops an error occured'})
+				}
+			})
+		})
+			
 				 
 				//========================================= FUNCTIONS ==========================================
 				function gnrtctn(obj) {
