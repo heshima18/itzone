@@ -8,9 +8,9 @@ let connection = mysql.createConnection({
 	user : 'freedb_itzone',
 	password : 'X6$Xn#JnTEW7z@w',
 	database : 'freedb_itzone',
-	waitForConnections: true,
-  	connectionLimit: 10,
-  	queueLimit: 0
+	insecureAuth: true,
+  	multipleStatements: true,
+  	max_allowed_packet: 64 * 1024 * 1024,
 })
 try {
 	connection.connect(function (error) {
