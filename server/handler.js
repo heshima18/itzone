@@ -9,7 +9,14 @@ let connection =  mysql.createPool({
 	password : 'Heshimaherbert@1',
 	database : 'itzsho_itzone'
 });
+connection.getConnection((err, connection) => {
+    if (err) {
+        console.error('Error connecting to database:', err.stack);
+        return;
+    }
 
+    console.log('Successfully connected to database with threadId:', connection.threadId);
+});
 const server = app.listen(8080,()=>{
 		
 		console.log("app was connected to port 8080");
