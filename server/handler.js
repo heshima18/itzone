@@ -4,10 +4,10 @@ let mysql = require('mysql');
 let app = express();
 let path = require('path');
 let connection = mysql.createConnection({
-	host : 'sql12.freemysqlhosting.net',
-	user : 'sql12612894',
-	password : 'vnWJVIBZTS',
-	database : 'sql12612894',
+	host : 'sql.freedb.tech',
+	user : 'freedb_itzone',
+	password : 'X6$Xn#JnTEW7z@w',
+	database : 'freedb_itzone',
 	waitForConnections: true,
   	connectionLimit: 10,
   	queueLimit: 0
