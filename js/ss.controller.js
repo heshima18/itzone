@@ -2,15 +2,18 @@ const slideShowContainer = document.querySelector('.slideShow');
             const slidesContainer = document.querySelector('.slidesContainer');
             const rightBtn = document.querySelector('#slideRight');
             const leftBtn = document.querySelector('#slideLeft');
+            let dotscont = document.querySelector('div.dots-cont')
             const slideShowInterval = 3000;
             let slides = document.querySelectorAll('.slideCard');
             let index = 0;
             let currentSlide;
-            let dots;
-
+            let dots = Array.from(dotscont.querySelectorAll('div.dot'))
             const firstClone = slides[0].cloneNode(true);
             const lastClone = slides[slides.length - 1].cloneNode(true);
-
+            dotscont.innerHTML = null
+            slides.forEach(sl=>{
+              dotscont.innerHTML+=`<div class="dot w-10p h-10p br-50 b-1-s-dgray m-5p hover"></div>`
+            })
             firstClone.id = 'firstClone'
             lastClone.id = 'lastClone'
 
@@ -77,14 +80,24 @@ const slideSelect = () => document.querySelectorAll('.slideDot');
 //   slideDots[index - 1].classList.add('selectedSlide');
 // };
 
-// setCurrentSlide();
 // -------------------- //
 
 
 // ----- slide autoplay ----- //
+dots = Array.from(dotscont.querySelectorAll('div.dot'))
 const autoplay = () => {
   currentSlide = setInterval(() => {
     moveRight();
+    dots.forEach(dot=>{
+
+      dot.classList.remove('bc-dgray')
+    })
+    console.log(index)
+    try {
+      dots[index-1].classList.add('bc-dgray')
+    } catch (error) {
+      
+    }
     
   }, slideShowInterval);
 }
@@ -99,25 +112,4 @@ autoplay();
 // -------------------- //
 
 
-// ----- disclosure window scripts ----- // 
-// open disclosure
-let discBtn = document.getElementsByClassName("disclosurePrompt");
-let disc;
-for (disc = 0; disc < discBtn.length - 0; disc++) {
-  discBtn[disc].addEventListener("click", function() {
-    this.nextElementSibling.classList.add("discVisible");
-  });
-}
-
-// close disclosure
-let closeBtn = document.getElementsByClassName("fa-times");
-let close;
-for (close = 0; close < closeBtn.length - 0; close++) {
-  closeBtn[close].addEventListener("click", function() {
-    var slideDiscWindow = document.querySelectorAll(".discVisible");
-    [].forEach.call(slideDiscWindow, function(el) {
-      el.classList.remove("discVisible");
-    });
-  });
-}
 

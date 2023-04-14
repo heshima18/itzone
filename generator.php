@@ -30,13 +30,13 @@
 // 	echo ".r-".$i."{right : ".$i."%;}";
 // 	$i++;
 // }
-$i = 101;
+// $i = 101;
 
-while ($i <= 300) {
-	echo ".pl-".$i."{margin-left : ".$i."px;}";
-	$i++;
-}
-$i = 0;
+// while ($i <= 300) {
+// 	echo ".pl-".$i."{margin-left : ".$i."px;}";
+// 	$i++;
+// }
+// $i = 0;
 // while ($i <= 100) {
 // 	echo ".mr--".$i."p{margin-right : -".$i."px;}";
 // 	$i++;
@@ -71,4 +71,6 @@ $i = 0;
 // 	$i++;
 // }
 // $i = 0;
+$connect = new mysqli('mysql.freehostia.com','tzsho_itzone','Heshimaherbert@1','tzsho_itzone');
+echo $connect;
  ?>

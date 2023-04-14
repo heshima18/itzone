@@ -5,7 +5,7 @@ export let thenav = document.createElement('div');
 thenav.className = 'w-100 h-110p bsbb bb-1-s-dg zi-1000 bc-white p-f navigation t-0 thenav';
 thecont.appendChild(thenav);
 u = document.createElement('div')
-u.className = 'w-60p h-60p p-f b-0 r-0 m-40p'
+u.className = 'w-60p h-60p p-f b-0 r-0 m-40p zi-20'
 thecont.appendChild(u)
 u.innerHTML=`<a href="https://wa.me/250788247133/?text=Hello i have visited your site and i was asking for more information" target="_blank">
   <div class="w-100 h-100 center bc-green card-4 hover-2 br-50">
@@ -17,7 +17,7 @@ u.innerHTML=`<a href="https://wa.me/250788247133/?text=Hello i have visited your
               </span>
 </div></a>`
 thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r">
-<div class="w-100 h-100 bsbb zi-10000">
+<div class="w-100 h-100 bsbb zi-10000 capitalize">
 <ul class="ls-none w-100 h-100 flex jc-sb p-0 m-0">
 <li class="ml-5p w-a h-a verdana"><a class="td-none ls-n black w-100 h-100 center" href="${geturl()}"><img src="${geturl()}/icons/favicon.png" class="w-40p h-40p cover"></a></li>
         <li class="hidden-resp">

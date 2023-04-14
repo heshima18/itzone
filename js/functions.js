@@ -232,6 +232,7 @@ export async function request(url,options){
   try {
     z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
     y = await z.json();
+    Object.assign(y,{status: z.status})
     return y;
   } catch (error) {
     // alertMessage(error);
@@ -1326,7 +1327,11 @@ export async function sendmessage(inputs,type,form,formdata) {
     p.body =  JSON.stringify(values)
     r = await request('login',p)
     if (r.success == false) {
-      alertMessage("incorrect email or password");
+      if (r.status == 404) {
+        alertMessage("incorrect email or password");
+      }else if (r.status == 403) {
+        alertMessage("user banned");
+      }
     }else if(r.success){
       localStorage.setItem("user",JSON.stringify(r.message.token));
       alertMessage("you have been successfully logged in");
@@ -1419,6 +1424,10 @@ export function checkFileType(input) {
   var type = input.files[0].type.split(/\//);
   return type;
 }
+export function checkFileSize(input) {
+  var size = input.files[0].size;
+  return size;
+}
 export function ellipsis(text, limit) {
   return text.length > limit ? text.substring(0, limit) + '...' : text;
 }
@@ -1478,43 +1487,38 @@ export async function showcontent(data,targetdiv) {
                   <span class="fs-14p verdana">${users.email}</span>
                 </td>
                 <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana orange center hover-2 us-none banlink" id='${users.id}'>ban</span>
-                  <span class="fs-14p verdana red center hover-2 us-none deletelink" id='${users.id}'>delete</span>
+                ${(users.status == 'active')? ` <span class="fs-14p verdana orange center hover-2 us-none banlink capitalize" id='${users.id}'>ban</span>`: ` <span class="fs-14p verdana theme center hover-2 us-none banlink capitalize" id='${users.id}'>un ban</span>`}
+               
+                  <span class="fs-14p verdana red center hover-2 us-none deletelink capitalize" id='${users.id}'>delete</span>
                 </td>`;
                 i+=1;
       })
-      const deletee = Array.from(document.querySelectorAll('span.delete'));
-      if (deletee.length > 0) {
-        deletee.forEach(del=>{
-          del.addEventListener('click',e=>{
-            e.preventDefault();
-            async function ftchusrs(url) {
-              try {
-                const response = await fetch(url,{
-                  mode: 'cors',
-                  method: "POST",
-                  body: JSON.stringify({id: del.id,token: getdata('admin')}),
-                  headers: {
-                    "content-type": "application/json",
-                    'accept': '*/*'
+      const ban = Array.from(document.querySelectorAll('span.banlink'));
 
-                }
-                });
-                const data = await response.json();
-                if (data.success == true) {
-                  alertMessage(data.message)
-                  showcontent("database.users",targetdiv);
-                }else{
-                  alertMessage(data.message)
-                }
-              } catch (error) {
-                alertMessage(error);
-              }
-            }
-            ftchusrs("http://localhost:6060/api/deleteuser"); 
+      const deletee = Array.from(document.querySelectorAll('span.deletelink'));
+      
+        deletee.forEach(del=>{
+          del.addEventListener('click',async e=>{
+            e.preventDefault();
+            p = postschema
+            p.body = JSON.stringify({token: getdata('admin'),userid: deletee.id})
+            r = await request('deleteuser',p)
+            if (!r.success) return 0
+            alertMessage(r.message) 
+            showcontent(null,targetdiv)
           })
         })
-      }
+        ban.forEach(banlink=>{
+          banlink.addEventListener('click',async e=>{
+            e.preventDefault();
+            p = postschema
+            p.body = JSON.stringify({token: getdata('admin'),userid: banlink.id})
+            r = await request('ban',p)
+            if (!r.success) return 0
+            alertMessage(r.message) 
+            showcontent(null,targetdiv)
+          })
+        })
   }else if (targetdiv.id == 'add-product') {
 		window.history.pushState('','','?page=add-product')
     o = getschema
@@ -1682,9 +1686,9 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-14p verdana">${ellipsis(prod.description,40)}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p verdana green center-2 hover-2 us-none adddiscountlink" id='${prod.prodid}'>add discount</span>
-                <span class="fs-14p verdana orange center-2 hover-2 us-none editlink" id='${prod.prodid}'>edit</span>
-                <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${prod.prodid}'>delete</span>
+                <span class="fs-14p nowrap pr-10p bsbb  verdana green center-2 hover-2 us-none adddiscountlink" id='${prod.prodid}'>add discount</span>
+                <span class="fs-14p nowrap pr-10p bsbb  verdana orange center-2 hover-2 us-none editlink" id='${prod.prodid}'>edit price</span>
+                <span class="fs-14p nowrap pr-10p bsbb  verdana red center-2 hover-2 us-none deletelink" id='${prod.prodid}'>delete</span>
               </td>`;
               i+=1;
     })
@@ -1695,11 +1699,12 @@ export async function showcontent(data,targetdiv) {
     editlink.forEach(s=>{
       s.addEventListener('click',async(e)=>{
         e.preventDefault();
-        i = await editBlog(s.id, getdata('admin'));
-        // if (i.success) {
-        //   alertMessage(i.message);
-        //   showcontent('data',targetdiv)
-        // }
+        p = postschema
+        p.body = JSON.stringify({id:s.id})
+        v = await request('getproduct',p)
+        if (v.success) {
+          sheditpriceform(v.message)
+        }
       })
     })
     adddiscount.forEach(s=>{
@@ -1775,13 +1780,20 @@ export async function showcontent(data,targetdiv) {
               i+=1;
     })
     const view = Array.from(document.querySelectorAll('span.view'));
-    if (view.length > 0) {
+    const seen = Array.from(document.querySelectorAll('span.seen'));
       view.forEach(vl=>{
         vl.addEventListener('click',e=>{
-         
+          r.message.forEach(async queries=>{
+            if (queries.id == vl.id) {
+              showq(r.message[r.message.indexOf(queries)])
+              p = postschema
+              p.body = JSON.stringify({token: getdata('admin'),status: 'seen',queryid: vl.id})
+              await request('chquest',p)
+              showcontent(null,targetdiv)
+            }
+          })
         })
       })
-    }
   }else if (targetdiv.id == 'queries') {
 		window.history.pushState('','','?page=queries')
     var atr = document.createElement('tr');
@@ -1831,66 +1843,30 @@ export async function showcontent(data,targetdiv) {
               i+=1;
     })
     const view = Array.from(document.querySelectorAll('span.view'));
-    if (view.length > 0) {
       view.forEach(vl=>{
         vl.addEventListener('click',e=>{
-         
+          r.message.forEach(async queries=>{
+            if (queries.id == vl.id) {
+              showq(r.message[r.message.indexOf(queries)])
+            }
+          })
         })
       })
-    }
   }else if (targetdiv.id == 'home'){
 		window.history.pushState('','','?page=home')
-    var cards = Array.from(document.querySelectorAll('font.cardsc'));
-    async function ftchnbrs(url) {
-      try {
-        const response = await fetch("http://localhost:6060/api/ftchnbrs",{
-          mode: 'cors',
-          method: "POST",
-          body: JSON.stringify({token: getdata('admin')}),
-          headers: {
-            "content-type": "application/json",
-            'accept': '*/*'
-
-        }
-        });
-        const data = await response.json();
-        if (data.success == true) {
-           addnbrs(data.message);
-        }else{
-          alertMessage(data.message)
-        }
-      } catch (error) {
-        // alertMessage(error);s
-      }
-    }
-    // ftchnbrs("http://localhost:6060/api/ftchnbrs");
+    var cards = Array.from(targetdiv.querySelectorAll('span.cardsc'));
+    p = postschema
+    p.body = JSON.stringify({token : getdata('admin')})
+    r = await request('ftchnbrs',p)
+    if (!r.success) return 0
+    addnbrs(r.message)
     function addnbrs(numbers) {
+      numbers.forEach(numb=>{
       cards.forEach(nbrs=>{
-        if (nbrs.id == 'users') {
-          numbers.forEach(ttl=>{
-            if (ttl.id == nbrs.id) {
-              nbrs.innerText = ttl.total;        
-            }
-          })
-        }else if (nbrs.id == 'nqueries') {
-          numbers.forEach(ttl=>{
-            if (ttl.id == nbrs.id) {
-              nbrs.innerText = ttl.total;        
-            }
-          })
-        }else if (nbrs.id == 'blogs') {
-          numbers.forEach(ttl=>{
-            if (ttl.id == nbrs.id) {
-              nbrs.innerText = ttl.total;        
-            }
-          })
-        }else if (nbrs.id == 'queries') {
-          numbers.forEach(ttl=>{
-            if (ttl.id == nbrs.id) {
-              nbrs.innerText = ttl.total;        
-            }
-          })        
-        }
+          if (nbrs.id == Object.keys(numb)) {
+            nbrs.innerText = numb[Object.keys(numb)]
+          }
+        })
       })
     }
   }else if (targetdiv.id == 'new-orders') {
@@ -2040,6 +2016,7 @@ export async function showcontent(data,targetdiv) {
           p=postschema
           postschema.body = JSON.stringify({token: getdata('admin'),orderid: d.id,status: 'delivered'})
           c = await request('chorst',p)
+          showcontent(null,targetdiv)
           if(c.success) alertMessage('order status changed successfully')
         })
       })
@@ -3637,4 +3614,212 @@ async function shadddiscountform(product) {
 			}else{
 			}
 		})
+}
+async function sheditpriceform(product) {
+  s = addshade();
+  a = document.createElement('div')
+	s.appendChild(a)
+  a.className = "w-500p h-a p-20p bsbb bc-white cntr zi-10000 br-5p b-mgc-resp"
+  a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg">
+							<span class="fs-18p black capitalize igrid center h-100 verdana">edit a product</span>
+						</div>
+						<div class="body w-100 h-a p-5p grid mt-10p">
+              <div class="avdisc w-100 h-a p-10p bsbb">
+                
+              </div>
+							<form method="post" id="add-discount-form" name="add-discount-form">
+								<div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
+									<div class="w-100 h-100 parent bsbb p-r">
+										<label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">condition</label>
+										<select type="text" id="condition" name="product-condition" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input">
+												<option></option>
+										</select>
+										<span class="p-a r-0 t-0 mr-10p mt-10p">
+											<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="10" cy="10" r="10" fill="#FF0000"/>
+												<path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+											</svg>
+											<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="10" cy="10" r="10" fill="#68D753"/>
+												<line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+												<line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+											</svg>
+										</span>
+										<small class="red verdana left hidden ml-5p">error mssg</small>				
+									</div>
+								</div>
+								<div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
+									<div class="p-r w-100 h-100 mr-10p left parent flex">
+										<input type="number" name="newprice" placeholder="New price" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input w-40" id="newprice">
+                    <div class="no-outline bsbb b-1-s-dgray bc-gray w-60 h-100 center-2 iblock">
+                        <div class="consolas fs-14p dgray p-5p bsbb cprihol">current price: </div>
+                    </div>
+										<span class="p-a r-0 mt-10p mr-5p">
+											<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="10" cy="10" r="10" fill="#FF0000"></circle>
+												<path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"></path>
+											</svg>
+											<svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="10" cy="10" r="10" fill="#68D753"></circle>
+												<line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"></line>
+												<line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"></line>
+											</svg>
+										</span>
+										<small class="red verdana hidden ml-5p p-a mt-50p w-100 ">error mssg</small>
+									</div>
+								</div>
+								<div class="w-a  h-60p mt-10p p-r right mb-10p p-10p bsbb">
+                  <div class="w-100 igrid">
+                          <span class="center iblock">
+                              <button type="submit" class="bc-theme br-2p hover-2 p-10p b-none w-100">
+                                  <span class="verdana white fs-15p capitalize">proceed</span>
+                              </button>
+                          </span>
+                      </div>
+                  </div>
+							</form>
+						</div>`
+		f = a.querySelector('form#add-discount-form')
+		j = a.querySelector('div.avdisc')
+		s = Array.from(f.querySelectorAll('select.main-input'))
+		s.forEach(select=>{
+			select.addEventListener('focus',e=>{
+				setFocusFor(select);
+			})
+			select.addEventListener('blur',e=>{
+				if (select.value == '') {
+					setBlurFor(select);
+				}
+			})
+      let cprihol = a.querySelector('div.cprihol')
+      select.addEventListener('change',e=>{
+        if (select.value !='') {
+          cprihol.textContent = `current price: ${adcm(product[0].conditions[select.value].newprice)} RWF`
+        }
+			})
+		})
+		o = getschema
+		t= await request('tree',o)
+		if (!t.success) {
+			return 0
+		}
+		for (const condition of product[0].conditions) {
+        o = document.createElement('option')
+        o.value = product[0].conditions.indexOf(condition)
+        o.className = 'p-10p bsbb'
+        o.setAttribute('data-price',condition.newprice)
+        o.innerHTML = `<div class="w-100 h-100 block verdana black">${condition.name}</div>`
+        s[0].appendChild(o)
+		}
+		f.addEventListener('submit',async (e)=>{
+			e.preventDefault()
+			i = Array.from(f.querySelectorAll('.main-input'))
+			let newprice,condition
+			for(const input of i){
+			  if (input.value == '') {
+				setErrorFor(input,'this is a required field')
+			  }else(
+				setSuccessFor(input)
+			  )
+			  if (input.id == 'newprice') {
+				 newprice = input.value
+			  }
+			  if (input.id == 'condition') {
+				condition = input.value
+			 }
+			}
+			if(newprice != '' && condition != ''){
+			  o = {
+        product: product[0].prodid,
+        conditions : [{price: newprice,condid: condition}],
+				token: getdata('admin')
+			  }
+				l = {
+				  mode: 'cors',
+				  method: "POST",
+				  body: JSON.stringify(o),
+				  headers: {
+					"content-type": "application/json",
+					'accept': '*/*'
+				}
+			  }
+			  r = await request('editprodpri',l)
+			  if (r.success) {
+				alertMessage(r.message)
+				f.reset()
+			  }else{
+				alertMessage(r.message)
+			  }
+			}else{
+			}
+		})
+}
+function showq(queryinfo) {
+  s = addshade();
+  c = document.createElement('div')
+  c.className = `w-80 h-80 bc-white cntr br-5p card-6 b-mgc-resp`
+  s.appendChild(c)
+  c.innerHTML = `<div class="p-r w-100 h-100">
+                  <div class="w-100 h-70p p-5p bsbb the-h bb-1-s-g">
+                      <div class="w-100 h-100 p-20p bsbb">
+                          <span class="verdana helvetica fs-20p capitalize">query information</span>
+                      </div>
+                  </div>
+                  <div class="w-100 h-90 p-5p bsbb ovys">
+                    <div class="w-a h-a p-20p bsbb">
+                      <p class="verdana"><span class="fs-16p capitalize">full names</span></p>
+                        <span class="w-100 h-a fs-16p bold consolas dgray capitalize nowrap">${queryinfo.fullname}</span>
+                      <p class="verdana"><span class="fs-16p capitalize">requester's address</span></p>
+                      <ul class="p-0 m-0 ls-none h-a">
+                        <li class="w-100 p-5p bsbb flex">
+                            <span class="w-100 h-a fs-16p bold verdana capitalize dgray">email : </span>
+                            <span class="w-100 h-a fs-16p bold consolas dgray nowrap">${queryinfo.email}</span>
+                        </li>
+                        <li class="w-100 p-5p bsbb flex">
+                            <span class="w-100 h-a fs-16p bold verdana capitalize dgray">Phone : </span>
+                            <span class="w-100 h-a fs-16p bold consolas capitalize">${queryinfo.phone}</span>
+                        </li>
+                      </ul>
+                      <p class="verdana"><span class="fs-16p capitalize">subject</span></p>
+                        <span class="w-100 h-a fs-16p bold consolas capitalize">${queryinfo.subject}</span>
+                      <p class="verdana"><span class="fs-16p capitalize">message</span></p>
+                        <span class="w-100 h-a fs-16p bold consolas capitalize">${queryinfo.message}</span>
+                      <p class="verdana"><span class="fs-16p capitalize">date added</span></p>
+                        <span class="w-100 h-a fs-16p bold consolas capitalize nowrap">${queryinfo.dateadded}</span>
+                  </div>
+                </div>
+                  `
+}
+export async function ai(input,parent) {
+  let p = parent.querySelector('span.placeholder')
+  if (p) {
+      deletechild(p,parent)
+  }
+  s = await showPreview(input)
+  input.value = null
+  c = document.createElement('span')
+  c.className = 'w-60p h-60p b-1-s-gray br-2p m-5p iblock chip p-r';
+  r = document.createElement('div');
+  r.className = "w-20p h-20p p-a bc-white remove b-1-s-gray center br-50 hover t-0 r-0 mr--10p mt--5p"
+  r.innerHTML = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve"><g><line fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" x1="18.947" y1="17.153" x2="45.045" y2="43.056"></line></g><g><line fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" x1="19.045" y1="43.153" x2="44.947" y2="17.056"></line></g></svg>`
+  c.innerHTML = `<span class="p-5p block h-100 w-100 bsbb p-r"><img src="${s}" class="w-100 h-100 contain"></span> `
+  c.appendChild(r)
+  parent.appendChild(c)
+  k = getcips(parent)
+  r = Array.from(document.querySelectorAll('div.remove'));
+  r.forEach(remove=>{
+      remove.addEventListener('click',e=>{
+          e.preventDefault();
+          try {
+          deletechild(remove.parentNode,parent)
+          l = Array.from(parent.querySelectorAll('span.chip'))
+          if(l.length == 0){
+              parent.innerHTML = `<span class="placeholder w-100 h-100p p-10p center verdana dgray fs-13p capitalize bsbb">add conditions to preview them here</span>`
+          }
+          } catch (error) {
+              console.log(error)
+          }
+          
+      })
+  })
 }
