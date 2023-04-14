@@ -3,24 +3,13 @@ let bodyParser = require('body-parser');
 let mysql = require('mysql');
 let app = express();
 let path = require('path');
-let connection = mysql.createConnection({
-
-	host : 'sql.freedb.tech',
+let connection =  mysql.createPool({
+  	connectionLimit: 10,
+ 	host : 'sql.freedb.tech',
 	user : 'freedb_itzone',
 	password : 'X6$Xn#JnTEW7z@w',
 	database : 'freedb_itzone'
-})
-try {
-	connection.connect(function (error) {
-		if(error)
-		 console.log(error)
-			else
-				console.log('connected to my sql')
-	})
-	
-} catch (error) {
-	console.log(error)
-}
+});
 
 const server = app.listen(8080,()=>{
 		
