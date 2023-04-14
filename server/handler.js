@@ -4,10 +4,10 @@ let mysql = require('mysql');
 let app = express();
 let path = require('path');
 let connection = mysql.createConnection({
-	host : 'mysql.freehostia.com',
-	user : 'itzsho_itzone',
-	password : 'Heshimaherbert@1',
-	database : 'itzsho_itzone'
+	host : 'sql12.freemysqlhosting.net',
+	user : 'sql12612894',
+	password : 'vnWJVIBZTS',
+	database : 'sql12612894'
 })
 try {
 	connection.connect(function (error) {
