@@ -1,4 +1,4 @@
-import { request,geturl,cc,adcm,sf } from "./functions.js";
+import { request,geturl,cc,adcm,sf,geimgturl } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 let catscont = document.querySelector('div.cats')
 let prodscont = document.querySelector('div.prods')
@@ -45,7 +45,7 @@ function showprods(aa) {
         l.innerHTML = `<div class="w-100 h-100 flex">
                         <div class="the-thumb w-80p h-80p p-5p bsbb iblock">
                             <div class="w-100 h-100 br-50 center">
-                                <img class="w-100 h-100 contain " src="${geturl()}/images/${cat.image}">
+                                <img class="w-100 h-100 contain " src="${geimgturl()}/images/${cat.image}">
                             </div>
                         </div>
                         <div class="the-desc w-60 h-50p mt-5p  p-5p bsbb iblock ml-10p" >
@@ -61,7 +61,7 @@ function showprods(aa) {
         l.innerHTML = `<div class="w-100 h-100 flex">
                         <div class="the-thumb w-80p h-80p p-5p bsbb iblock">
                           <div class="w-100 h-100 br-50 center">
-                            <img class="w-100 h-100 contain " src="${geturl()}/brands/${brand.image}">
+                            <img class="w-100 h-100 contain " src="${geimgturl()}/brands/${brand.image}">
                           </div>
                         </div>
                         <div class="the-desc w-60 h-50p p-5p mt-10p ml-10p bsbb  iblock">
@@ -77,7 +77,7 @@ function showprods(aa) {
         l.innerHTML = `<div class="w-100 h-100 flex">
                         <div class="the-thumb w-80p h-80p p-5p bsbb iblock">
                             <div class="w-100 h-100 br-50 center">
-                                <img class="w-100 h-100 contain " src="${geturl()}/images/${serie.image}">
+                                <img class="w-100 h-100 contain " src="${geimgturl()}/images/${serie.image}">
                             </div>
                         </div>
                         <div class="the-desc w-60 h-50p mt-5p  p-5p bsbb m-5p iblock mt-10p">
@@ -93,7 +93,7 @@ function showprods(aa) {
         l.innerHTML = `<div class="w-100 h-100 flex">
                         <div class="the-thumb w-80p h-80p p-5p bsbb iblock">
                             <div class="w-100 h-100 br-50 center">
-                                <img class="w-100 h-100 contain " src="${geturl()}/images/${subcat.image}">
+                                <img class="w-100 h-100 contain " src="${geimgturl()}/images/${subcat.image}">
                             </div>
                         </div>
                         <div class="the-desc w-60 h-50p ml-20p  p-5p bsbb iblock mt-5p">

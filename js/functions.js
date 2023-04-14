@@ -107,7 +107,7 @@ function shwcrtcntn(a,x,items) {
         <td rowspan="2">
           <div class="left w-60p h-60p bc-white iblock">
             <span class="w-100 h-100 p-r">
-              <img src="${geturl()}/product-imgz/${d.image}" class="w-100 h-100 contain">
+              <img src="${geimgturl()}/product-imgz/${d.image}" class="w-100 h-100 contain">
             </span>
           </div>
         </td>
@@ -394,7 +394,7 @@ export function showrecs(cont,resp) {
     l.innerHTML = `<div class="w-100 h-100 flex">
                     <div class="the-thumb w-50p h-50p m-5p iblock">
                       <div class="w-50p h-50p br-50 m-5p">
-                        <img src="${geturl()}/images/${cat.image}" class="w-100 h-100 contain">
+                        <img src="${geimgturl()}/images/${cat.image}" class="w-100 h-100 contain">
                       </div>
                     </div>
                     <div class="the-desc w-60 h-50p p-5p mt-5p bsbb iblock">
@@ -410,7 +410,7 @@ export function showrecs(cont,resp) {
     l.innerHTML = `<div class="w-100 h-100 flex">
                     <div class="the-thumb w-50p h-50p m-5p iblock">
                       <div class="w-50p h-50p br-50  m-5p">
-                        <img src="${geturl()}/brands/${brand.image}" class="w-100 h-100 contain">
+                        <img src="${geimgturl()}/brands/${brand.image}" class="w-100 h-100 contain">
                       </div>
                     </div>
                     <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
@@ -426,7 +426,7 @@ export function showrecs(cont,resp) {
     l.innerHTML = `<div class="w-100 h-100 flex">
                     <div class="the-thumb w-50p h-50p m-5p iblock">
                       <div class="w-50p h-50p br-50 m-5p">
-                      <img src="${geturl()}/images/${serie.image}" class="w-100 h-100 contain">
+                      <img src="${geimgturl()}/images/${serie.image}" class="w-100 h-100 contain">
                       </div>
                     </div>
                     <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
@@ -442,7 +442,7 @@ export function showrecs(cont,resp) {
     l.innerHTML = `<div class="w-100 h-100 flex">
                     <div class="the-thumb w-50p h-50p m-5p iblock">
                       <div class="w-50p h-50p br-50 m-5p">
-                      <img src="${geturl()}/images/${subcat.image}" class="w-100 h-100 contain">
+                      <img src="${geimgturl()}/images/${subcat.image}" class="w-100 h-100 contain">
                       </div>
                     </div>
                     <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
@@ -470,7 +470,7 @@ export function showrecs(cont,resp) {
     l.innerHTML = `<div class="w-100 h-100 flex ${(resp.message.prods.indexOf(prod) != (resp.message.prods.length-1))? 'bb-1-s-g':''} pb-10p">
                     <div class="the-thumb w-65p h-65p p-5p bsbb iblock">
                       <div class="w-100 h-100 br-5p">
-                        <img src="${geturl()}/product-imgz/${prod.pimgs[0]}" alt="" class="w-100 h-100 b-none contain">
+                        <img src="${geimgturl()}/product-imgz/${prod.pimgs[0]}" alt="" class="w-100 h-100 b-none contain">
                       </div>
                     </div>
                     <div class="the-desc w-80 h-100 p-5p bsbb iblock">
@@ -641,6 +641,10 @@ export function v_(bscont,pw) {
 export function geturl() {
    i = new URL(window.location.href)
    return i.origin
+}
+export function geimgturl() {
+  i = 'https://itzoneshop.onrender.com/api/'
+  return i
 }
 export async function dcrtmgc(elem,aa,index,cond) {
   aa = await request('getprods',getschema)
@@ -3167,7 +3171,7 @@ export function getcinfo(prods) {
                           <div class="w-100 h-100 flex">
                               <div class="w-90p h-90p">
                                   <div class="w-100 h-100 br-5p">
-                                      <img src="${geturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
+                                      <img src="${geimgturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
                                   </div>
                               </div>
                               <div class="w-100 h-100 pl-20p bsbb">
@@ -3206,7 +3210,7 @@ export function getcinfo(prods) {
                  <div class="w-100 h-100 flex">
                      <div class="w-90p h-90p">
                          <div class="w-100 h-100 br-5p">
-                          <img src="${geturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
+                          <img src="${geimgturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
                          </div>
                      </div>
                      <div class="w-100 h-100 pl-20p bsbb">
@@ -3411,7 +3415,7 @@ export function sf(aa,parent) {
                       <div class="w-100 h-100 p-10p bsbb flex">
                           <div class="image p-10p bsbb iblock w-100p h-100p br-5p">
                               <span class="w-100 h-100">
-                               <img src="${geturl()}/product-imgz/${d.pimgs[0]}" alt="" class="w-100 h-100 b-none contain">
+                               <img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" alt="" class="w-100 h-100 b-none contain">
                               </span>
                           </div>
                           <div class="w-80 h-100 iblock pl-20p bsbb">

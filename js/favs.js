@@ -1,4 +1,4 @@
-import { getParam, getdata,request,postschema,getschema,addshade,shuffleArray,closetab,cc,geturl,adcm,dcrtmgc } from "./functions.js";
+import { getParam, getdata,request,postschema,getschema,addshade,shuffleArray,closetab,cc,geturl,adcm,dcrtmgc,geimgturl } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m;
 j = document.querySelector('div.fav-c')
 f = getdata('favs');
@@ -72,7 +72,7 @@ if (f) {
                 <div class="cat w-200p h-a p-5p hover-2 bsbb iblock m-10p b-1-s-gray br-5p bfull-resp bm-a-resp bmb-20p-resp" id='${z.indexOf(category)}' title="${category.type}">
                     <div class="the-img center mb-10p p-5p bsbb">
                         <div class="img w-100p h-100p  br-50">
-                            <img src="images/${category.image}" class="w-100 h-100 contain">
+                        <img src="${geimgturl()}/images/${category.image}" class="w-100 h-100 contain">
                         </div>
                     </div>
                     <div class="the-desc bsbb">

@@ -1,5 +1,5 @@
 
-import { adcm, cc, getdata, getschema, geturl, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr } from "./functions.js";
+import { adcm, cc, getdata, getschema, geturl, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr,geimgturl } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 
 m = document.querySelector('span.ttl-m')
@@ -39,7 +39,7 @@ export function getcinfo(prods) {
                             <div class="w-100 h-100 flex">
                                 <div class="w-90p h-90p">
                                     <div class="w-100 h-100 br-5p">
-                                        <img src="${geturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
+                                       <img src="${geimgturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
                                     </div>
                                 </div>
                                 <div class="w-100 h-100 pl-20p bsbb">
@@ -78,7 +78,7 @@ export function getcinfo(prods) {
                    <div class="w-100 h-100 flex">
                        <div class="w-90p h-90p">
                            <div class="w-100 h-100 br-5p">
-                            <img src="${geturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
+                           <img src="${geimgturl()}/product-imgz/${product.pimgs[0]}" class="w-100 h-100 contain">
                            </div>
                        </div>
                        <div class="w-100 h-100 pl-20p bsbb">
