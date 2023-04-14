@@ -248,7 +248,7 @@ function s(cats) {
 								<div class="cat w-200p h-100 p-5p bsbb iblock m-10p bc-white hover-4 br-10p">
 									<div class="the-img center mb-10p p-5p bsbb">
 										<div class="img w-100p h-100p  br-50">
-											<img src="images/${subcat.image}" class="w-100 h-100 contain">
+											<img src="${geimgturl()}/images/${subcat.image}" class="w-100 h-100 contain">
 										</div>
 									</div>
 									<div class="the-desc bsbb">
