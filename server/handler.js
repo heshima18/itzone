@@ -3,8 +3,7 @@ let bodyParser = require('body-parser');
 let mysql = require('mysql');
 let app = express();
 let path = require('path');
-function connect(){
-	
+
 let connection = mysql.createConnection({
 	host : 'sql.freedb.tech',
 	user : 'freedb_itzone',
@@ -29,7 +28,6 @@ connection.on('error', function(err) {
   console.error('Database connection error:', err.stack);
   connect()
 });
-}
 const server = app.listen(8080,()=>{
 		
 		console.log("app was connected to port 8080");
