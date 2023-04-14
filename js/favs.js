@@ -169,7 +169,7 @@ export function addfav(aa,parent){
 								<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="${0}">${d.conditions[0].name}
 								</span>
 								<span class="w-100 h-100 p-5p bsbb block">
-									<img src="${geturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
+									<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
 								</span>
 							</div>
 							<div class="w-100 h-180p">
