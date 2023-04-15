@@ -4,7 +4,7 @@ import {thecont} from './navigation.js'
 
 export let sidenav = document.createElement('div')
 thecont.appendChild(sidenav)
-sidenav.className = '#sidenav w-300p h-100 pt-100p bsbb p-f bc-white zi-20 b-1-s-dgray sidenav tr-0-3 ml--100 bw-100-500-resp t-0';
+sidenav.className = '#sidenav w-300p h-100 pt-100p bsbb p-f bc-white zi-100 b-1-s-dgray sidenav tr-0-3 ml--100 bw-100-500-resp t-0';
 sidenav.innerHTML = `<div class="w-100 h-100 ovys #thebody">
   <div class="w-100 h-a thesidenavdata pt-5p bsbb">
       <ul class="w-100 ls-none p-0 m-0 the-sidenav-pinned">
