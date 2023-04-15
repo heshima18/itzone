@@ -497,13 +497,12 @@ export function a441618154(aa,parent){
 									</div></div>`;
 	}
     let _311820 = document.querySelectorAll('button._311820');
-        _311820.forEach(button => {
-            button.addEventListener('click',e=>{
-                let x = parseInt(button.parentNode.parentNode.parentElement.parentElement.childNodes[1].childNodes[1].childNodes[1].classList[6])
-                let y = button.parentNode.parentNode.parentElement.parentElement.childNodes[1].childNodes[1].childNodes[1].id
-                e.preventDefault()
-                let b = dcrtmgc(button,aa,x,y)
-                checkCart()
-            })
-        });
+    _311820.forEach(button => {
+        button.addEventListener('click',e=>{
+            e.preventDefault()
+            let x = button.parentNode.parentNode.parentElement.parentElement.parentElement.childNodes[0].childNodes[1].childNodes[1].childNodes[1].classList[5]
+            let y = button.parentNode.parentNode.parentElement.parentElement.parentElement.childNodes[0].childNodes[1].childNodes[1].childNodes[1].id
+            dcrtmgc(button,aa,x,y)
+        })
+    });
 }
