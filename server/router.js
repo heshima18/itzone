@@ -10,31 +10,27 @@ let {server,database} = require('./handler')
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 const io = require('socket.io')(server, {
   cors: {
-    origin: 'http://localhost',
+    origin: '*',
     methods: ['GET', 'POST']
   }
 });
-const EventEmitter = require('events');
-const { json } = require('body-parser');
-const { object } = require('webidl-conversions');
-const { message } = require('statuses');
-const internal = require('stream');
-const eventEmitter = new EventEmitter();
 io.on('connection', function (socket) {
     console.log('A user connected');
     socket.on('message', (data) => {
         console.log(`Received message: ${data}`);
 		    socket.emit('acknowledge', 'Message received');
     });
-    socket.on('newcommentdata', (comment) => {
-		    io.emit('newcomment', comment);
-    });
+    socket.on('refresh',(message)=>{
+		console.log(message)
+		io.emit('datarefreshed','please refresh')
+	})
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });
 
 	
 })		
+
 		router.get('/images/:filename', (req, res) => {
 			const { filename } = req.params;
 			const path = `../images/${filename}`; // replace with your own path
