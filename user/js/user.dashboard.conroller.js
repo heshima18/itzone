@@ -132,7 +132,7 @@ async  function cpgcntn(step) {
                                             <span class="w-a p-5p courier bold-2 addfb dgray bsbb h-a bc-tr-theme br-3p bb-1-s-theme fs-12p block capitalize" data-wrap="${order.id}">
                                                 add feedback
                                             </span>
-                                        </div>` : null}
+                                        </div>` : ''}
                                             
                                         </div>
                                     </div>
