@@ -598,7 +598,7 @@ io.on('connection', function (socket) {
 						n = `${generateUniqueId()}.${e}`
 						const base64Data = i.replace(/^data:image\/\w+;base64,/, '');
 						const bufferData = Buffer.from(base64Data, 'base64');
-						const filePath = path.join(__dirname,'..','images', n);
+						const filePath = path.join(__dirname,'..','brands', n);
 						fs.writeFileSync(filePath, bufferData);
 						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
 							if (error) return res.send({success: false, message: 'oops an error occured'})
