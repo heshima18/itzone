@@ -92,7 +92,6 @@ const autoplay = () => {
 
       dot.classList.remove('bc-dgray')
     })
-    console.log(index)
     try {
       dots[index-1].classList.add('bc-dgray')
     } catch (error) {
