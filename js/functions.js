@@ -1,5 +1,18 @@
 
+
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m;
+const socket = io('https://itzoneshop.onrender.com');
+// Listen for the 'connect' event
+socket.on('connect', () => {
+  console.log('Connected to the server');
+});
+d = socket.emit('message', 'Hello, server!');
+socket.on('acknowledge', (data) => {
+  console.log(`Received acknowledgement from server: ${data}`);
+});
+socket.on('datarefreshed',(message)=>{
+  refreshtoken()
+});
 (()=>{
   x = getdata('cart');
   if (x == null) {
@@ -229,7 +242,48 @@ function  mnuscrtqty(prodid,cart) {
   })
 }
 export async function request(url,options){
+  if (url == 'tree') {
+    t = getdata('tree')
+    if (!t) {
+      z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+      y = await z.json();
+      Object.assign(y,{status: z.status})
+      localStorage.setItem('tree',JSON.stringify(y))
+      return y;
+    }else{
+      console.log('tree')
+      return t
+    }
+  }else if (url == 'getprods') {
+    t = getdata('getprods')
+    if (!t) {
+      z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+      y = await z.json();
+      Object.assign(y,{status: z.status})
+      localStorage.setItem('getprods',JSON.stringify(y))
+      return y;
+    }else{
+      console.log('getprods')
+      return t
+    }
+  }else if (url == 'getpinned'){
+    t = getdata('getpinned')
+    if (!t) {
+      z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+      y = await z.json();
+      Object.assign(y,{status: z.status})
+      localStorage.setItem('getpinned',JSON.stringify(y))
+      return y;
+    }else{
+      console.log('getpinned')
+      return t
+    }
+
+  }
   try {
+    if (url.indexOf('edit') !=-1 || url.indexOf('add') !=-1 || url.indexOf('delete') !=-1 || url.indexOf('remdiscount') !=-1 || url.indexOf('pin') != -1) {
+      socket.emit('refresh','data');
+    }
     z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
     y = await z.json();
     Object.assign(y,{status: z.status})
@@ -238,7 +292,6 @@ export async function request(url,options){
     // alertMessage(error);
     return {success:false,message:'an error occured'}
   }
-  
 
 
 }
@@ -3823,7 +3876,13 @@ export async function ai(input,parent) {
           } catch (error) {
               console.log(error)
           }
-          
       })
   })
+}
+async function refreshtoken(params) {
+  g= getschema
+  localStorage.removeItem('tree')
+  localStorage.removeItem('getpinned')
+  localStorage.removeItem('getprods')
+  
 }
