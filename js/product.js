@@ -111,7 +111,7 @@ async function getparams(url) {
                         <span class="black nowrap h-20p w-100p block verdana capitalize fs-13p">${feedback.firstname} ${feedback.lastname}</span>
                     </div>
                     <div class="message flex p-10p bsbb">
-                        ${(feedback.image != 'null') ? `<div class="img w-70p h-70p br-5p bc-gray skel"><img src="${geimgturl()}/feedback-imgz/${feedback.image}" class="w-100 h-100 cover"></div>` : ''}
+                        ${(feedback.image != 'null') ? `<div class="img w-70p h-70p br-5p"><img src="${geimgturl()}/feedback-imgz/${feedback.image}" class="w-100 h-100 contain"></div>` : ''}
                         
                         <div class="mssg w-80 h-a">
                             <span class="w-80 h-a m-5p block bsbb dgray verdana fs-12p">${feedback.message}</span>
@@ -147,9 +147,43 @@ async function getparams(url) {
                                                 </svg>
                                         </span>
                                     </div>`
-                phol.innerHTML = `<div class="w-100 h-100 p-10p bsbb center-2 pttl">
-                <span class="verdana h-100 w-100 capitalize bold fs-20p nowrap">${pd.pname}</span>
+                phol.innerHTML = `<div class="w-100 h-100 bsbb pttl bb-1-s-g">
+                <div class="w-100 h-a flex jc-sb">
+                <span class="verdana h-100 w-100 capitalize bold fs-20p ">${pd.pname}</span>
+                <span class="verdana w-a h-100 iblock  fs-17p black price nowrap">${adcm(pd.conditions[0].newprice)} <span class="consolas dgray">RWF</span></span>
+                </div>
+                <div class="w-100 h-40p bsbb p-5p rates-hol flex"></div>
+                
                 </div>`
+                let rateshol = phol.querySelector('div.rates-hol')
+                    for (let index = 1; index <= 5; index++) {
+                        rateshol.innerHTML+= ` <span class="#icon h-30p center-2 w-25p">
+                        <span class="#icon h-30p center-2 w-40p">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="rateicon" fill="#f2f2f2" width="20" height="20" viewBox="0 0 32 32" version="1.1">
+                        <path d="M3.488 13.184l6.272 6.112-1.472 8.608 7.712-4.064 7.712 4.064-1.472-8.608 6.272-6.112-8.64-1.248-3.872-7.808-3.872 7.808z"/>
+                        </svg>`
+                    }
+                    let ratio = 0
+                    let rated = 0;
+                    for (const feedback of pd.feedbacks) {
+                        if (feedback.rate) {
+                            ratio += parseInt(feedback.rate)
+                            rated++
+                        }
+                    }
+                    
+                    if (pd.feedbacks.length == 0) {
+                        rateshol.innerHTML = `<span class="dgray capitalize fs-13p bsbb verdana">no ratings available</span>`
+                    }else{
+                        ratio = parseInt(ratio/rated)
+                        let rateicons = Array.from(rateshol.querySelectorAll('svg.rateicon'));
+                        for (const rate of rateicons) {
+                            if (rateicons.indexOf(rate)< ratio) {
+                                rate.style.fill = 'gold'
+                            }
+                        }
+                        rateshol.innerHTML += `<span class="pl-10p bsbb fs-12p capitalize center-2 verdana">${rated} total rates</span>`
+                    }
                 pspectitlhol.innerHTML = `<div class="w-100 h-100 p-5p">
                 <span class="verdana h-100 w-100 capitalize fs-18p">specitifations</span>
                 </div>`
@@ -168,6 +202,7 @@ async function getparams(url) {
                                         <span class="verdana h-100 w-a capitalize nowrap fs-13p pl-10p nowrap dgray">${pd.pspecs[spec]}</span>
                                     </div>`
                 })
+
                 proddescttlhol.className = 'w-100  proddesc'
                 proddescttlhol.innerHTML = '<div class="ls-none m-0 pl-10p bsbb"><span class="verdana h-100 w-100 capitalize fs-18p">description</span></div>'
                 proddesc.innerHTML = `<div class="ls-none m-0 pl-10p bsbb"><span class="verdana h-100 w-100 fs-13p dgray">${pd.description}</span></div>`
@@ -497,13 +532,12 @@ export function a441618154(aa,parent){
 									</div></div>`;
 	}
     let _311820 = document.querySelectorAll('button._311820');
-        _311820.forEach(button => {
-            button.addEventListener('click',e=>{
-                let x = parseInt(button.parentNode.parentNode.parentElement.parentElement.childNodes[1].childNodes[1].childNodes[1].classList[6])
-                let y = button.parentNode.parentNode.parentElement.parentElement.childNodes[1].childNodes[1].childNodes[1].id
-                e.preventDefault()
-                let b = dcrtmgc(button,aa,x,y)
-                checkCart()
-            })
-        });
+    _311820.forEach(button => {
+        button.addEventListener('click',e=>{
+            e.preventDefault()
+            let x = button.parentNode.parentNode.parentElement.parentElement.parentElement.childNodes[0].childNodes[1].childNodes[1].childNodes[1].classList[5]
+            let y = button.parentNode.parentNode.parentElement.parentElement.parentElement.childNodes[0].childNodes[1].childNodes[1].childNodes[1].id
+            dcrtmgc(button,aa,x,y)
+        })
+    });
 }

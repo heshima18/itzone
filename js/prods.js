@@ -65,7 +65,9 @@ export function a441618154(aa,parent){
 								<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="${0}">${d.conditions[0].name}
 								</span>
 								<span class="w-100 h-100 p-5p bsbb block">
+								<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black">
 									<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
+								</a>
 								</span>
 							</div>
 							<div class="w-100 h-a">
@@ -167,7 +169,9 @@ export function sdisc(aa,parent){
 					<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="0">${d.conditions[0].name}
 					</span>
 					<span class="w-100 h-100 block">
-						<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
+						<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black">
+							<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
+						</a>
 					</span>
 				</div>
 				<div class="w-100 h-180p">
@@ -248,7 +252,7 @@ function s(cats) {
 								<div class="cat w-200p h-100 p-5p bsbb iblock m-10p bc-white hover-4 br-10p">
 									<div class="the-img center mb-10p p-5p bsbb">
 										<div class="img w-100p h-100p  br-50">
-											<img src="images/${subcat.image}" class="w-100 h-100 contain">
+											<img src="${geimgturl()}/images/${subcat.image}" class="w-100 h-100 contain">
 										</div>
 									</div>
 									<div class="the-desc bsbb">
