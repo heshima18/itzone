@@ -1253,6 +1253,7 @@ io.on('connection', function (socket) {
 						database.query(`select * from users where id = '${t}' and status = 'active'`,async (error,result)=>{
 							if (error) return res.send({success: false, message: error})
 							if (result.length > 0) {
+								console.log('dd')
 								try {
 									p = req.body.products;
 									m = 0
@@ -1278,10 +1279,14 @@ io.on('connection', function (socket) {
 												r = JSON.parse(r[0].conditions)
 												r.forEach(conds=>{
 													if (conds.name == productinfo.condition) {
-														r= conds
+														r = conds
 													}
 												})
-												v = await query(`update products set quantity = (select quantity from products where id='${productinfo.prodid}') - ${productinfo.qty}, orders = (select orders from products where id='${productinfo.prodid}') + ${productinfo.qty} where id = '${productinfo.prodid}' and quantity >= ${productinfo.qty}`);
+												p = await query(`select quantity,orders from products where id = '${productinfo.prodid}'`)
+												p = p[0]
+												q = p.quantity
+												n = p.orders
+												v = await query(`update products set quantity = ${q} - ${productinfo.qty}, orders = ${n} + ${productinfo.qty} where id = '${productinfo.prodid}' and quantity >= ${productinfo.qty}`);
 												if (v) {
 													if (v.affectedRows > 0) {
 														c.products.push({id: productinfo.prodid,condition: productinfo.condition, qty: productinfo.qty,pname: productinfo.pname,image: productinfo.image,unitprice: r.newprice, totalprice: r.newprice * parseInt(productinfo.qty)})
