@@ -282,7 +282,9 @@ export async function request(url,options){
   }
   try {
     if (url.indexOf('edit') !=-1 || url.indexOf('add') !=-1 || url.indexOf('delete') !=-1 || url.indexOf('remdiscount') !=-1 || url.indexOf('pin') != -1) {
-      socket.emit('refresh','data');
+      if (url != 'addorder') {
+        socket.emit('refresh','data');
+      }
     }
     z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
     y = await z.json();
