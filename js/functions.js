@@ -698,7 +698,7 @@ export function geturl() {
    return i.origin
 }
 export function geimgturl() {
-  i = 'https://itzoneshop.onrender.com/api/'
+  i = 'https://itzoneshop.onrender.com/api'
   return i
 }
 export async function dcrtmgc(elem,aa,index,cond) {
