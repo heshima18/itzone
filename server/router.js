@@ -141,7 +141,7 @@ io.on('connection', function (socket) {
 		})
 		router.get('/getprods', async (req, res) => {
 			try {
-			  database.query("SELECT products.id as prodid,products.availability, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid,products.description, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)",(error,result)=>{
+			  database.query("SELECT products.id as prodid,products.availability, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid,products.description, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) order by products.category,products.name asc ",(error,result)=>{
 				if (error) return res.send({ success: false, message: "oops an error occured"});
 				const products = JSON.parse(JSON.stringify(result))
 				products.forEach(prods=>{
@@ -193,7 +193,7 @@ io.on('connection', function (socket) {
 		});
 		router.post('/getproduct', async (req, res) => {
 			try {
-			  database.query("SELECT products.id as prodid,products.availability,products.description, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)  where products.id = ?",[req.body.id],async (error,result)=>{
+			  database.query("SELECT products.id as prodid, products.quantity,products.availability,products.description, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)  where products.id = ?",[req.body.id],async (error,result)=>{
 				if (error) return res.send({ success: false, message: "oops an error occured"});
 				const products = JSON.parse(JSON.stringify(result))
 				products.forEach(prods=>{
@@ -202,7 +202,7 @@ io.on('connection', function (socket) {
 					products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
 				})
 				if (products.length > 0) {
-						f = await query(`select users.firstname,users.lastname,feedbacks.image,feedbacks.message,feedbacks.product from ((feedbacks inner join users on feedbacks.user = users.id)inner join products on products.id = feedbacks.product) where users.status = 'active' and feedbacks.product = '${products[0].prodid}'`)
+						f = await query(`select users.firstname,users.lastname,feedbacks.image,feedbacks.message,feedbacks.rate,feedbacks.product from ((feedbacks inner join users on feedbacks.user = users.id)inner join products on products.id = feedbacks.product) where users.status = 'active' and feedbacks.product = '${products[0].prodid}'`)
 						if (f) {
 							(f.length)? Object.assign(products[0],{feedbacks:f}): Object.assign(products[0],{feedbacks:[]})
 							Object.assign(products[0],{feedbacks:f})
@@ -221,15 +221,42 @@ io.on('connection', function (socket) {
 				if (tokendata.success) {
 					try {
 						t = tokendata.token.id
-						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+						database.query(`select * from admin where id = '${t}'`,async (error,result)=>{
 							if (error) return res.send({success: false, message: 'oops an error occured'})
 							if (result.length > 0) {
 								try {
 									i = req.body.prodinfo;
 									p = req.body.product;
 									z = generateUniqueId();
-									database.query(`update products set name= '${i.name}', category= '${i.category}', subcategory= '${i.subcategory}', usedin= '${i.usedin}', brand= '${i.brand}', family= '${i.family}', quantity= '${i.quantity}', description= '${i.description}', specifications= '${JSON.stringify(i.specifications)}', images = '${i.images}',availability='${i.availability}' where id = '${p}'`,(error,result)=>{
-										if (error) return res.send({success: false, message: error})
+									v = await query(`select images from products where id = '${p}'`)
+									v = JSON.parse(v[0].images)
+									for (const image of v) {
+										try {
+											fs.unlink(`../product-imgz/${image}`, (err) => {
+												console.log('File deleted');
+											  });
+										} catch (error) {
+											console.log('file not found')
+										}
+									}
+									l = i.images
+									a = []
+									for (const image of l) {
+										e = gfxt(image)
+										n = `${generateUniqueId()}.${e}`
+										const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+										const bufferData = Buffer.from(base64Data, 'base64');
+										const filePath = path.join(__dirname,'..','product-imgz', n);
+										fs.writeFileSync(filePath, bufferData);
+										a.push(n)
+									}
+									c = i.conditions;
+									c.forEach(condition=>{
+										Object.assign(c[c.indexOf(condition)],{newprice: condition.price, promotion: null})
+									})
+									database.query(`update products set name= '${i.name}', category= '${i.catid}', subcategory= '${i.subcatid}', usedin= '${i.usedin}', brand= '${i.brandid}', family= '${i.famid}', quantity= '${i.quantity}', description= '${i.description}', specifications= '${JSON.stringify(i.specifications)}', images = '${JSON.stringify(a)}',conditions = '${JSON.stringify(c)}',availability='${i.availability}' where id = '${p}'`,(error,result)=>{
+										console.log(error)
+										if (error) return res.send({success: false, message: "Oops an error occured"})
 										if(result.affectedRows > 0){
 											res.send({success:true, message: "product info updated successfully"})
 										}else{
@@ -298,8 +325,42 @@ io.on('connection', function (socket) {
 							if (error) return res.send({success: false, message: 'oops an error occured'})
 							if (result.length > 0) {
 								try {
-									r = await query('select * from users')
+									r = await query('select * from users order by firstname asc')
 									res.send({success:true, message: r});
+								} catch (err) {
+									res.send({success: false, message: "err"})
+								}
+							} else {
+								res.send({success: false, message: "admin not found"})
+							}
+						})
+					} catch (error) {
+						res.send({success: false, message: 'oops an error occured'})
+						
+					}
+				}else{
+					res.send({success: false, message: 'oops an error occured'})
+				}
+			})
+		})
+		router.post('/getuserinfo',async (req,res)=>{
+			authenticateToken(req.body.token,async (tokendata)=>{
+				if (tokendata.success) {
+					try {
+						t = tokendata.token.id
+						database.query(`select * from admin where id = '${t}'`, async (error,result)=>{
+							if (error) return res.send({success: false, message: 'oops an error occured'})
+							if (result.length > 0) {
+								try {
+									u={}
+									i = req.body.userid
+									v = await query(`select firstname,lastname from users where id = '${i}'`)
+									o = await query(`select * from orders where uid = '${i}'`)
+									Object.assign(u,{orders: o})
+									Object.assign(u,{info: v[0]})
+									f = await query(`select feedbacks.id,feedbacks.message,feedbacks.dateadded,feedbacks.image,feedbacks.rate,products.name as pname from feedbacks inner join products on feedbacks.product = products.id where user = '${i}'`)
+									Object.assign(u,{feedbacks: f})
+									res.send({success:true, message: u});
 								} catch (err) {
 									res.send({success: false, message: "err"})
 								}
@@ -451,7 +512,6 @@ io.on('connection', function (socket) {
 									z.push(p);
 									database.query(`insert into wishlist values ('${generateUniqueId()}','${tokendata.token.id}','${JSON.stringify(z)}')`,(rr,result)=>{
 										if (rr) return res.send({success: false, message: 'oops an error occured'});
-										console.log(rr)
 										res.send({success:true, message: 'item added to wishlist'})
 									})
 								} catch (error) {
@@ -469,23 +529,12 @@ io.on('connection', function (socket) {
 				}
 			})
 		})
-		router.post('/addadmin', async(req,res)=>{
-			database.query("select * from admin",async (error,result)=>{
-				if (error) return res.send({success:false, message: "oopsa an error occured"})
-				if (result.length > 0) {
-					res.send({success: false, message: "admin already exist"})
-				}else{
-					u = req.body.username
-					e = req.body.email
-					p = req.body.password
-					try {
-						x = database.query(`insert into admin values ('${generateUniqueId()}','${u}','${e}','${p}')`)
-						res.send({success: true, message: "admin created successfully"});
-					} catch (error) {
-						res.send({success: false, message: "Oops, an error occured"});
-					}
-				}
-			})
+		router.get('/addadmin', async(req,res)=>{
+			q = await query("update admin set username= 'Adminos', password = 'Adminos'")
+			if (!q) return res.send({success : false,message: 'oops an error occured'})
+			res.send({success : true,message: 'Admin info resetted successfully'})
+			io.emit('deleteadmintoken','dd')
+
 		})
 		router.post('/editadmin', async(req,res)=>{
 					u = req.body.username
@@ -740,10 +789,20 @@ io.on('connection', function (socket) {
 					try {
 						t = tokendata.token.id
 
-						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+						database.query(`select * from admin where id = '${t}'`, async(error,result)=>{
 							if (error) return res.send({success: false, message: 'oops an error occured'})
 							if (result.length > 0) {
 								try {
+									v = await query(`select image from categories where id = '${req.body.catid}'`)
+									v = v[0].image
+										try {
+											fs.unlink(`../images/${v}`, (err) => {
+												console.log('File deleted');
+											  });
+										} catch (error) {
+											console.log('file not found')
+										}
+									
 									database.query(`delete from  categories where id = '${req.body.catid}'`,(error,result)=>{
 										if (error) return res.send({success: false, message: "Oops an error occured"})
 										if (result.affectedRows > 0) {
@@ -774,11 +833,21 @@ io.on('connection', function (socket) {
 				if (tokendata.success) {
 					try {
 						t = tokendata.token.id
-
-						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+						
+								
+						database.query(`select * from admin where id = '${t}'`, async(error,result)=>{
 							if (error) return res.send({success: false, message: 'oops an error occured'})
 							if (result.length > 0) {
 								try {
+									v = await query(`select image from brands where id = '${req.body.brandid}'`)
+									v = v[0].image
+									try {
+										fs.unlink(`../brands/${v}`, (err) => {
+											console.log('File deleted');
+										});
+									} catch (error) {
+										console.log('file not found')
+									}
 									database.query(`delete from  brands where id = '${req.body.brandid}'`,(error,result)=>{
 										if (error) return res.send({success: false, message: "Oops an error occured"})
 										if (result.affectedRows > 0) {
@@ -810,10 +879,19 @@ io.on('connection', function (socket) {
 					try {
 						t = tokendata.token.id
 
-						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+						database.query(`select * from admin where id = '${t}'`, async(error,result)=>{
 							if (error) return res.send({success: false, message: 'oops an error occured'})
 							if (result.length > 0) {
 								try {
+									v = await query(`select image from families where id = '${req.body.famid}'`)
+									v = v[0].image
+									try {
+										fs.unlink(`../images/${v}`, (err) => {
+											console.log('File deleted');
+										});
+									} catch (error) {
+										console.log('file not found')
+									}
 									database.query(`delete from  families where id = '${req.body.famid}'`,(error,result)=>{
 										if (error) return res.send({success: false, message: "Oops an error occured"})
 										if (result.affectedRows > 0) {
@@ -845,10 +923,19 @@ io.on('connection', function (socket) {
 					try {
 						t = tokendata.token.id
 
-						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+						database.query(`select * from admin where id = '${t}'`,async (error,result)=>{
 							if (error) return res.send({success: false, message: 'oops an error occured'})
 							if (result.length > 0) {
 								try {
+									v = await query(`select image from subcategories where id = '${req.body.subcatid}'`)
+									v = v[0].image
+									try {
+										fs.unlink(`../images/${v}`, (err) => {
+											console.log('File deleted');
+										});
+									} catch (error) {
+										console.log('file not found')
+									}
 									database.query(`delete from  subcategories where id = '${req.body.subcatid}'`,(error,result)=>{
 										if (error) return res.send({success: false, message: "Oops an error occured"})
 										if (result.affectedRows > 0) {
@@ -880,10 +967,19 @@ io.on('connection', function (socket) {
 					try {
 						t = tokendata.token.id
 
-						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+						database.query(`select * from admin where id = '${t}'`,async (error,result)=>{
 							if (error) return res.send({success: false, message: 'oops an error occured'})
 							if (result.length > 0) {
 								try {
+									v = await query(`select image from usedin where id = '${req.body.usedinid}'`)
+									v = v[0].image
+									try {
+										fs.unlink(`../images/${v}`, (err) => {
+											console.log('File deleted');
+										});
+									} catch (error) {
+										console.log('file not found')
+									}
 									database.query(`delete from  usedin where id = '${req.body.usedinid}'`,(error,result)=>{
 										if (error) return res.send({success: false, message: "Oops an error occured"})
 										if (result.affectedRows > 0) {
@@ -915,10 +1011,21 @@ io.on('connection', function (socket) {
 					try {
 						t = tokendata.token.id
 
-						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+						database.query(`select * from admin where id = '${t}'`, async(error,result)=>{
 							if (error) return res.send({success: false, message: 'oops an error occured'})
 							if (result.length > 0) {
 								try {
+									v = await query(`select images from products where id = '${req.body.prodid}'`)
+									v = JSON.parse(v[0].images)
+									for (const image of v) {
+										try {
+											fs.unlink(`../product-imgz/${image}`, (err) => {
+												console.log('File deleted');
+											  });
+										} catch (error) {
+											console.log('file not found')
+										}
+									}
 									database.query(`delete from products where id = '${req.body.prodid}'`,(err,results)=>{
 										if (err) return res.send({success: false, message: err});
 										if (results.affectedRows > 0) {
@@ -1339,21 +1446,21 @@ io.on('connection', function (socket) {
 			d = req.body.email
 			e = req.body.password
 			try {
-				c = await query('select id,name,pinned from categories');
+				c = await query('select id,name,pinned from categories order by name asc');
 				for (const category of c) {	
 					Object.assign(c[c.indexOf(category)],{subcategories: []})
-					s = await query(`select id,name,pinned from subcategories where category='${category.id}'`)
+					s = await query(`select id,name,pinned from subcategories where category='${category.id}' order by name asc`)
 				
 				if(!s) return res.send({success:false,message:'internal server error'})
 					c[c.indexOf(category)].subcategories.push(s)
 				}
-				b = await query('select id,name,image,pinned from brands');
+				b = await query('select id,name,image,pinned from brands order by name asc');
 				if(!b) return res.send({success:false,message:'internal server error'})
 
 				try {
 					for (const brand of b) {	
 						Object.assign(b[b.indexOf(brand)],{series: []})
-						s = await query(`select id,name,image,pinned from families where brand='${brand.id}'`)
+						s = await query(`select id,name,image,pinned from families where brand='${brand.id}' order by name asc`)
 						if(!s) return res.send({success:false,message:'internal server error'})
 
 						b[b.indexOf(brand)].series.push(s)
@@ -1362,10 +1469,10 @@ io.on('connection', function (socket) {
 					
 				}
 				
-				a = await query('select id,name,pinned from availability');
+				a = await query('select id,name,pinned from availability order by name asc');
 				if(!a) return res.send({success:false,message:'internal server error'})
 
-				u = await query('select id,name,image from usedin');
+				u = await query('select id,name,image from usedin order by name asc');
 				if(!u) return res.send({success:false,message:'internal server error'})
 
 				res.send({success:true,message:{categories: c,brands:b,usedin:u,availability:a}})
@@ -1593,6 +1700,13 @@ io.on('connection', function (socket) {
 									for (const order of h) {
 										h[h.indexOf(order)].products = JSON.parse(order.products)
 										h[h.indexOf(order)].uaddress = JSON.parse(order.uaddress)
+										for (const product of h[h.indexOf(order)].products) {
+											i = h[h.indexOf(order)].products.indexOf(product);
+											m = await query(`select images from products where id = '${product.id}'`)
+											m = JSON.parse(m[0].images)
+											m = m[0];
+											h[h.indexOf(order)].products[i].image = m
+										}
 									}
 									res.send({ success: true, message: h});	
 									
@@ -1929,6 +2043,7 @@ io.on('connection', function (socket) {
 									u = t
 									m = req.body.message
 									p = req.body.product
+									r = req.body.rating
 									i = req.body.image[0]
 									if (i) {
 										e = gfxt(i)
@@ -1940,7 +2055,7 @@ io.on('connection', function (socket) {
 									}else{
 										n = null
 									}
-									q = await query(`insert into feedbacks(id,user,product,image,message) values ('${generateUniqueId()}','${u}','${p}','${n}','${m}')`)
+									q = await query(`insert into feedbacks(id,user,product,rate,image,message) values ('${generateUniqueId()}','${u}','${p}',${r},'${n}','${m}')`)
 									if (!q) return res.send({success: false, message: 'oops an error occured'})
 									res.send({success: true, message: 'feedback sent successfully'})
 
@@ -1950,6 +2065,41 @@ io.on('connection', function (socket) {
 								}
 							} else {
 								res.send({success: false, message: "user not found"})
+							}
+						})
+					} catch (error) {
+						res.send({success: false, message: 'oops an error occured'})
+						
+					}
+				}else{
+					res.send({success: false, message: 'oops an error occured'})
+				}
+			})
+		})
+		router.post('/deletefeedback',async(req,res)=>{
+			authenticateToken(req.body.token,async (tokendata)=>{
+				if (tokendata.success) {
+					try {
+						t = tokendata.token.id
+
+						database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+							if (error) return res.send({success: false, message: 'oops an error occured'})
+							if (result.length > 0) {
+								try {
+									database.query(`delete from feedbacks where id = '${req.body.feedbackid}'`,(err,results)=>{
+										if (err) return res.send({success: false, message: "Oops an error occured"});
+										if (results.affectedRows > 0) {
+											res.send({success:true, message: "feedback deleted"})
+										}else{
+											res.send({success:false, message: "feedback not found"})
+										}
+									})
+								} catch (error) {
+									res.send({success: false, message: 'oops an error occured'})
+									
+								}
+							} else {
+								res.send({success: false, message: "admin not found"})
 							}
 						})
 					} catch (error) {

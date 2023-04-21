@@ -123,7 +123,7 @@ if (f) {
         q = new Array(v,n,m)
         b.addEventListener('click',async(e)=>{
             e.preventDefault();
-            if (d.length > 4) {
+            if (d.length > 2 ) {
                 localStorage.setItem('favs',JSON.stringify(d))
                 q.forEach(el=>{
                     if (el != null) {
@@ -169,7 +169,10 @@ export function addfav(aa,parent){
 								<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="${0}">${d.conditions[0].name}
 								</span>
 								<span class="w-100 h-100 p-5p bsbb block">
-									<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
+                                    <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black">
+									    <img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
+                                    </a>    
+
 								</span>
 							</div>
 							<div class="w-100 h-180p">

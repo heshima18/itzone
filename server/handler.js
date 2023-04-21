@@ -4,7 +4,7 @@ let mysql = require('mysql');
 let app = express();
 let path = require('path');
 let connection =  mysql.createPool({
- 	host : 'mysql.freehostia.com',
+	host : 'mysql.freehostia.com',
 	user : 'itzsho_itzone',
 	password : 'Heshimaherbert@1',
 	database : 'itzsho_itzone'

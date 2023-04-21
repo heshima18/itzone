@@ -354,7 +354,7 @@ function filnvd(asked,divs) {
             }
         }
     }else if (Object.keys(asked) == 'availability') {
-        let lelis = Array.from(divs[4].querySelectorAll('input'))
+        let lelis = Array.from(divs[3].querySelectorAll('input'))
         for (const radio of lelis) {
             if (radio.value != asked.availability) {
                 radio.parentNode.className = 'hidden'

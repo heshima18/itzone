@@ -420,10 +420,8 @@ async function addfbpopup(orderinfo) {
 							<span class="fs-18p black capitalize igrid center h-100 verdana">add a feedback</span>
 						</div>
 						<div class="body w-100 h-a p-5p grid mt-10p">
-              <div class="avdisc w-100 h-a p-10p bsbb">
-                
-              </div>
 							<form method="post" id="add-discount-form" name="add-discount-form">
+                               
 								<div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
 									<div class="w-100 h-100 parent bsbb p-r">
 										<label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">product</label>
@@ -444,6 +442,12 @@ async function addfbpopup(orderinfo) {
 										<small class="red verdana left hidden ml-5p">error mssg</small>				
 									</div>
 								</div>
+                                <div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
+                                    <span class="black bold verdana capitalize">rate this product</span>
+                                    <div class="p-5p bsbb w-100 h-a flex rates-hol">
+                                    
+                                    </div>
+                                </div>
                                 <div class="w-100 h-a mt-10p mb-10p p-10p bsbb flex bblock-resp">
 									<div class="p-r w-200p  mr-10p mt-10p left parent ovh h-100 bfull-resp">
 									  <div class="p-10p no-outline bsbb b-1-s-dgray bc-white w-100 h-40p hover-2 dgray capitalize fs-14p consolas nowrap p-r mb-10p">
@@ -503,6 +507,32 @@ async function addfbpopup(orderinfo) {
 							</form>
 						</div>`
 		f = a.querySelector('form#add-discount-form')
+        let rateshol = a.querySelector('div.rates-hol')
+        for (let index = 1; index <= 5; index++) {
+            rateshol.innerHTML+= ` <span class="#icon h-40p center-2 w-40p">
+            <svg xmlns="http://www.w3.org/2000/svg" class="rateicon" fill="#f2f2f2" width="40" height="40" id="${index}" viewBox="0 0 32 32" version="1.1">
+            <path d="M3.488 13.184l6.272 6.112-1.472 8.608 7.712-4.064 7.712 4.064-1.472-8.608 6.272-6.112-8.64-1.248-3.872-7.808-3.872 7.808z"/>
+            </svg>
+        </span>`
+            
+        }
+        let rateicons = Array.from(rateshol.querySelectorAll('svg.rateicon'));
+        for (const rate of rateicons) {
+            rate.addEventListener('click',v=>{
+                rateicons.forEach(rt=>{
+                    rt.style.fill = ''
+                    rt.classList.remove('active');
+                    if (rateicons.indexOf(rt)< rateicons.indexOf(rate)) {
+                        rt.style.fill = 'var(--main-color)'
+
+                    }
+                })
+                rate.classList.add('active');
+                rate.style.fill = 'var(--main-color)'
+
+                
+            })
+        }
 		s = Array.from(f.querySelectorAll('select.main-input'))
 		s.forEach(select=>{
 			select.addEventListener('focus',e=>{
@@ -514,6 +544,8 @@ async function addfbpopup(orderinfo) {
 				}
 			})
 		})
+        let rating = null
+        
 		o = getschema
 		t= await request('tree',o)
 		if (!t.success) {
@@ -547,10 +579,16 @@ async function addfbpopup(orderinfo) {
 			 }
 			}
             image = getcips(z)
+            for (const rate of rateicons) {
+                if (rate.classList.contains('active')) {
+                    rating = parseInt(rate.id)
+                }
+            }
+            console.log(rating)
 			if(message != '' && product != ''){
                 console.log(message,product,image)
 		        o = postschema
-                o.body = JSON.stringify({product,message,image,token: getdata('user')})
+                o.body = JSON.stringify({product,message,image,rating,token: getdata('user')})
 			  r = await request('addfeedback',o)
 			  if (r.success) {
 				alertMessage(r.message)

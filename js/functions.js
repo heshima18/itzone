@@ -1,7 +1,6 @@
 
-
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m;
-const socket = io('https://itzoneshop.onrender.com');
+const socket = io('https://itzoneshop.onrender.com/');
 // Listen for the 'connect' event
 socket.on('connect', () => {
   console.log('Connected to the server');
@@ -12,6 +11,10 @@ socket.on('acknowledge', (data) => {
 });
 socket.on('datarefreshed',(message)=>{
   refreshtoken()
+});
+socket.on('deleteadmintoken',(message)=>{
+  localStorage.removeItem('admin');
+  window.location.reload()
 });
 (()=>{
   x = getdata('cart');
@@ -251,7 +254,6 @@ export async function request(url,options){
       localStorage.setItem('tree',JSON.stringify(y))
       return y;
     }else{
-      console.log('tree')
       return t
     }
   }else if (url == 'getprods') {
@@ -263,7 +265,6 @@ export async function request(url,options){
       localStorage.setItem('getprods',JSON.stringify(y))
       return y;
     }else{
-      console.log('getprods')
       return t
     }
   }else if (url == 'getpinned'){
@@ -275,7 +276,6 @@ export async function request(url,options){
       localStorage.setItem('getpinned',JSON.stringify(y))
       return y;
     }else{
-      console.log('getpinned')
       return t
     }
 
@@ -343,12 +343,29 @@ export function getdata(item){
     return null 
   }
 }
+
 export function alertMessage(message){
   q =  addshade();
   a = document.createElement('div')
+  q.removeChild(q.firstChild)
   q.appendChild(a)
-  a.className = "w-300p h-200p p-20p bsbb bc-white cntr zi-10000 br-10p card-5" 
-  a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg"><span class="fs-18p black capitalize igrid center h-100 verdana">message</span></div><div class="body w-100 h-a p-5p grid center mt-10p"><span class="fs-15p dgray capitalize left verdana">${message}</span></div>`;
+  a.className = "w-300p h-a p-20p bsbb bc-white cntr zi-10000 br-10p card-5" 
+  a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg"><span class="fs-18p black capitalize igrid center h-100 verdana">message</span></div><div class="body w-100 h-a p-5p grid center mt-10p"><span class="fs-15p dgray capitalize left verdana">${message}</span></div><div class="mssg-footer w-100 h-30p mt-10p  bsbb center-2"><span class="w-60p br-2p hover-2 h-a bc-theme p-5p white capitalize verdana center accept">ok</span></div>`;
+  let accept = a.querySelector('span.accept')
+  let body = document.querySelector('div#body');
+  let nav = document.querySelector('div.navigation'); 
+  let sidenav = document.querySelector('div.sidenav');  
+  let thebody = document.querySelector('div.cont'); 
+  let thea = new Array(body,nav,sidenav)
+  accept.addEventListener('click',e=>{
+	  e.preventDefault();
+    thea.forEach(el=>{
+      if (el != null) {
+        el.classList.remove('blur')
+      }
+    })
+		closetab(q,thebody);
+	});
 }
 export function showsidemenu(){
   f = document.querySelector('div.sidenav');
@@ -1117,7 +1134,6 @@ export async function validateForm(form,inputs,formdata) {
         sessionStorage.setItem('val',0);
         sendmessage(inputs,'signup',form,formdata);
       }else{
-        console.log(val)
       }
   }else if (form.name == 'login-form') {
     inputs.forEach(inp=>{
@@ -1499,6 +1515,16 @@ export async function showPreview(input) {
     });
     return blob
 }
+export async function givePreview(link) {
+      d = window.getComputedStyle(link)
+      let canvas = document.createElement('canvas');
+      link.crossOrigin = "Anonymous";
+      canvas.width = link.naturalWidth;
+      canvas.height = link.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(link, 0, 0, link.naturalWidth, link.naturalHeight);
+      return canvas.toDataURL()
+}
 export async function showcontent(data,targetdiv) {
   if (targetdiv.id == 'users'){
 		window.history.pushState('','','?page=users')
@@ -1547,24 +1573,37 @@ export async function showcontent(data,targetdiv) {
                 </td>
                 <td class="p-10p flex jc-sb">
                 ${(users.status == 'active')? ` <span class="fs-14p verdana orange center hover-2 us-none banlink capitalize" id='${users.id}'>ban</span>`: ` <span class="fs-14p verdana theme center hover-2 us-none banlink capitalize" id='${users.id}'>un ban</span>`}
-               
+                <span class="fs-14p verdana theme center hover-2 us-none viewlink capitalize" id='${users.id}'>view</span>
                   <span class="fs-14p verdana red center hover-2 us-none deletelink capitalize" id='${users.id}'>delete</span>
                 </td>`;
                 i+=1;
       })
-      const ban = Array.from(document.querySelectorAll('span.banlink'));
-
-      const deletee = Array.from(document.querySelectorAll('span.deletelink'));
+      const ban = Array.from(targetdiv.querySelectorAll('span.banlink'));
+      const deletee = Array.from(targetdiv.querySelectorAll('span.deletelink'));
       
         deletee.forEach(del=>{
           del.addEventListener('click',async e=>{
             e.preventDefault();
             p = postschema
-            p.body = JSON.stringify({token: getdata('admin'),userid: deletee.id})
+            p.body = JSON.stringify({token: getdata('admin'),userid: del.id})
             r = await request('deleteuser',p)
             if (!r.success) return 0
             alertMessage(r.message) 
             showcontent(null,targetdiv)
+          })
+        })
+        const view = Array.from(targetdiv.querySelectorAll('span.viewlink'));
+      
+        view.forEach(view=>{
+          view.addEventListener('click',async e=>{
+            e.preventDefault();
+            p = postschema
+            p.body = JSON.stringify({token: getdata('admin'),userid: view.id})
+            r = await request('getuserinfo',p)
+            if (!r.success) return 0
+            // alertMessage(r.message) 
+            showUser(r.message);
+            // showcontent(null,targetdiv)
           })
         })
         ban.forEach(banlink=>{
@@ -1704,16 +1743,16 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">#</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p nowrap">product id</span>
-              </td>
-              <td class="p-10p bsbb bb-1-s-g">
                 <span class="fs-15p verdana p-10p nowrap">product name</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
-                <span class="fs-15p verdana p-10p">description</span>
+                <span class="fs-15p verdana p-10p">category</span>
               </td>
               <td class="p-10p bsbb bb-1-s-g">
                 <span class="fs-15p verdana p-10p">action</span>
+              </td>
+              <td class="p-10p bsbb bb-1-s-g">
+                <span class="fs-15p verdana p-10p">edit</span>
               </td>
               `;
     i = 1;
@@ -1736,24 +1775,39 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-14p verdana">${i}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${prod.prodid}</span>
-              </td>
-              <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${prod.pname}</span>
               </td>
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${ellipsis(prod.description,40)}</span>
+                <span class="fs-14p verdana">${prod.catname}</span>
               </td>
               <td class="p-10p flex jc-sb">
-                <span class="fs-14p nowrap pr-10p bsbb  verdana green center-2 hover-2 us-none adddiscountlink" id='${prod.prodid}'>add discount</span>
-                <span class="fs-14p nowrap pr-10p bsbb  verdana orange center-2 hover-2 us-none editlink" id='${prod.prodid}'>edit price</span>
-                <span class="fs-14p nowrap pr-10p bsbb  verdana red center-2 hover-2 us-none deletelink" id='${prod.prodid}'>delete</span>
-              </td>`;
+                <span class="fs-14p nowrap mr-10p bsbb  verdana green center-2 hover-2 us-none adddiscountlink" id='${prod.prodid}'>add discount</span>
+                <span class="fs-14p nowrap mr-10p bsbb  verdana red center-2 hover-2 us-none deletelink" id='${prod.prodid}'>delete</span>
+              </td>
+              <td class=" jc-sb">
+              <div class="flex w-100 h-100">
+                <span class="fs-14p nowrap mr-10p bsbb  verdana orange center-2 hover-2 us-none editlink" id='${prod.prodid}'>price</span>
+                <span class="fs-14p nowrap mr-10p bsbb  verdana orange center-2 hover-2 us-none editprodlink" id='${prod.prodid}'>info</span>
+              </div>
+              </td>
+              `;
               i+=1;
     })
 
     const adddiscount = Array.from(document.querySelectorAll('span.adddiscountlink'));
     var deletelink = Array.from(document.querySelectorAll('span.deletelink'));
+    var editprodlink = Array.from(document.querySelectorAll('span.editprodlink'));
+    editprodlink.forEach(s=>{
+      s.addEventListener('click',async(e)=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({id:s.id})
+        v = await request('getproduct',p)
+        if (v.success) {
+          sheditproductform(v.message)
+        }
+      })
+    })
     var editlink = Array.from(document.querySelectorAll('span.editlink'));
     editlink.forEach(s=>{
       s.addEventListener('click',async(e)=>{
@@ -2868,23 +2922,34 @@ export function rs(string){
   string=string.replace(/,/gi,"")
   return string
 }
-export function ats(elem,obj,elems) {
+export function ats(elem,obj,elems,parent,subparent) {
   for (const category of obj) {
-    o = document.createElement('option')
+    o = document.createElement('option');
+    (category.name == parent && elem.id == 'category') ? cch(c(),category.subcategories[0],subparent) : '';
+    (category.name == parent && elem.id == 'brand') ? cch(b(),category.series[0],subparent) : '';
+    (category.name == parent) ? o.setAttribute('selected','') : '';
+    (category.name == parent) ? setFocusFor(elem) : '';
     o.className = 'p-10p bsbb'
     o.innerHTML = `<div class="w-100 h-100 block verdana black">${category.name}</div>`
     elem.appendChild(o)
   }
+  function c() {
+    for(const select of elems){
+      if (select.name == 'product-subcategory') {
+        return select
+      }
+    }
+  }
+  function b() {
+    for(const select of elems){
+      if (select.name == 'product-serie') {
+        return select
+      }
+    }
+  }
   elem.addEventListener('change',e=>{
     e.preventDefault();
     if(elem.id == 'category'){
-      c = ()=> {
-        for(const select of elems){
-          if (select.name == 'product-subcategory') {
-            return select
-          }
-        }
-      }
       if (elem.value != '') {
         obj.forEach(category=>{
           if (category.name == elem.value) {
@@ -2895,17 +2960,10 @@ export function ats(elem,obj,elems) {
         c().innerHTML = '<option></option>'
       }
     }else if(elem.id == 'brand'){
-      c = ()=> {
-        for(const select of elems){
-          if (select.name == 'product-serie') {
-            return select
-          }
-        }
-      }
       if (elem.value != '') {
         obj.forEach(category=>{
           if (category.name == elem.value) {
-              cch(c(),category.series[0])
+              cch(b(),category.series[0])
           }
         })
       }else{
@@ -2914,13 +2972,15 @@ export function ats(elem,obj,elems) {
     }
   })
 }
-export function cch(elem,obj) {
+export function cch(elem,obj,subparent) {
   elem.innerHTML = `<option></option>`
   for (const subcategory of obj) {
-    o = document.createElement('option')
-    o.className = 'p-10p bsbb'
-    o.innerHTML = `<div class="w-100 h-100 block verdana black">${subcategory.name}</div>`
-    elem.appendChild(o)
+    d = document.createElement('option');
+    (subcategory.name == subparent) ? setFocusFor(elem) : '';
+    d.className = 'p-10p bsbb'
+    d.innerHTML = `<div class="w-100 h-100 block verdana black">${subcategory.name}</div>`;
+    (subcategory.name == subparent) ? d.setAttribute('selected','') : '';
+    elem.appendChild(d)
   }
   
 }
@@ -3461,6 +3521,183 @@ export function showOrder(orderinfo) {
                   <span class="fs-14p verdana right p-10p bsbb">${adcm(orderinfo.totalprice)} <small class="consolas dgray">RWF</small></span>
                 </td>`
 }
+export function showUser(userinfo) {
+  s = addshade();
+  c = document.createElement('div')
+  c.className = `w-80 h-80 bc-white cntr br-5p card-6 b-mgc-resp`
+  s.appendChild(c)
+  c.innerHTML = `<div class="p-r w-100 h-100 ovys">
+                  <div class="w-100 h-70p p-5p bsbb the-h bb-1-s-g">
+                      <div class="w-100 h-100 p-20p bsbb">
+                          <span class="verdana helvetica fs-20p capitalize">orders</span>
+                      </div>
+                  </div>
+                  <div class=" w-100 h-a ovys p-10p bsbb">
+                  <table class="w-100 h-a theob">
+                    <tr class="">
+                        <td class="p-10p bsbb bb-1-s-g">
+                          <span class="fs-15p verdana p-10p">#</span>
+                        </td>
+                        <td class="p-10p bsbb bb-1-s-g">
+                          <span class="fs-15p verdana p-10p nowrap">Nbr of products</span>
+                        </td>
+                        <td class="p-10p bsbb bb-1-s-g">
+                          <span class="fs-15p verdana p-10p">date</span>
+                        </td>
+                        <td class="p-10p bsbb bb-1-s-g">
+                          <span class="fs-15p verdana p-10p">Status</span>
+                        </td>
+                        <td class="p-10p bsbb bb-1-s-g">
+                          <span class="fs-15p verdana p-10p nowrap">total price</span>
+                        </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="w-100 h-70p p-5p bsbb the-h bb-1-s-g">
+                    <div class="w-100 h-100 p-20p bsbb">
+                        <span class="verdana helvetica fs-20p capitalize">feedbacks</span>
+                    </div>
+                </div>  
+                    <div class=" w-100 h-a ovys p-10p bsbb">
+                      <table class="w-100 h-a thefb">
+                        <tr class="">
+                            <td class="p-10p bsbb bb-1-s-g">
+                              <span class="fs-15p verdana p-10p">#</span>
+                            </td>
+                            <td class="p-10p bsbb bb-1-s-g">
+                              <span class="fs-15p verdana p-10p">user</span>
+                            </td>
+                            <td class="p-10p bsbb bb-1-s-g">
+                              <span class="fs-15p verdana p-10p nowrap">Product name</span>
+                            </td>
+                            <td class="p-10p bsbb bb-1-s-g">
+                              <span class="fs-15p verdana p-10p">rate</span>
+                            </td>
+                            <td class="p-10p bsbb bb-1-s-g">
+                              <span class="fs-15p verdana p-10p">message</span>
+                            </td>
+                            <td class="p-10p bsbb bb-1-s-g">
+                              <span class="fs-15p verdana p-10p">date</span>
+                            </td>
+                            <td class="p-10p bsbb bb-1-s-g">
+                              <span class="fs-15p verdana p-10p">action</span>
+                            </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  </div>
+                  `
+let theb = c.querySelector('table.theob');
+let orders = userinfo.orders
+i = 1
+if (orders.length) {
+  orders.forEach(pinfo=>{
+    t = document.createElement('tr');
+    t.innerHTML = 
+      `<td class="p-10p bsbb">
+        <span class="fs-14p verdana">${i}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${JSON.parse(pinfo.products).length}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${pinfo.date}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${pinfo.status}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${adcm(pinfo.totalprice)} <small class="consolas dgray">RWF</small></span>
+      </td>
+      `;
+      theb.appendChild(t)
+      i+=1;
+  })
+}else{
+  t = document.createElement('tr');
+    t.innerHTML = 
+      `<td class="p-10p bsbb" colspan="8">
+        <div class="w-100 h-a">
+        <div class="center p-10p bsbb w-100 h-a svg-hol">
+          <span class="verdana fs-15p"><svg class="w-100p h-100p" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="removeIconTitle" stroke="#ccc" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#ccc"> <title id="removeIconTitle">Remove</title> <path d="M17,12 L7,12"></path> <circle cx="12" cy="12" r="10"></circle> </svg></span>
+        </div>
+        <div class="center p-40p bsbb w-100 h-100">
+          <span class="verdana fs-18p ta-c dgray">it seems like there are <br> no orders for this user</span>
+        </div>
+      </div>
+      </td>
+      `;
+      theb.appendChild(t)
+}
+let thefb = c.querySelector('table.thefb');
+let feedbacks = userinfo.feedbacks
+i = 1
+if (feedbacks.length) {
+  feedbacks.forEach(pinfo=>{
+    t = document.createElement('tr');
+    t.innerHTML = 
+      `<td class="p-10p bsbb">
+        <span class="fs-14p verdana">${i}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana capitalize nowrap">${userinfo.info.firstname} ${userinfo.info.lastname}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${pinfo.pname}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana nowrap">${pinfo.rate} Star</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${pinfo.message}</span>
+      </td>
+      <td class="p-10p bsbb">
+        <span class="fs-14p verdana">${pinfo.dateadded}</span>
+      </td>
+      <td class="p-10p bsbb">
+      <span class="fs-14p verdana red center hover-2 us-none deletelink capitalize" id='${pinfo.id}'>delete</span>
+      </td>
+      `;
+      thefb.appendChild(t)
+      i+=1;
+    })
+    const dele = Array.from(thefb.querySelectorAll('span.deletelink'));
+        
+    dele.forEach(del=>{
+      del.addEventListener('click',async e=>{
+        e.preventDefault();
+        p = postschema
+        p.body = JSON.stringify({token: getdata('admin'),feedbackid: del.id})
+        try {
+          del.parentNode.parentNode.parentNode.removeChild(del.parentNode.parentNode)
+        } catch (error) {
+          
+        }
+        r = await request('deletefeedback',p)
+
+        if (!r.success) return 0
+        alertMessage(r.message)
+      })
+    })
+  
+}else{
+  t = document.createElement('tr');
+    t.innerHTML = 
+      `<td class="p-10p bsbb" colspan="8">
+      <div class="w-100 h-a">
+      <div class="center p-10p bsbb w-100 h-a svg-hol">
+        <span class="verdana fs-15p"><svg class="w-100p h-100p" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="removeIconTitle" stroke="#ccc" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#ccc"> <title id="removeIconTitle">Remove</title> <path d="M17,12 L7,12"></path> <circle cx="12" cy="12" r="10"></circle> </svg></span>
+      </div>
+      <div class="center p-40p bsbb w-100 h-100">
+        <span class="verdana fs-18p ta-c dgray">it seems like there are <br> no feedbacks for this user</span>
+      </div>
+    </div>
+      </td>
+      `;
+      thefb.appendChild(t)
+}
+}
 export function sf(aa,parent) {
   if (aa.success) {
   if ( aa.message.length > 0) {
@@ -3585,7 +3822,6 @@ async function shadddiscountform(product) {
       let cprihol = a.querySelector('div.cprihol')
       select.addEventListener('change',e=>{
         if (select.value !='') {
-          console.log(cprihol)
           cprihol.textContent = `current price: ${adcm(product[0].conditions[select.value].newprice)} RWF`
         }
 			})
@@ -3653,7 +3889,6 @@ async function shadddiscountform(product) {
 				condition: condition,
 				token: getdata('admin')
 			  }
-        console.log(o)
 				l = {
 				  mode: 'cors',
 				  method: "POST",
@@ -3680,7 +3915,7 @@ async function sheditpriceform(product) {
 	s.appendChild(a)
   a.className = "w-500p h-a p-20p bsbb bc-white cntr zi-10000 br-5p b-mgc-resp"
   a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg">
-							<span class="fs-18p black capitalize igrid center h-100 verdana">edit a product</span>
+							<span class="fs-18p black capitalize igrid center h-100 verdana">edit price</span>
 						</div>
 						<div class="body w-100 h-a p-5p grid mt-10p">
               <div class="avdisc w-100 h-a p-10p bsbb">
@@ -3813,6 +4048,539 @@ async function sheditpriceform(product) {
 			}
 		})
 }
+async function sheditproductform(product) {
+  product = product[0]
+  s = addshade();
+  a = document.createElement('div')
+	s.appendChild(a)
+  a.className = "w-80 h-80 p-20p bsbb bc-white cntr zi-10000 br-5p b-mgc-resp"
+  a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg">
+							<span class="fs-18p black capitalize igrid center h-100 verdana">edit product</span>
+						</div>
+						<div class="body w-100 h-90 ovys p-5p grid mt-10p">
+            <div class="w-100 bsbb ovys p-10p">
+            <div class="form-holder w-100 h-100">
+              <form method="POST" action="" id="edit-product-form" name="edit-product-form">
+                <div class="f-content w-100 h-100">
+                  <div class="1st w-100 h-a p-5p">
+                    <div class="title black bb-1-s-g p-5p">
+                      <span class="fs-20p bold capitalize verdana">basic information</span>
+                    </div>
+                    <div class="w-100 h-a flex bblock-resp mb-30p">
+                      <div class="w-50 parent mt-30p p-10p bsbb  p-r bfull-resp">
+                        <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">product name</label>
+                        <input type="text" id="name" name="product-name" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input" placeholder="" value="${product.pname}">	
+                        <span class="p-a r-0 t-0 mr-20p mt-20p">
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                            <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                          </svg>
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                            <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                            <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                          </svg>
+                        </span>
+                        <small class="red verdana left hidden ml-5p">error mssg</small>				
+                      </div>
+                      <div class="w-50 parent mt-30p p-10p bsbb  p-r bfull-resp">
+                        <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">product quantity</label>
+                        <input type="number" id="quantity" name="product-quantity" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input" placeholder="" value="${product.quantity}">	
+                        <span class="p-a r-0 t-0 mr-20p mt-20p">
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                            <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                          </svg>
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                            <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                            <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                          </svg>
+                        </span>
+                        <small class="red verdana left hidden ml-5p">error mssg</small>				
+                      </div>
+                    </div>
+                    <div class="w-100 parent mt-30p p-10p bsbb bm-a-resp  p-r bfull-resp">
+                      <textarea type="text" name="description" id="description" class=" black b-1-s-dgray consolas w-100 h-80p no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input" placeholder="description">${product.description}</textarea>
+                      <span class="p-a r-0 t-0 mt-20p mr-20p">
+                        <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                          <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                        </svg>
+                        <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                          <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                          <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                        </svg>
+                      </span>
+                      <small class="red verdana left hidden ml-5p"></small>				
+                    </div>
+                    <div class="w-100 h-a mt-10p mb-10p p-10p bsbb flex bblock-resp">
+                      <div class="p-r w-170p  mr-10p mt-10p left parent ovh h-100 bfull-resp">
+                        <div class="p-10p no-outline bsbb b-1-s-dgray bc-white w-100 h-40p hover-2 dgray capitalize fs-14p consolas nowrap p-r mb-10p">
+                        <label>
+                          select images
+                        </label>
+                        </div>
+                        <input type="file" name="image" placeholder="Thumbnail" class="p-a l-0 t-0 center hover-2 h-40p w-100 op-0">
+                        <span class="p-a r-0 mt--37p mr-5p w-20p h-20p zi-10000">
+                        <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                          <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                        </svg>
+                        <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                          <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                          <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                        </svg>
+                        </span>
+                        <small class="red verdana hidden ml-5p">error mssg</small>
+                        <div class="w-100 h-a bsbb mt-10p">
+                        <div class="butt-hol">
+                          <span class="w-100 p-10p bsbb h-a verdana bc-orange white center hover-2 us-none litbuts" id="images">add images</span>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="p-r w-90  right h-100 parent p-10p bsbb bfull-resp">
+                        <div class="no-outline previewpanel bsbb b-1-s-dgray bc-white w-100 h-a left" title="images"><span class="bsbb placeholder w-100 h-100p p-10p center verdana dgray fs-13p capitalize" name="images">select images to preview them here</span></div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="2nd w-100 h-a p-5p">
+                    <div class="title black bb-1-s-g p-5p">
+                      <span class="fs-20p bold capitalize verdana">other related informations</span>
+                    </div>
+                    <div class="w-100 flex p-10p bsbb b-p-0-resp bblock-resp">
+                      <div class="w-100 parent p-10p bsbb p-r">
+                        <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">category</label>
+                          <select type="text" id="category" name="product-category" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input">
+                            <option></option>
+                          </select>
+                          <span class="p-a r-0 t-0 mr-20p mt-20p">
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                              <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                            </svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                              <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                              <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                            </svg>
+                          </span>
+                        <small class="red verdana left hidden ml-5p">error mssg</small>				
+                      </div>
+                      <div class="w-100 parent p-10p bsbb p-r">
+                        <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">subcategory</label>
+                          <select type="text" id="subcategory" name="product-subcategory" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input">
+                            <option></option>
+                          </select>
+                          <span class="p-a r-0 t-0 mr-20p mt-20p">
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                              <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                            </svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                              <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                              <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                            </svg>
+                          </span>
+                        <small class="red verdana left hidden ml-5p">error mssg</small>				
+                      </div>
+                      <div class="w-100 parent p-10p bsbb p-r">
+                        <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">brand</label>
+                        <select type="text" id="brand" name="product-brand" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input">
+                          <option></option>
+                        </select>
+                        <span class="p-a r-0 t-0 mr-20p mt-20p">
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                            <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                          </svg>
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                            <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                            <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                          </svg>
+                        </span>
+                        <small class="red verdana left hidden ml-5p">error mssg</small>				
+                      </div>
+                      <div class="w-100 parent p-10p bsbb p-r">
+                        <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">serie</label>
+                        <select type="text" id="serie" name="product-serie" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input">
+                          <option></option>
+                        </select>
+                        <span class="p-a r-0 t-0 mr-20p mt-20p">
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                            <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                          </svg>
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                            <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                            <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                          </svg>
+                        </span>
+                        <small class="red verdana left hidden ml-5p">error mssg</small>				
+                      </div>
+                      <div class="w-100 parent p-10p bsbb p-r">
+                        <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">usability</label>
+                        <select type="text" id="usability" name="product-usability" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input">
+                          <option></option>
+                        </select>
+                        <span class="p-a r-0 t-0 mr-20p mt-20p">
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                            <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                          </svg>
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                            <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                            <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                          </svg>
+                        </span>
+                        <small class="red verdana left hidden ml-5p">error mssg</small>				
+                      </div>
+                      <div class="w-100 parent p-10p bsbb p-r">
+                        <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">availability</label>
+                        <select type="text" id="availability" name="product-availability" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p main-input">
+                          <option></option>
+                        </select>
+                        <span class="p-a r-0 t-0 mr-20p mt-20p">
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                            <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                          </svg>
+                          <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                            <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                            <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                          </svg>
+                        </span>
+                        <small class="red verdana left hidden ml-5p">error mssg</small>				
+                      </div>
+                    </div>
+                    <div class="w-100 h-a mt-10p mb-10p p-10p bsbb flex bblock-resp">
+                      <div class="p-10p bsbb w-100">
+                        <div class="w-100 parent p-10p bsbb p-r">
+                          <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">specification name</label>
+                          <input type="text" id="specification-name" name="specification-name" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p">
+                          <span class="p-a r-0 t-0 mt-20p mr-20p">
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                              <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                            </svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                              <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                              <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                            </svg>
+                          </span>
+                          <small class="red verdana left hidden ml-5p">error mssg</small>				
+                        </div>
+                        <div class="w-100 parent p-10p bsbb p-r">
+                          <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">specification value</label>
+                          <input type="text" id="specification-value" name="specification-value" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p">
+                          <span class="p-a r-0 t-0 mt-20p mr-20p">
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                              <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                            </svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                              <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                              <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                            </svg>
+                          </span>
+                          <small class="red verdana left hidden ml-5p">error mssg</small>				
+                        </div>
+                        <div class="w-100 h-a bsbb p-10p">
+                          <div class="butt-hol">
+                            <span class="w-100 p-10p bsbb h-a verdana bc-orange white center hover-2 us-none litbuts" id="specifications" >add specification</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="p-r w-90  right h-100 parent p-10p bsbb bsbb bfull-resp">
+                          <div class="no-outline previewpanel bsbb b-1-s-dgray bc-white w-100 h-a left" title="specifications">
+                          <span class="bsbb placeholder w-100 h-100p p-10p center verdana dgray fs-13p 	capitalize">add specifications to preview them here</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="3rd w-100 h-a p-5p bsbb">
+                    <div class="title black bb-1-s-g p-5p">
+                      <span class="fs-20p bold capitalize verdana">prices and conditions</span>
+                    </div>
+                    <div class="w-100 h-a mt-10p mb-10p p-10p bsbb flex bblock-resp">
+                      <div>
+                        <div class="w-100 parent p-10p bsbb p-r">
+                          <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">condition name</label>
+                          <input type="text" id="condition-name" name="condition-name" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p">
+                          <span class="p-a r-0 t-0 mt-20p mr-20p">
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                              <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                            </svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                              <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                              <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                            </svg>
+                          </span>
+                          <small class="red verdana left hidden ml-5p">error mssg</small>				
+                        </div>
+                        <div class="w-100 parent p-10p bsbb p-r">
+                          <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">condition price</label>
+                          <input type="number" id="condition-price" name="condition-price" class="black b-1-s-dgray consolas w-100 no-outline center bsbb p-10p mt--2p fs-15p br-2p">
+                          <span class="p-a r-0 t-0 mt-20p mr-20p">
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                              <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                            </svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                              <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                              <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                            </svg>
+                          </span>
+                          <small class="red verdana left hidden ml-5p">error mssg</small>				
+                        </div>
+                        <div class="w-100 h-a p-10p bsbb">
+                          <div class="butt-hol">
+                            <span class="w-100 p-10p bsbb h-a verdana bc-orange white center hover-2 us-none litbuts" id="conditions">add condition</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="p-r w-90  right h-100 parent p-10p bsbb bsbb bfull-resp">
+                        <div class="no-outline previewpanel bsbb b-1-s-dgray bc-white w-100 h-a left" title="conditions">
+                        <span class="placeholder w-100 h-100p p-10p center verdana dgray fs-13p capitalize bsbb">add conditions to preview them here</span></div>
+                      </div>
+                    </div>
+                    <div class="buttons w-100 h-a mt-p p-10p bsbb ovh">
+                      <div class="button-hol w-100 h-100 p-10p bsbb">
+                        <button type="submit" class="b-none br-2p bc-theme white p-15p bsbb right verdana center hover-2">
+                          <span class="fs-15p">edit the product</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+						</div>`
+  f = a.querySelector('form#edit-product-form')
+  let i = Array.from(f.querySelectorAll('input'))
+  p = Array.from(f.querySelectorAll('div.previewpanel'));
+  let litbuts = Array.from(f.querySelectorAll('span.litbuts'));
+  litbuts.forEach(button=>{
+      button.addEventListener('click',()=>{
+          if(button.id == 'conditions'){
+              p =  button.parentNode.parentNode.parentNode
+              i = Array.from(p.querySelectorAll('input'));
+              i.forEach(input=>{
+                  (input.value == '')? setErrorFor(input,'') : setSuccessFor(input);
+              })
+              if(i[0].value != '' && i[1].value != ''){
+                  v = p.parentElement.childNodes[3].childNodes[1]
+                  d = {[i[0].value]: i[1].value}
+                  i.forEach(input=>{
+                      input.value = null;
+                      setBlurFor(input)
+                  })
+                  ac(d,v)
+              }
+          }else if (button.id == 'specifications') {
+              p =  button.parentNode.parentNode.parentNode
+              i = Array.from(p.querySelectorAll('input'));
+              i.forEach(input=>{
+                  (input.value == '')? setErrorFor(input,'') : setSuccessFor(input);
+              })
+              if(i[0].value != '' && i[1].value != ''){
+                  v = p.parentElement.childNodes[3].childNodes[1]
+                  d = {[i[0].value]: i[1].value}
+                  i.forEach(input=>{
+                      input.value = null;
+                      setBlurFor(input)
+                  })
+                  as(d,v)
+              }
+          }else if (button.id == 'images') {
+              p =  button.parentNode.parentNode.parentNode.parentNode
+              i = Array.from(p.querySelectorAll('input'));
+              i.forEach(inp=>{
+                  if (inp.type == 'file' && inp.value == '') {
+                      setErrorFor(inp,"choose an image");
+                      return 0;
+                    }else if (inp.type == 'file' && inp.value != '') {
+                      d = checkFileType(inp)[0];
+                      if (d == 'image') {
+                        setSuccessFor(inp);
+                        ai(inp,p.querySelector('div.previewpanel'))
+                        return 1;
+                      }else{
+                        setErrorFor(inp,'only images are allowed')
+                        return 0;
+                      }
+              
+                    }
+              })
+          }
+      })
+  })
+
+  for (const panel of p) {
+    if (panel.title == 'images') {
+       product.pimgs.forEach(async (image)=>{
+        let img = document.createElement('img');
+        img.src = geimgturl()+'/product-imgz/'+image
+        img.addEventListener('load',()=>{
+          ai(img,panel)
+        })
+       })
+    }else if (panel.title == 'conditions') {
+      product.conditions.forEach(condition=>{
+        ac({[condition.name]:condition.newprice},panel)
+      })
+    }else if (panel.title == 'specifications') {
+      Object.keys(product.pspecs).forEach(spec=>{
+        as({[spec] : product.pspecs[spec]},panel)
+      })
+    }
+  }
+  i.forEach(input=>{
+    if (input.value != '') {
+      setFocusFor(input)
+    }
+    input.addEventListener('focus',()=>{
+      setFocusFor(input)
+    })
+    input.addEventListener('blur',()=>{
+      if (input.value.trim() == '') {
+        setBlurFor(input)
+      }
+    })
+  })
+  t= await request('tree',o)
+  s = Array.from(a.querySelectorAll('select.main-input'))
+    for (const select of s) {
+      if (select.name == 'product-category') {
+        select.innerHTML = `<option></option>`
+        setBlurFor(select)
+        ats(select,t.message.categories,s,product.catname,product.subcatname)
+      }else if(select.name == 'product-brand'){
+        select.innerHTML = `<option></option>`
+        setBlurFor(select)
+        ats(select,t.message.brands,s,product.brandname,product.famname)
+      }else if(select.name == 'product-usability'){
+        select.innerHTML = `<option></option>`
+        setBlurFor(select)
+        ats(select,t.message.usedin,s,product.usedinname)
+      }else if(select.name == 'product-availability'){
+        select.innerHTML = `<option></option>`
+        setBlurFor(select)
+        ats(select,t.message.availability,s,product.availability)
+      }
+    }
+		f.addEventListener('submit',async (e)=>{
+      e.preventDefault()
+      i = Array.from(f.querySelectorAll('input.main-input'))
+      t = Array.from(f.querySelectorAll('textarea.main-input'))
+      s = Array.from(f.querySelectorAll('select.main-input'))
+      t.forEach(textarea=>{
+        i.push(textarea)
+      })
+      s.forEach(select=>{
+        i.push(select)
+      })
+      p = Array.from(f.querySelectorAll('div.previewpanel'));
+      let images,conditions,specifications
+      for (const panel of p) {
+        if (panel.title == 'images') {
+           images = getcips(panel)
+        }else if (panel.title == 'conditions') {
+          conditions = getcips(panel)
+        }else if (panel.title == 'specifications') {
+           specifications = getcips(panel)
+        }
+      }
+      let name,quantity,description,catid,subcatid,brandid,famid,usedin,availability
+      for(const input of i){
+        if (input.value == '') {
+          setErrorFor(input,'this is a required field')
+        }else(
+          setSuccessFor(input)
+        )
+        if (input.id == 'name') {
+           name = input.value
+        }else if (input.id == 'quantity') {
+          quantity = input.value
+         
+        }else if (input.id == 'description') {
+           description = input.value
+          
+        }else if (input.id == 'category') {
+           catid = input.value
+          
+        }else if (input.id == 'subcategory') {
+           subcatid = input.value
+          
+        }else if (input.id == 'brand') {
+           brandid = input.value
+          
+        }else if (input.id == 'serie') {
+           famid = input.value
+          
+        }else if (input.id == 'usability') {
+           usedin = input.value
+          
+        }else if (input.id == 'availability') {
+           availability = input.value
+          
+        }
+      }
+      if(name != '' && quantity != '' && description != '' && catid != '' && subcatid != '' && brandid != '' && famid != '' && usedin != '' && availability != '' && images.length > 0 && conditions.length > 0 && Object.keys(specifications).length > 0){
+        o = {
+          prodinfo: {
+            name: name,
+            quantity: quantity,
+            description: description,
+            catid: catid,
+            subcatid: subcatid,
+            brandid: brandid,
+            famid: famid,
+            usedin: usedin,
+            availability: availability,
+            images: images,
+            conditions: conditions,
+            specifications: specifications
+          },
+          product: product.prodid,
+          token: getdata('admin')
+        }
+          l = {
+            mode: 'cors',
+            method: "POST",
+            body: JSON.stringify(o),
+            headers: {
+              "content-type": "application/json",
+              'accept': '*/*'
+          }
+        }
+        r = await request('editprodinfo',l)
+        if (r.success) {
+          alertMessage(r.message)
+          f.reset()
+        }else{
+          alertMessage(r.message)
+        }
+      }else{
+      }
+    })
+}
 function showq(queryinfo) {
   s = addshade();
   c = document.createElement('div')
@@ -3854,8 +4622,11 @@ export async function ai(input,parent) {
   if (p) {
       deletechild(p,parent)
   }
-  s = await showPreview(input)
-  input.value = null
+  s = (input.classList.length == 0) ? await givePreview(input) : await showPreview(input);
+  (input.classList.length > 0) ? input.value = null : null;
+  if (s == 'data:,') {
+    return
+  }
   c = document.createElement('span')
   c.className = 'w-60p h-60p b-1-s-gray br-2p m-5p iblock chip p-r';
   r = document.createElement('div');
@@ -3881,12 +4652,90 @@ export async function ai(input,parent) {
       })
   })
 }
+export function ac(info,parent) {
+  p = parent.querySelector('span.placeholder')
+  if (p) {
+      deletechild(p,parent)
+  }
+  c = document.createElement('span')
+  c.className = 'w-a h-20p b-1-s-gray br-2p p-5p m-5p fs-13p iblock chip verdana dgray consolas ';
+  r = document.createElement('div');
+  r.className = "w-20p h-20p p-r right bc-white remove mb-5p ml-5p  b-1-s-gray center br-50 hover"
+  r.innerHTML = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve"><g><line fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" x1="18.947" y1="17.153" x2="45.045" y2="43.056"></line></g><g><line fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" x1="19.045" y1="43.153" x2="44.947" y2="17.056"></line></g></svg>`
+  c.innerHTML = `<span class="p-5p bsbb consolas ${cc(Object.keys(info)[0])} fs-12p">${Object.keys(info)[0]}</span> : <span class="p-5p bsbb consolas black fs-12p">${adcm(info[Object.keys(info)[0]])}</span> RWF`
+  c.appendChild(r)
+  let found = 0
+  for(const chip of parent.childNodes){
+      if (chip) {
+          t = chip.childNodes[0]
+          if (t && t.textContent == Object.keys(info)[0]) {
+           found = 1
+          }
+      }
+  }
+  (!found)? parent.appendChild(c): null
+  d = getcips(parent)
+  r = Array.from(document.querySelectorAll('div.remove'));
+  r.forEach(remove=>{
+      remove.addEventListener('click',e=>{
+          e.preventDefault();
+          try {
+              deletechild(remove.parentNode,parent)
+              l = Array.from(parent.querySelectorAll('span.chip'))
+              if(l.length == 0){
+                  parent.innerHTML = `<span class="placeholder w-100 h-100p p-10p center verdana dgray fs-13p capitalize bsbb">add conditions to preview them here</span>`
+          }
+          } catch (error) {
+              console.log(error)
+          }
+          
+      })
+  })
+}
+export function as(info,parent) {
+  let p = parent.querySelector('span.placeholder')
+  if (p) {
+      deletechild(p,parent)
+  }
+  c = document.createElement('span')
+  c.className = 'w-a h-20p b-1-s-gray br-2p p-5p m-5p fs-13p iblock chip verdana dgray consolas ';
+  r = document.createElement('div');
+  r.className = "w-20p h-20p p-r right bc-white remove mb-5p ml-5p  b-1-s-gray center br-50 hover"
+  r.innerHTML = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve"><g><line fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" x1="18.947" y1="17.153" x2="45.045" y2="43.056"></line></g><g><line fill="none" stroke="#000" stroke-width="1" stroke-miterlimit="10" x1="19.045" y1="43.153" x2="44.947" y2="17.056"></line></g></svg>`
+  c.innerHTML = `<span class="p-5p bsbb consolas black fs-12p">${Object.keys(info)[0]}</span> : <span class="p-5p bsbb consolas dgray fs-12p">${info[Object.keys(info)[0]]}</span> `
+  c.appendChild(r)
+  let found = 0
+  for(const chip of parent.childNodes){
+      if (chip) {
+          t = chip.childNodes[0]
+          if (t && t.textContent == Object.keys(info)[0]) {
+           found = 1  
+          }
+      }
+  }
+  (!found)? parent.appendChild(c): null
+  d = getcips(parent)
+  r = Array.from(document.querySelectorAll('div.remove'));
+  r.forEach(remove=>{
+      remove.addEventListener('click',e=>{
+          e.preventDefault();
+          try {
+          deletechild(remove.parentNode,parent)
+          l = Array.from(parent.querySelectorAll('span.chip'))
+          if(l.length == 0){
+              parent.innerHTML = `<span class="placeholder w-100 h-100p p-10p center verdana dgray fs-13p capitalize bsbb">add conditions to preview them here</span>`
+          }
+          } catch (error) {
+              console.log(error)
+          }
+          
+      })
+  })
+}
 async function refreshtoken(params) {
   g= getschema
   localStorage.removeItem('tree')
   localStorage.removeItem('getpinned')
   localStorage.removeItem('getprods')
   
-
 }
-
