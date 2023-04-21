@@ -123,7 +123,7 @@ if (f) {
         q = new Array(v,n,m)
         b.addEventListener('click',async(e)=>{
             e.preventDefault();
-            if (d.length > 4) {
+            if (d.length > 2 ) {
                 localStorage.setItem('favs',JSON.stringify(d))
                 q.forEach(el=>{
                     if (el != null) {
