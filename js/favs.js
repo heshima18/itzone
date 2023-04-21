@@ -172,6 +172,7 @@ export function addfav(aa,parent){
                                     <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black">
 									    <img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
                                     </a>    
+
 								</span>
 							</div>
 							<div class="w-100 h-180p">

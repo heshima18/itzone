@@ -1360,6 +1360,7 @@ io.on('connection', function (socket) {
 						database.query(`select * from users where id = '${t}' and status = 'active'`,async (error,result)=>{
 							if (error) return res.send({success: false, message: error})
 							if (result.length > 0) {
+								console.log('dd')
 								try {
 									p = req.body.products;
 									m = 0
