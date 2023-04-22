@@ -153,7 +153,7 @@ io.on('connection', function (socket) {
 					res.send({ success: true, message: products});
 					
 				} catch (error) {
-			      res.send({ success: false, message: "oops an error occured" });
+			  		res.send({ success: false, message: "oops an error occured" });
 				  	
 				}
 			  });
@@ -415,12 +415,17 @@ io.on('connection', function (socket) {
 				database.query("SELECT products.id as prodid, products.name as pname, products.availability, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) where orders >=(SELECT avg(orders) from products) and products.category != 'services'",(error,result)=>{
 					if (error) return res.send({ success: false, message: "oops an error occured"});
 					const products = JSON.parse(JSON.stringify(result))
-					products.forEach(prods=>{
-						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
-					})
-					res.status(201).send({success:true,message:products})
+					try {
+						products.forEach(prods=>{
+							products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+							products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+							products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+						})
+						res.status(201).send({success:true,message:products})
+						
+					} catch (error) {
+						res.send({ success: false, message: "oops an error occured"});
+					}
 			 
 				  });
 			} catch (error) {
@@ -1267,19 +1272,24 @@ io.on('connection', function (socket) {
 			  database.query(`SELECT products.id as prodid,JSON_EXTRACT(products.conditions, '$') AS conditions,products.availability,products.description,products.availability, products.name as pname, products.specifications as pspecs,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) where JSON_CONTAINS(conditions, '{"promotion": true}', '$') `,(error,result)=>{
 				if (error) return res.send({ success: false, message: error});
 				const products = JSON.parse(JSON.stringify(result))
-				products.forEach(prods=>{
-					products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-					products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-					products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
-				})
-				products.forEach(prod=>{
-					prod.conditions.forEach(cond=>{
-						if (cond.promotion == null) {
-							products[products.indexOf(prod)].conditions.splice(prod.conditions.indexOf(cond),1)
-						}
+				try {
+					products.forEach(prods=>{
+						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
 					})
-				})
-				res.send({ success: true, message: products});
+					products.forEach(prod=>{
+						prod.conditions.forEach(cond=>{
+							if (cond.promotion == null) {
+								products[products.indexOf(prod)].conditions.splice(prod.conditions.indexOf(cond),1)
+							}
+						})
+					})
+					res.send({ success: true, message: products});
+					
+				} catch (error) {
+					res.send({ success: false, message: "oops an error occured" });
+				}
 			  });
 			} catch (err) {
 			  res.send({ success: false, message: "oops an error occured" });
