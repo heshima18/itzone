@@ -106,9 +106,14 @@ io.on('connection', function (socket) {
 					if (error) return res.send({ success: false, message: error});
 					const products = JSON.parse(JSON.stringify(result))
 					products.forEach(prods=>{
-						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+						try {
+							products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+							products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+							products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+							
+						} catch (error) {
+							
+						}
 					})
 					r = {categories: null,subcategories:null,brands: null,series: null,prods: null};
 					r.prods = products
@@ -145,9 +150,14 @@ io.on('connection', function (socket) {
 				if (error) return res.send({ success: false, message: "oops an error occured"});
 				const products = JSON.parse(JSON.stringify(result))
 				products.forEach(prods=>{
-					products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-					products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-					products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+					try {
+						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+						
+					} catch (error) {
+						
+					}
 				})
 				res.send({ success: true, message: products});
 			  });
@@ -163,9 +173,14 @@ io.on('connection', function (socket) {
 				if (error) return res.send({ success: false, message: error});
 				const products = JSON.parse(JSON.stringify(result))
 				products.forEach(prods=>{
-					products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-					products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-					products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+					try {
+						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+						
+					} catch (error) {
+						
+					}
 				})
 				res.send({ success: true, message: products});
 			  });
@@ -181,9 +196,14 @@ io.on('connection', function (socket) {
 					if (err) return res.status(500).send({ success: false, message: err});
 					const products = JSON.parse(JSON.stringify(result))
 					products.forEach(prods=>{
-						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+						try {
+							products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+							products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+							products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+							
+						} catch (error) {
+							
+						}
 					})
 					res.send({ success: true, message: products});
 				});
@@ -197,9 +217,14 @@ io.on('connection', function (socket) {
 				if (error) return res.send({ success: false, message: "oops an error occured"});
 				const products = JSON.parse(JSON.stringify(result))
 				products.forEach(prods=>{
-					products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-					products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-					products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+					try {
+						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+						
+					} catch (error) {
+						
+					}
 				})
 				if (products.length > 0) {
 						f = await query(`select users.firstname,users.lastname,feedbacks.image,feedbacks.message,feedbacks.rate,feedbacks.product from ((feedbacks inner join users on feedbacks.user = users.id)inner join products on products.id = feedbacks.product) where users.status = 'active' and feedbacks.product = '${products[0].prodid}'`)
@@ -410,9 +435,14 @@ io.on('connection', function (socket) {
 					if (error) return res.send({ success: false, message: "oops an error occured"});
 					const products = JSON.parse(JSON.stringify(result))
 					products.forEach(prods=>{
-						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+						try {
+							products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+							products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+							products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+							
+						} catch (error) {
+							
+						}
 					})
 					res.status(201).send({success:true,message:products})
 			 
@@ -1262,9 +1292,14 @@ io.on('connection', function (socket) {
 				if (error) return res.send({ success: false, message: error});
 				const products = JSON.parse(JSON.stringify(result))
 				products.forEach(prods=>{
-					products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-					products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-					products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+					try {
+						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+						
+					} catch (error) {
+						
+					}
 				})
 				products.forEach(prod=>{
 					prod.conditions.forEach(cond=>{
@@ -1499,9 +1534,14 @@ io.on('connection', function (socket) {
 										let pr = await query(`SELECT products.id as prodid,products.availability,	products.description, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)  where products.id = '${prodid}'`)
 										const products = JSON.parse(JSON.stringify(pr))
 										products.forEach(prods=>{
-											products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-											products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-											products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+											try {
+												products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+												products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+												products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+												
+											} catch (error) {
+												
+											}
 										})
 										if(products.length > 0) j.push(products[0])
 										if (!pr) return res.send({ success: false, message: "oops an error occured"});
