@@ -71,8 +71,8 @@ export function a441618154(aa,parent){
 								</span>
 							</div>
 							<div class="w-100 h-a">
-								<div class="title w-100 h-30p p-5p bsbb center">
-									<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black"><span class="verdana left fs-16p p-5p bsbb black capitalize">${d.pname}</span></a>
+								<div class="title w-100 h-a p-5p bsbb center">
+									<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
 								</div>
 								<div class=" w-100 h-30p bsbb ovh center">
 									<span class="verdana fs-13p bsbb bc-gray p-7p br-5p dgray h-100 w-a ">${d.availability}</span>
@@ -174,9 +174,10 @@ export function sdisc(aa,parent){
 						</a>
 					</span>
 				</div>
-				<div class="w-100 h-180p">
-					<div class="title w-100 h-30p p-5p bsbb center">
-						<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black"><span class="verdana left fs-16p p-5p bsbb black capitalize">${d.pname}</span></a>
+				</div>
+				<div class="w-100 h-a">
+					<div class="title w-100 h-a p-5p bsbb center">
+						<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
 					</div>
 					<div class=" w-100 h-30p bsbb ovh center">
 						<span class="verdana fs-13p bsbb bc-gray p-7p br-5p dgray h-100 w-a ">${d.availability}</span>

@@ -1,5 +1,5 @@
 
-import { alertMessage, geturl,cc,request,adcm,checkCart,dcrtmgc,geimgturl } from "./functions.js";
+import { alertMessage, geturl,cc,request,adcm,checkCart,dcrtmgc,geimgturl, ellipsis } from "./functions.js";
 let prods_cont = document.querySelector('div.related-prods-cont')
 for (let i = 0; i < 20; i++) {
     prods_cont.innerHTML+= `<div class="product w-250p h-350p bc-white br-5p ovh ml-10p mr-10p mb-15p mt-15p iblock hover-4 bfull-500-resp bm-a-resp">
@@ -149,8 +149,8 @@ async function getparams(url) {
                                     </div>`
                 phol.innerHTML = `<div class="w-100 h-100 bsbb pttl bb-1-s-g">
                 <div class="w-100 h-a flex jc-sb">
-                <span class="verdana h-100 w-100 capitalize bold fs-20p ">${pd.pname}</span>
-                <span class="verdana w-a h-100 iblock  fs-17p black price nowrap">${adcm(pd.conditions[0].newprice)} <span class="consolas dgray">RWF</span></span>
+                <span class="verdana h-100 w-100 capitalize bold fs-20p wrap">${pd.pname}</span>
+                <span class="verdana w-30 h-100 iblock  fs-17p black price nowrap">${adcm(pd.conditions[0].newprice)} <span class="consolas dgray">RWF</span></span>
                 </div>
                 <div class="w-100 h-40p bsbb p-5p rates-hol flex"></div>
                 
@@ -199,7 +199,7 @@ async function getparams(url) {
                     leli.className = 'w-100 p-5p bsbb'
                     leli.innerHTML=`<div class="w-100 h-20p flex">
                                         <span class="verdana h-100 w-a capitalize fs-13p nowrap">${spec}:</span>
-                                        <span class="verdana h-100 w-a capitalize nowrap fs-13p pl-10p nowrap dgray">${pd.pspecs[spec]}</span>
+                                        <span class="verdana h-100 w-a capitalize  fs-13p pl-10p dgray">${pd.pspecs[spec]}</span>
                                     </div>`
                 })
 
@@ -462,10 +462,11 @@ export function a441618154(aa,parent){
 									<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
 								</span>
 							</div>
+                            </div>
 							<div class="w-100 h-a">
-								<div class="title w-100 h-30p p-5p bsbb center">
-									<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black"><span class="verdana left fs-16p p-5p bsbb black">${d.pname}</span></a>
-								</div>
+                                <div class="title w-100 h-a p-5p bsbb center">
+                                    <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
+                                </div>
 								<div class="cond w-100 h-30p bsbb ovh center">
 									<span class="verdana fs-13p bsbb bc-gray p-7p br-5p dgray h-100 w-a ">${d.availability}</span>
 								</div>

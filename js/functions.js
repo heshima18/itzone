@@ -546,7 +546,7 @@ export function showrecs(cont,resp) {
                       </div>
                     </div>
                     <div class="the-desc w-80 h-100 p-5p bsbb iblock">
-                    <div class="w-100 h-15p"><a href="${geturl()}/product/?id=${prod.prodid}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${prod.pname}</span></a></div>
+                    <div class="w-100 h-a"><a href="${geturl()}/product/?id=${prod.prodid}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${prod.pname}</span></a></div>
                     <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>in <a href="${geturl()}/browse/?category=${prod.catname}" class="td-none black ls-n"><font class="theme hover-2">${prod.catname}</font></a> , <a href="${geturl()}/browse/?subcategory=${prod.subcatname}" class="td-none black ls-n"><font class="theme hover-2">${prod.subcatname}</font></a>, <a href="${geturl()}/browse/?brand=${prod.brandname}" class="td-none black ls-n"><font class="theme hover-2">${prod.brandname}</font></a>, <a href="${geturl()}/browse/?usedin=${prod.usedinname}" class="td-none black ls-n"><font class="theme hover-2">${prod.usedinname}</font></a>, <a href="${geturl()}/browse/?serie=${prod.famname}" class="td-none black ls-n"><font class="theme hover-2">${prod.famname}</font></a></span></div>
                     </div>
                   </div> `
