@@ -144,12 +144,18 @@ io.on('connection', function (socket) {
 			  database.query("SELECT products.id as prodid,products.availability, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid,products.description, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) order by products.category,products.name asc ",(error,result)=>{
 				if (error) return res.send({ success: false, message: "oops an error occured"});
 				const products = JSON.parse(JSON.stringify(result))
-				products.forEach(prods=>{
-					products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
-					products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
-					products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
-				})
-				res.send({ success: true, message: products});
+				try {
+					products.forEach(prods=>{
+						products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
+						products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
+						products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+					})
+					res.send({ success: true, message: products});
+					
+				} catch (error) {
+			      res.send({ success: false, message: "oops an error occured" });
+				  	
+				}
 			  });
 			} catch (error) {
 			  res.send({ success: false, message: "oops an error occured" });
@@ -1360,7 +1366,6 @@ io.on('connection', function (socket) {
 						database.query(`select * from users where id = '${t}' and status = 'active'`,async (error,result)=>{
 							if (error) return res.send({success: false, message: error})
 							if (result.length > 0) {
-								console.log('dd')
 								try {
 									p = req.body.products;
 									m = 0
