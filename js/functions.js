@@ -132,7 +132,7 @@ function shwcrtcntn(a,x,items) {
             <span class="w-100 h-100 p-4p bc-white w-100 __16141134">
               <a href="${geturl()}/product/?id=${d.prodid}" class="td-none ls-n">
                 <font class="fs-16p black poppsins capitalize verdana hover-2 _16141134"  title="${d.pname}">
-                  ${d.pname}
+                  ${ellipsis(d.pname,20)}
                 </font>	
               </a>
             </span>
@@ -1468,9 +1468,11 @@ export async function sendmessage(inputs,type,form,formdata) {
       if (p.length > 0) {
         s = postschema
         s.body = JSON.stringify({payment: {method: m,data: d},products: p, address: l,token: u})
+        form.classList.add('op-0-3');
         r = await request('addorder',s)
         if (r.success) {
           form.reset();
+          form.classList.remove('op-0-3');
           localStorage.setItem('cart',JSON.stringify([]))
           p = await request('getprods',getschema)
           c = getdata('cart')
@@ -1478,6 +1480,7 @@ export async function sendmessage(inputs,type,form,formdata) {
           alertMessage(r.message)
           checkCart()
         }else{
+          form.classList.remove('op-0-3');
           alertMessage(r.message)
         }
       }else{

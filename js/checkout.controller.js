@@ -1,5 +1,5 @@
 
-import { adcm, cc, getdata, getschema, geturl, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr,geimgturl } from "./functions.js";
+import { adcm, cc, getdata, getschema, geturl, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr,geimgturl, ellipsis } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 
 m = document.querySelector('span.ttl-m')
@@ -46,7 +46,7 @@ export function getcinfo(prods) {
                                     <div class="w-100 h-100">
                                         <div class="w-100 h-a br-3p  mb-10p">
                                         <a href="${geturl()}/product/?id=${product.prodid}" class="td-none ls-n black">
-                                            <span class="w-100 h-a fs-18p bold verdana capitalize">${product.pname}</span>
+                                            <span class="w-100 h-a fs-15p bold verdana capitalize">${ellipsis(product.pname,40)}</span>
                                         </a>
                                         </div>
                                         <div class="w-100 h-a br-3p  mb-10p">
@@ -84,9 +84,9 @@ export function getcinfo(prods) {
                        <div class="w-100 h-100 pl-20p bsbb">
                            <div class="w-100 h-100">
                                <div class="w-100 h-a br-3p  mb-10p">
-                               <a href="${geturl()}/product/?id=${product.prodid}" class="td-none ls-n black">
-                                <span class="w-100 h-a fs-18p bold verdana capitalize">${product.pname}</span>
-                               </a>
+                                <a href="${geturl()}/product/?id=${product.prodid}" class="td-none ls-n black">
+                                     <span class="w-100 h-a fs-15p bold verdana capitalize">${ellipsis(product.pname,40)}</span>
+                                </a>
                                </div>
                                <div class="w-100 h-a br-3p  mb-10p">
                                     <ul class="p-0 m-0 ls-none h-a">
@@ -145,6 +145,7 @@ p.forEach(paymentForm=>{
     paymentForm.addEventListener('submit',(e)=>{
         z = Array.from(p[p.indexOf(paymentForm)].querySelectorAll('.main-input'))
         e.preventDefault()
+        if (paymentForm.classList.contains('op-0-3')) return 0
         validateForm(paymentForm,z,null);
     })
 })

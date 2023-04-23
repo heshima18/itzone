@@ -4,7 +4,6 @@ let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 let usericon = document.querySelector('svg.wishicon');
 usericon.addEventListener('click',(e)=>{
     e.preventDefault();
-    console.log('dd');
     u = getdata('user');
     if (u) {
         initiatewishlist();
@@ -165,8 +164,8 @@ export async function initiatewishlist() {
                       dcrtmgc(button,aa,x,y)
                   })
               });
-              let w = Array.from(parent.querySelectorAll('span.wish-icon'))
-                w.forEach(wishlistbut=>{
+              let wish = Array.from(document.querySelectorAll('span.wish-icon'))
+                wish.forEach(wishlistbut=>{
                     wishlistbut.addEventListener('click',async()=>{
                         u = getdata('user')
                         if (!u) {
@@ -175,12 +174,9 @@ export async function initiatewishlist() {
                             p = postschema
                             p.body = JSON.stringify({pid: wishlistbut.getAttribute('data-id'),token: u}) 
                             r = await request('addtowishlist',p);
-                            p.body = JSON.stringify({token: getdata('user')});
-                            z = await request('getwishlist',p);
-                            if (z.success) {
-                                addfav(z,parent) 
+                            if (r.success) {
+                                addsCard(r.message,true)
                             }
-
                         }
                     })
                 })
@@ -200,21 +196,4 @@ export async function initiatewishlist() {
                                       </div></div>`;
       }
   }
-  window.onload = ()=>{
-      let wish = Array.from(document.querySelectorAll('span.wish-icon'))
-      wish.forEach(wishlistbut=>{
-        wishlistbut.addEventListener('click',async()=>{
-            u = getdata('user')
-            if (!u) {
-                alertMessage('wish list is not available')
-            }else{
-                p = postschema
-                p.body = JSON.stringify({pid: wishlistbut.getAttribute('data-id'),token: u}) 
-                r = await request('addtowishlist',p);
-                if (r.success) {
-                    addsCard(r.message,true)
-                }
-            }
-        })
-      })
-  }
+ 

@@ -1,5 +1,6 @@
+let q,w,e,r,t,y,u,o,p,a,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 var prods_cont = document.querySelector('div.ts-cont');
-import { cc,request,v_,geturl,adcm, dcrtmgc, checkCart,geimgturl} from "./functions.js";
+import { cc,request,v_,geturl,adcm, dcrtmgc, checkCart,geimgturl,getdata,addsCard,postschema} from "./functions.js";
 let ts = document.querySelector('div.ts-cont');
 let ctscont = document.querySelector('div.cats-cont');
 let brndscont = document.querySelector('div.brands-cont')
@@ -124,6 +125,22 @@ export function a441618154(aa,parent){
 					dcrtmgc(button,aa,x,y)
 				})
 			});
+			let wish = Array.from(parent.querySelectorAll('span.wish-icon'))
+                wish.forEach(wishlistbut=>{
+                    wishlistbut.addEventListener('click',async()=>{
+                        u = getdata('user')
+                        if (!u) {
+                            alertMessage('wish list is not available')
+                        }else{
+                            p = postschema
+                            p.body = JSON.stringify({pid: wishlistbut.getAttribute('data-id'),token: u}) 
+                            r = await request('addtowishlist',p);
+                            if (r.success) {
+                                addsCard(r.message,true)
+                            }
+                        }
+                    })
+                })
 		}else{
 			parent.innerHTML = `<div class="w-100 h-a">
 									<div class="center p-10p bsbb w-100 h-100p svg-hol">
@@ -223,6 +240,22 @@ export function sdisc(aa,parent){
 				dcrtmgc(button,aa,x,y)
 			})
 		});
+		let wish = Array.from(parent.querySelectorAll('span.wish-icon'))
+                wish.forEach(wishlistbut=>{
+                    wishlistbut.addEventListener('click',async()=>{
+                        u = getdata('user')
+                        if (!u) {
+                            alertMessage('wish list is not available')
+                        }else{
+                            p = postschema
+                            p.body = JSON.stringify({pid: wishlistbut.getAttribute('data-id'),token: u}) 
+                            r = await request('addtowishlist',p);
+                            if (r.success) {
+                                addsCard(r.message,true)
+                            }
+                        }
+                    })
+                })
 	}else{
 		parent.innerHTML = `<div class="w-100 h-a">
 								<div class="center p-10p bsbb w-100 h-100p svg-hol">

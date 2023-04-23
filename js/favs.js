@@ -1,4 +1,4 @@
-import { getParam, getdata,request,postschema,getschema,addshade,shuffleArray,closetab,cc,geturl,adcm,dcrtmgc,geimgturl } from "./functions.js";
+import { getParam, getdata,request,postschema,getschema,addshade,shuffleArray,closetab,cc,geturl,adcm,dcrtmgc,geimgturl,addsCard } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m;
 j = document.querySelector('div.fav-c')
 f = getdata('favs');
@@ -232,6 +232,22 @@ export function addfav(aa,parent){
 					dcrtmgc(button,aa,x,y)
 				})
 			});
+            let wish = Array.from(parent.querySelectorAll('span.wish-icon'))
+                wish.forEach(wishlistbut=>{
+                    wishlistbut.addEventListener('click',async()=>{
+                        u = getdata('user')
+                        if (!u) {
+                            alertMessage('wish list is not available')
+                        }else{
+                            p = postschema
+                            p.body = JSON.stringify({pid: wishlistbut.getAttribute('data-id'),token: u}) 
+                            r = await request('addtowishlist',p);
+                            if (r.success) {
+                                addsCard(r.message,true)
+                            }
+                        }
+                    })
+                })
 		}else{
 			parent.innerHTML = `<div class="w-100 h-a">
 									<div class="center p-10p bsbb w-100 h-100p svg-hol">

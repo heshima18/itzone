@@ -1,5 +1,5 @@
-
-import { alertMessage, geturl,cc,request,adcm,checkCart,dcrtmgc,geimgturl, ellipsis } from "./functions.js";
+let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
+import { alertMessage, geturl,cc,request,adcm,checkCart,dcrtmgc,geimgturl,getdata,postschema,addsCard } from "./functions.js";
 let prods_cont = document.querySelector('div.related-prods-cont')
 for (let i = 0; i < 20; i++) {
     prods_cont.innerHTML+= `<div class="product w-250p h-350p bc-white br-5p ovh ml-10p mr-10p mb-15p mt-15p iblock hover-4 bfull-500-resp bm-a-resp">
@@ -110,11 +110,11 @@ async function getparams(url) {
                     <div class="unames">
                         <span class="black nowrap h-20p w-100p block verdana capitalize fs-13p">${feedback.firstname} ${feedback.lastname}</span>
                     </div>
-                    <div class="message flex p-10p bsbb">
+                    <div class="message flex pl-10p bsbb">
                         ${(feedback.image != 'null') ? `<div class="img w-70p h-70p br-5p"><img src="${geimgturl()}/feedback-imgz/${feedback.image}" class="w-100 h-100 contain"></div>` : ''}
                         
-                        <div class="mssg w-80 h-a">
-                            <span class="w-80 h-a m-5p block bsbb dgray verdana fs-12p">${feedback.message}</span>
+                        <div class="mssg w-100 h-a">
+                            <span class="w-100 h-a m-5p block bsbb dgray verdana fs-12p">${feedback.message}</span>
                         </div>
                 </div>`
                 }
@@ -148,8 +148,8 @@ async function getparams(url) {
                                         </span>
                                     </div>`
                 phol.innerHTML = `<div class="w-100 h-100 bsbb pttl bb-1-s-g">
-                <div class="w-100 h-a flex jc-sb">
-                <span class="verdana h-100 w-100 capitalize bold fs-20p wrap">${pd.pname}</span>
+                <div class="w-100 h-a flex jc-sb right">
+                <span class="verdana h-100 w-100 capitalize bold fs-20p wrap left">${pd.pname}</span>
                 <span class="verdana w-30 h-100 iblock  fs-17p black price nowrap">${adcm(pd.conditions[0].newprice)} <span class="consolas dgray">RWF</span></span>
                 </div>
                 <div class="w-100 h-40p bsbb p-5p rates-hol flex"></div>
@@ -512,6 +512,22 @@ export function a441618154(aa,parent){
 						</div>
 					</div>`;
 			})
+            let wish = Array.from(parent.querySelectorAll('span.wish-icon'))
+                wish.forEach(wishlistbut=>{
+                    wishlistbut.addEventListener('click',async()=>{
+                        u = getdata('user')
+                        if (!u) {
+                            alertMessage('wish list is not available')
+                        }else{
+                            p = postschema
+                            p.body = JSON.stringify({pid: wishlistbut.getAttribute('data-id'),token: u}) 
+                            r = await request('addtowishlist',p);
+                            if (r.success) {
+                                addsCard(r.message,true)
+                            }
+                        }
+                    })
+                })
 		}else{
 			parent.innerHTML = `<div class="w-100 h-a">
 									<div class="center p-10p bsbb w-100 h-100p svg-hol">
