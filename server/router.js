@@ -1,6 +1,7 @@
 let express = require('express');
 let crypto = require('crypto');
 let jwt = require('jsonwebtoken');
+const archiver = require('archiver');
 let fs = require('fs')
 let multer = require('multer')
 let secretkey = "myguy";
@@ -30,7 +31,46 @@ io.on('connection', function (socket) {
 
 	
 })		
-
+		router.get('/download/:folder', (req, res) => {
+			const folderPath = path.join(__dirname, '..', req.params.folder); // assuming the target directory is in the parent directory
+			const zipFileName = `${req.params.folder}.zip`;
+			const output = fs.createWriteStream(zipFileName);
+			const archive = archiver('zip', {
+			zlib: { level: 9 }
+			});
+		
+			// Set the headers for the response
+			res.attachment(zipFileName);
+			res.setHeader('Content-Type', 'application/zip');
+		
+			// Pipe the archive to the response
+			archive.pipe(res);
+		
+			// Append all the files in the directory to the archive
+			fs.readdir(folderPath, (err, files) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).send(err);
+			}
+		
+			files.forEach((file) => {
+				const filePath = path.join(folderPath, file);
+		
+				// Ensure that the file is not a directory before adding it to the archive
+				if (fs.lstatSync(filePath).isFile()) {
+				archive.file(filePath, { name: file });
+				}
+			});
+		
+			// Finalize the archive and send it to the client
+			archive.finalize();
+			});
+		
+			// Log when the archive is finished
+			output.on('close', () => {
+			console.log(`${zipFileName} has been created and sent to the client.`);
+			});
+		});
 		router.get('/images/:filename', (req, res) => {
 			const { filename } = req.params;
 			const path = `../images/${filename}`; // replace with your own path
