@@ -111,15 +111,10 @@ export async function initiatewishlist() {
                                       <img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
                                   </span>
                               </div>
-                              <div class="w-100 h-180p">
-                                  <div class="title w-100 h-30p p-5p bsbb">
+                              </div>
+                              <div class="w-100 h-200p">
+                                  <div class="title w-100 h-100p p-5p bsbb">
                                       <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black"><span class="verdana left fs-16p p-5p bsbb black">${d.pname}</span></a>
-                                  </div>
-                                  <div class="cats w-100 pl-15p pr-5p h-40p bsbb ovh">
-                                      <span class="verdana left fs-13p bsbb dgray wrap">in <a href="${geturl()}/browse/?category=${d.catname}" class="td-none ls-n"><font class="theme">${d.catname}</font></a> , <a href="${geturl()}/browse/?subcategory=${d.subcatname}" class="td-none ls-n"><font class="theme">${d.subcatname}</font></a> , <a href="${geturl()}/browse/?brand=${d.brandname}" class="td-none ls-n"><font class="theme">${d.brandname}</font></a> , <a href="${geturl()}/browse/?serie=${d.famname}" class="td-none ls-n"><font class="theme">${d.famname}</font></a> , <a href="${geturl()}/browse/?usedin=${d.usedinname}" class="td-none ls-n"><font class="theme">${d.usedinname}</font></a></span>
-                                  </div>
-                                  <div class="cond w-100 pl-15p h-30p bsbb ovh center">
-                                      <span class="verdana fs-13p bsbb bc-gray p-7p br-5p dgray h-100 w-a">${d.availability}</span>
                                   </div>
                                   <div class="w-100 h-a p-15p bsbb">
                                       <table class="w-100">

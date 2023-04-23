@@ -197,7 +197,7 @@ async function getparams(url) {
                     let leli = document.createElement('li');
                     pspecs.appendChild(leli)
                     leli.className = 'w-100 p-5p bsbb'
-                    leli.innerHTML=`<div class="w-100 h-20p flex">
+                    leli.innerHTML=`<div class="w-100 h-a flex">
                                         <span class="verdana h-100 w-a capitalize fs-13p nowrap">${spec}:</span>
                                         <span class="verdana h-100 w-a capitalize  fs-13p pl-10p dgray">${pd.pspecs[spec]}</span>
                                     </div>`
@@ -463,16 +463,11 @@ export function a441618154(aa,parent){
 								</span>
 							</div>
                             </div>
-							<div class="w-100 h-a">
-                                <div class="title w-100 h-a p-5p bsbb center">
+							<div class="w-100 h-200p">
+                                <div class="title w-100 h-100p p-5p bsbb center">
                                     <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
                                 </div>
-								<div class="cond w-100 h-30p bsbb ovh center">
-									<span class="verdana fs-13p bsbb bc-gray p-7p br-5p dgray h-100 w-a ">${d.availability}</span>
-								</div>
-								<div class="cats w-100 pl-15p pr-5p h-40p bsbb ovh center">
-									<span class="verdana left fs-13p bsbb dgray wrap">in <a href="${geturl()}/browse/?category=${d.catname}" class="td-none ls-n"><font class="theme">${d.catname}</font></a> , <a href="${geturl()}/browse/?subcategory=${d.subcatname}" class="td-none ls-n"><font class="theme">${d.subcatname}</font></a> , <a href="${geturl()}/browse/?brand=${d.brandname}" class="td-none ls-n"><font class="theme">${d.brandname}</font></a> , <a href="${geturl()}/browse/?serie=${d.famname}" class="td-none ls-n"><font class="theme">${d.famname}</font></a> , <a href="${geturl()}/browse/?usedin=${d.usedinname}" class="td-none ls-n"><font class="theme">${d.usedinname}</font></a></span>
-								</div>
+								
 								<div class="w-100 h-a p-15p bsbb">
 									<table class="w-100 h-100">
 										<tr>
