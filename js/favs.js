@@ -97,7 +97,7 @@ if (f) {
                     if (v) {
                         v = {[v.type] : v.name}
                         d.push(v)
-                        if (d.length > 4) {
+                        if (d.length >= 3) {
                             b.classList.replace('bc-dgray','bc-theme');
                         }
                         cat.classList.replace('b-1-s-gray','b-1-s-theme')
@@ -109,7 +109,7 @@ if (f) {
                         v = {[v.type] : v.name}
                         p = d.indexOf(v)
                         d.splice(p,1);
-                        if (d.length <= 4) {
+                        if (d.length < 3) {
                             b.classList.replace('bc-theme','bc-dgray');
                         }
                         cat.classList.replace('b-1-s-theme','b-1-s-gray')
@@ -123,7 +123,7 @@ if (f) {
         q = new Array(v,n,m)
         b.addEventListener('click',async(e)=>{
             e.preventDefault();
-            if (d.length > 2 ) {
+            if (d.length >= 3 ) {
                 localStorage.setItem('favs',JSON.stringify(d))
                 q.forEach(el=>{
                     if (el != null) {
