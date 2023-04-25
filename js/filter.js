@@ -24,7 +24,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
                 price range
             </span>
         </div>
-                <div class="theslider w-90 bfull-resp m-a p-r h-ap">
+                <div class="theslider w-90 bfull-resp m-a p-r h-a">
                     <div id="slider" class="p-r mt-10p h-ap w-100">
                     <div class="w-100 h-60p mt-10p mb-10p p-10p bsbb flex">
                     <div class="w-100 mr-10p left parent flex">
@@ -48,7 +48,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
                 categories
             </span>
         </div>
-        <div class="w-100 p-10p bsbb h-200p ovys left">
+        <div class="w-100 p-10p bsbb h-a ovys left">
             <span class="w-100 h-100 verdana">
                 <ul class="p-5p m-0 ls-none categories">
                     <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> computes</li>
@@ -112,7 +112,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
                 availability
             </span>
         </div>
-        <div class="w-100 p-10p bsbb h-200p ovys left">
+        <div class="w-100 p-10p bsbb h-a ovys left">
             <span class="w-100 h-100 verdana">
                 <ul class="p-5p m-0 ls-none availability">
                     <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
@@ -128,7 +128,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
                 usability
             </span>
         </div>
-        <div class="w-100 p-10p bsbb h-200p ovys left">
+        <div class="w-100 p-10p bsbb h-a ovys left">
             <span class="w-100 h-100 verdana">
                 <ul class="p-5p m-0 ls-none usability">
                     <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
@@ -144,7 +144,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
                     sort by
                 </span>
             </div>
-            <div class="w-100 p-10p bsbb h-200p ovys left">
+            <div class="w-100 p-10p bsbb h-a ovys left">
                 <span class="w-100 h-100 verdana">
                     <ul class="p-5p m-0 ls-none">
                         <li><input type="radio" id="radio" data-zon="order-by" name="order" value="name-asc"> Name (A-Z)</li>
