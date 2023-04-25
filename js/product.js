@@ -83,7 +83,7 @@ async function getparams(url) {
             let fbbody = document.querySelector('div.fb-body');
             let conds;
             res.message.forEach(pd => {
-                getrelated(Array({category:pd.catname},{subcategory:pd.subcatname},{brand:pd.brandname}))
+                getrelated(Array({category:pd.catname},{subcategory:pd.subcatname},{brand:pd.brandname},{idnot: pd.prodid}))
                 secimghol.innerHTML = null;
                 pd.pimgs.forEach(src=>{
                     if (pd.pimgs.indexOf(src) == 0) {
@@ -431,7 +431,7 @@ async function getrelated(conds) {
           'accept': '*/*'
     
         }}
-    var rel = await request('getprodswthorcndtn',opts)
+    var rel = await request('getprodswthcndtn',opts)
     a441618154(rel,prods_cont)
     
 }
