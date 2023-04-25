@@ -1146,7 +1146,7 @@ io.on('connection', function (socket) {
 										a.push(n)
 									}
 									z = generateUniqueId();
-									database.query(`insert into products(id,name,category,subcategory,usedin,brand,family,quantity,description,specifications,images,conditions,availability,orders,status) values('${z}','${req.body.name}','${req.body.catid}','${req.body.subcatid}','${req.body.usedin}','${req.body.brandid}','${req.body.famid}','${req.body.quantity}','${req.body.description}','${JSON.stringify(req.body.specifications)}','${JSON.stringify(a)}','${JSON.stringify(c)}','${req.body.availability}',0,'active')`,(error,result)=>{
+									database.query(`insert into products(id,name,category,subcategory,usedin,brand,family,quantity,description,specifications,images,conditions,availability,orders,status) values('${z}','?','${req.body.catid}','${req.body.subcatid}','${req.body.usedin}','${req.body.brandid}','${req.body.famid}','${req.body.quantity}','?','${JSON.stringify(req.body.specifications)}','${JSON.stringify(a)}','${JSON.stringify(c)}','${req.body.availability}',0,'active')`,[req.body.name,req.body.description],(error,result)=>{
 										if (error) return res.send({success: false, message: error})
 										res.send({success:true, message: "product inserted successfully"})
 									})
