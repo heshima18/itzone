@@ -3,7 +3,7 @@ const slideShowContainer = document.querySelector('.slideShow');
             const rightBtn = document.querySelector('#slideRight');
             const leftBtn = document.querySelector('#slideLeft');
             let dotscont = document.querySelector('div.dots-cont')
-            const slideShowInterval = 3000;
+            const slideShowInterval = 6000;
             let slides = document.querySelectorAll('.slideCard');
             let index = 0;
             let currentSlide;
@@ -53,7 +53,7 @@ const moveRight = () => {
   slides = slideCollection();
   if (index >= slides.length - 1) return;
   index++;
-  slidesContainer.style.transition = 'transform 0.4s ease-in-out';
+  slidesContainer.style.transition = 'transform 0.6s ease-in-out';
   slidesContainer.style.transform = 'translateX(' + ((-slideWidth * index)) + 'px)';
 }
 
@@ -61,7 +61,7 @@ const moveLeft = () => {
   slides = slideCollection();
   if (index <= 0) return;
   index--;
-  slidesContainer.style.transition = 'transform 0.4s ease-in-out';
+  slidesContainer.style.transition = 'transform 0.6s ease-in-out';
   slidesContainer.style.transform = 'translateX(' + ((-slideWidth * index)) + 'px)';
   
 }

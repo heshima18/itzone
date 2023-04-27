@@ -2,7 +2,7 @@ var q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m;
 import {searchFunc,checkCart,geturl} from './functions.js'
 export let thecont = document.querySelector('div#cont');
 export let thenav = document.createElement('div');
-thenav.className = 'w-100 h-110p bsbb bb-1-s-dg zi-1000 bc-white p-f navigation t-0 thenav';
+thenav.className = 'w-100 h-110p bsbb bb-1-s-dg zi-1000 bc-theme p-f navigation t-0 thenav';
 thecont.appendChild(thenav);
 u = document.createElement('div')
 u.className = 'w-60p h-60p p-f b-0 r-0 m-40p zi-20'
@@ -19,19 +19,19 @@ u.innerHTML=`<a href="https://wa.me/250788247133/?text=Hello i have visited your
 thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r">
 <div class="w-100 h-100 bsbb zi-10000 capitalize">
 <ul class="ls-none w-100 h-100 flex jc-sb p-0 m-0">
-<li class="ml-5p w-a h-a verdana"><a class="td-none ls-n black w-100 h-100 center" href="${geturl()}"><img src="${geturl()}/icons/favicon.png" class="w-40p h-40p cover"></a></li>
+<li class="ml-5p w-a h-a verdana"><a class="td-none ls-n black w-100 h-100 center" href="${geturl()}"><img src="${geturl()}/icons/favicon.png" class="w-65p h-65p cover"></a></li>
         <li class="hidden-resp">
           <div class="verdana center-2 h-100">
-          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/about/" class="td-none ls-n"><span class="nowrap hover-2 black">About us</span></a></span>
-          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/contact/" class="td-none ls-n"><span class="nowrap hover-2 black">contact us</span></a></span>
-          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/terms/" class="td-none ls-n"><span class="nowrap hover-2 black">policy</span></a></span>
+          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/about/" class="td-none ls-n"><span class="nowrap hover-2 white">About us</span></a></span>
+          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/contact/" class="td-none ls-n"><span class="nowrap hover-2 white">contact us</span></a></span>
+          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/terms/" class="td-none ls-n"><span class="nowrap hover-2 white">policy</span></a></span>
           </div>
         </li>
         <li class="bfull-resp">
         <div class="p-6p w-100 h-100 bsbb gob-resp  p-r search-sec">
-        <div class=" w-400p h-90 mt-5p p-r bfull-resp br-2p ovh">
+        <div class=" w-800p h-90 bmt-10p p-r bfull-resp br-2p ovh">
               <form action="" method="post" class="h-100 w-100 flex" id ="searchFrm">
-              <div class="#icon search-icon w-40p h-100 p-a r-0 center tr-0-3 bc-theme">
+              <div class="#icon search-icon w-40p h-100 p-a r-0 center tr-0-3 bc-orange">
                 <button type="submit" class="b-none p-0 m-0 transparent">
                 <span class="w-100 h-100 center #search-icon">
                   <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" width="25" height="25" focusable="false" role="none" stroke="#fff" fill="#fff" style="stroke-width: 0px;">
@@ -51,7 +51,7 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r">
                 <li class="w-a h-100 center pr-10p bp-a-resp r-0 bmt--10p">
                 <div class="p-5p bsbb h-50p w-110p jc-sb flex p-r ics">
                 <span class="#icon h-100 center-2 w-a">
-                  <svg version="1.1" class="w-20p h-20p p-r hover-2 wishicon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 51.997 51.997" style="enable-background:new 0 0 51.997 51.997;" xml:space="preserve">
+                  <svg version="1.1" class="w-20p h-20p p-r hover-2 wishicon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 51.997 51.997" style="fill: white;" xml:space="preserve">
                   <g>
                     <path d="M51.911,16.242C51.152,7.888,45.239,1.827,37.839,1.827c-4.93,0-9.444,2.653-11.984,6.905
                         c-2.517-4.307-6.846-6.906-11.697-6.906c-7.399,0-13.313,6.061-14.071,14.415c-0.06,0.369-0.306,2.311,0.442,5.478
@@ -64,10 +64,10 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r">
                  </svg>
                 </span>
                 <span class="#icon cart-icon h-100 center">
-                  <span class="hidden p-a br-50 w-15p h-15p theme bc-theme ml-20p cart-badge-hol ">
+                  <span class="hidden p-a br-50 w-15p h-15p theme bc-orange ml-20p cart-badge-hol ">
                     <font class="white consolas fs-12p center cart-badge iblock w-100 h-100">0</font>
 							    </span>
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="carticon hover-2"  width="20px" height="25px" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512" style="stroke: #000; fill: #000;">
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="carticon hover-2"  width="20px" height="25px" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512" style="stroke: #fff; fill: #fff;">
                     <g>
                     <g>
                     <g>
@@ -87,33 +87,27 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r">
                         </g>
                       </svg>
                 </span>
-                <span class="#icon user-icon h-100 center pt-7p bsbb">
-                  <svg width="30" height="30" viewBox="0 0 23 30" fill="none" class="mt-5p hover-2 user--ic" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16.5735 5C16.5735 7.44151 14.3809 9.5 11.5735 9.5C8.76621 9.5 6.57355 7.44151 6.57355 5C6.57355 2.5585 8.76621 0.5 11.5735 0.5C14.3809 0.5 16.5735 2.5585 16.5735 5Z" stroke="black"/>
-                  <path d="M21.7068 20C21.7068 25.2029 17.0517 29.5 11.2068 29.5C5.36189 29.5 0.706787 25.2029 0.706787 20C0.706787 14.797 5.36189 10.5 11.2068 10.5C17.0517 10.5 21.7068 14.797 21.7068 20Z" stroke="url(#paint0_linear_3_22)"/>
-                  <defs>
-                  <linearGradient id="paint0_linear_3_22" x1="11.2068" y1="9.99997" x2="11.2068" y2="30" gradientUnits="userSpaceOnUse">
-                  <stop/>
-                  <stop offset="0.369792" stop-color="#818080" stop-opacity="0.440945"/>
-                    <stop offset="0.661458" stop-color="#818080" stop-opacity="0"/>
-                    </linearGradient>
-                    </defs>
-                  </svg>
+                <span class="#icon user-icon h-100 center pt-7p bsbb mt--2p">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 24 24" fill="none" class="user--ic">
+                <g id="User / User_02">
+                <path id="Vector" d="M20 21C20 18.2386 16.4183 16 12 16C7.58172 16 4 18.2386 4 21M12 13C9.23858 13 7 10.7614 7 8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8C17 10.7614 14.7614 13 12 13Z" stroke="#fff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+                </svg>
               </span>
               </div>
               </li>
       </ul>
     </div>
     </div>
-    <div class="w-100 h-40p p-5p bsbb ovh">
+    <div class="w-100 h-40p p-5p bsbb ovh bc-orange">
     <div class="w-100 h-100">
       <ul class="ls-none w-100 h-100 flex p-0 m-0 ml-0">
-      <li class="w-a h-100 menubutt hover-2 bp-a-resp p-r bmt--5p">
+      <li class="w-a h-100 menubutt hover-2 bp-a-resp p-r">
       <span class="#icon menu-icon ml-6p  w-100 h-100 flex">
       <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 21.25H10M15 21.25H25M5 15H25M5 8.75H15M20 8.75H25" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5 21.25H10M15 21.25H25M5 15H25M5 8.75H15M20 8.75H25" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              <span class="verdana  capitalize hover-2 w-a h-a center">All</span>
+              <span class="verdana  capitalize hover-2 w-a h-a center white">All</span>
               </span>
               </li>
               <li class="w-95 h-a ovxh center pr-10p pl-10p bsbb">
