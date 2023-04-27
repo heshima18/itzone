@@ -185,8 +185,10 @@ async function getparams(url) {
                         rateshol.innerHTML += `<span class="pl-10p bsbb fs-12p capitalize center-2 verdana">${rated} total rates</span>`
                     }
                 pspectitlhol.innerHTML = `<div class="w-100 h-100 p-5p">
-                <span class="verdana h-100 w-100 capitalize fs-18p">specitifations</span>
-                </div>`
+                ${(pd.catname == 'services')? `<span class="verdana h-100 w-100 capitalize fs-18p">service details</span>
+                </div>`: `<span class="verdana h-100 w-100 capitalize fs-18p">specitifations</span>`}
+                </div>
+                `
                 
                 pspecs.innerHTML = null
                 pspecs.className = 'ls-none m-0 pl-10p bsbb pspecs'
