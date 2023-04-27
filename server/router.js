@@ -319,7 +319,7 @@ io.on('connection', function (socket) {
 									c.forEach(condition=>{
 										Object.assign(c[c.indexOf(condition)],{newprice: condition.price, promotion: null})
 									})
-									database.query(`update products set name= '${i.name}', category= '${i.catid}', subcategory= '${i.subcatid}', usedin= '${i.usedin}', brand= '${i.brandid}', family= '${i.famid}', quantity= '${i.quantity}', description= '${i.description}', specifications= '${JSON.stringify(i.specifications)}', images = '${JSON.stringify(a)}',conditions = '${JSON.stringify(c)}',availability='${i.availability}' where id = '${p}'`,(error,result)=>{
+									database.query(`update products set name= ?, category= '${i.catid}', subcategory= '${i.subcatid}', usedin= '${i.usedin}', brand= '${i.brandid}', family= '${i.famid}', quantity= '${i.quantity}', description= ?, specifications= '${JSON.stringify(i.specifications)}', images = '${JSON.stringify(a)}',conditions = '${JSON.stringify(c)}',availability='${i.availability}' where id = '${p}'`,[i.name,i.description],(error,result)=>{
 										console.log(error)
 										if (error) return res.send({success: false, message: "Oops an error occured"})
 										if(result.affectedRows > 0){
