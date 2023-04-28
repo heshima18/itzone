@@ -29,9 +29,9 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r" style="background: li
         </li>
         <li class="bfull-resp">
         <div class="p-6p w-100 h-100 bsbb gob-resp  p-r search-sec">
-        <div class=" w-800p h-90 bmt-10p p-r bfull-resp br-2p ovh">
+        <div class=" w-800p h-90 bmt-10p p-r bfull-resp br-5p ovh">
               <form action="" method="post" class="h-100 w-100 flex" id ="searchFrm">
-              <div class="#icon search-icon w-40p h-100 p-a r-0 center tr-0-3 bc-orange">
+              <div class="#icon search-icon w-60p h-100 p-a r-0 center bc-orange">
                 <button type="submit" class="b-none p-0 m-0 transparent">
                 <span class="w-100 h-100 center #search-icon">
                   <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" width="25" height="25" focusable="false" role="none" stroke="#fff" fill="#fff" style="stroke-width: 0px;">

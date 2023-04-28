@@ -243,7 +243,7 @@ thef.innerHTML = `<div class="bc-white w-90 m-a bfull-resp h-100 black pt-20p bs
                             </span>
                         </div>
                         <div class="iblock p-2p bsbb p-r w-100">
-                            <span class="verdana t-0 p-a verdana fs-14p h-100 center">info@aaaa.com</span>
+                            <span class="verdana t-0 p-a verdana fs-14p h-100 center"><a href="mailto::itzoneplus250@gmail.com" class="theme td-none ls-n ">itzoneplus250@gmail.com</a></span>
                         </div>
                     </li>
                 </ul>
