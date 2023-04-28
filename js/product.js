@@ -150,7 +150,8 @@ async function getparams(url) {
                 phol.innerHTML = `<div class="w-100 h-100 bsbb pttl bb-1-s-g">
                 <div class="w-100 h-a flex jc-sb right">
                 <span class="verdana h-100 w-100 capitalize bold fs-20p wrap left">${pd.pname}</span>
-                <span class="verdana w-30 h-100 iblock  fs-17p orange price nowrap">${adcm(pd.conditions[0].newprice)} <span class="consolas orange">RWF</span></span>
+                ${(pd.catname == 'services')? `<span class="verdana w-30 h-100 iblock  fs-17p orange price nowrap capitalize">negotiatable</span>` : `<span class="verdana w-30 h-100 iblock  fs-17p orange price nowrap">${adcm(pd.conditions[0].newprice)} <span class="consolas orange">RWF</span></span>`}
+                
                 </div>
                 <div class="w-100 h-40p bsbb p-5p rates-hol flex"></div>
                 
