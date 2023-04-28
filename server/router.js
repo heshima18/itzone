@@ -833,7 +833,7 @@ io.on('connection', function (socket) {
 							if (error) return res.send({success: false, message: 'oops an error occured'})
 							if (result.length > 0) {
 								try {
-									database.query(`insert into families(id,name,brand,image,pinned) values('${generateUniqueId()}','${req.body.fname}','${req.body.brandname}','null',false)`,(error,result)=>{
+									database.query(`insert into families(id,name,brand,image,pinned) values('${generateUniqueId()}','${req.body.fname}','${req.body.brandname}','${n}',false)`,(error,result)=>{
 										if (error) return res.send({success: false, message: error})
 										res.send({success:true, message: "family created"})
 									})
