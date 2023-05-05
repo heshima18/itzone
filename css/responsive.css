@@ -8,20 +8,35 @@
     .bh-a-resp{
         height: auto;
     }
+    .bh-180p-resp{
+        height: 180px;
+    }
     .bh-100p-resp{
         height: 100px;
     }
     .bh-50p-resp{
         height: 50px;
     }
-    .bh-70p-resp{
-        height: 70px;
+    .bh-55p-resp{
+        height: 55px;
+    }
+    .bh-10p-resp{
+        height: 10px;
+    }
+    .bh-30p-resp{
+        height: 30px;
+    }
+    .bw-30p-resp{
+        width: 30px;
     }
     .bblock-resp{
         display: block;
     }
     .bt-0{
         top: 0;
+    }
+    .bmt--45p{
+        margin-top: -45px;
     }
     .bmt--30p{
         margin-top: -30px;
