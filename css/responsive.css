@@ -114,6 +114,9 @@
 }
 
 @media screen and (max-width: 599px){
+    .bw-100p-resp{
+        width: 100px;
+    }
     .bcntr-500p-resp{
         position: absolute;
         transform: translate(-50%,-50%);

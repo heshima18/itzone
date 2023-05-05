@@ -273,17 +273,17 @@ function s(cats) {
 	ctscont.innerHTML = null
 	cats.forEach(subcat=>{
 		ctscont.innerHTML+= `<a href="${geturl()}/browse/?subcategory=${subcat.name}" class="td-none ls-n black">
-								<div class="cat w-200p h-100 p-5p bsbb iblock m-10p bc-white hover-4 br-10p">
+								<div class="cat w-200p bw-100p-resp h-100 p-5p bsbb iblock m-10p bm-a-resp bc-white hover-4 br-10p">
 									<div class="the-img center mb-10p p-5p bsbb">
-										<div class="img w-100p h-100p  br-50">
+										<div class="img w-100 h-100p  br-50">
 											<img src="${geimgturl()}/images/${subcat.image}" class="w-100 h-100 contain">
 										</div>
 									</div>
 									<div class="the-desc bsbb">
 										<div class="desc w-100 h-a ">
-											<div class="w-100 h-30p center-2">
+											<div class="w-100 h-a p-5p bsbb ">
 												
-													<span class="w-100 center-2 verdana fs-16p hover-6 capitalize">${subcat.name}</span>
+													<span class="w-100 center-2 verdana fs-14p hover-6 capitalize wrap">${subcat.name}</span>
 												
 											</div>
 										</div>

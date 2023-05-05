@@ -675,7 +675,7 @@ io.on('connection', function (socket) {
 		})
 		router.get('/getcats',async(req,res)=>{
 			try {
-				database.query(`select distinct subcategories.name,subcategories.image from categories inner join subcategories where categories.id = subcategories.category`,(error,result)=>{
+				database.query(`select distinct subcategories.name,subcategories.image from categories inner join subcategories where categories.id = subcategories.category order by subcategories.dateadded asc`,(error,result)=>{
 					if (error) return res.status(500).send({success: false, message: "Oops an error occured"})
 					res.status(200).send({success:true, message: result})
 				})
