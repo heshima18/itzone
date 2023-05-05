@@ -87,14 +87,14 @@ async function getparams(url) {
                 secimghol.innerHTML = null;
                 pd.pimgs.forEach(src=>{
                     if (pd.pimgs.indexOf(src) == 0) {
-                        secimghol.innerHTML+=`<div class="w-100p h-100p bsbb m-10p bsbb igrid">
-                                            <div class="w-100 h-100p p-r br-5p p-5p bsbb hover-2 b-1-s-theme active sm-img">
+                        secimghol.innerHTML+=`<div class="w-50p h-50p bsbb m-10p bsbb igrid">
+                                            <div class="w-100 h-50p p-r br-5p p-5p bsbb hover-2 b-1-s-theme active sm-img">
                                                 <img src="${geimgturl()}/product-imgz/${src}" alt="" class="w-100 h-100 b-none contain">
                                             </div>
                                         </div>`
                     }else{
-                        secimghol.innerHTML+=`<div class="w-100p h-100p bsbb m-10p bsbb igrid">
-                                                <div class="w-100 h-100p p-r br-5p p-5p bsbb hover-2 sm-img">
+                        secimghol.innerHTML+=`<div class="w-50p h-50p bsbb m-10p bsbb igrid">
+                                                <div class="w-100 h-50p p-r br-5p p-5p bsbb hover-2 sm-img">
                                                     <img src="${geimgturl()}/product-imgz/${src}" alt="" class="w-100 h-100 b-none contain">
                                                 </div>
                                             </div>`
