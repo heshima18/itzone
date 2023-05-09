@@ -83,7 +83,7 @@ async function getparams(url) {
             let fbbody = document.querySelector('div.fb-body');
             let conds;
             res.message.forEach(pd => {
-                getrelated(Array({category:pd.catname},{subcategory:pd.subcatname},{brand:pd.brandname},{idnot: pd.prodid}))
+                getrelated(Array({category:pd.catname},{subcategory:pd.subcatname},{usedin:pd.usedinname},{idnot: pd.prodid}))
                 secimghol.innerHTML = null;
                 pd.pimgs.forEach(src=>{
                     if (pd.pimgs.indexOf(src) == 0) {
