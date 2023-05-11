@@ -68,6 +68,15 @@ async function getparams(url) {
         let res = await request('getproduct',opts)
         if (res.success) {
             document.title =  `${res.message[0].pname.substring(0,1).toUpperCase()+res.message[0].pname.substring(1,res.message[0].pname.length)} | ITZONE +`
+            const titleMetaTag = document.querySelector('meta[property="og:title"]');
+            const descriptionMetaTag = document.querySelector('meta[property="og:description"]');
+            const imageMetaTag = document.querySelector('meta[property="og:image"]');
+            const priceMetaTag = document.querySelector('meta[property="product:price:amount"]');
+
+            titleMetaTag.setAttribute('content', res.message[0].pname.substring(0,1).toUpperCase()+res.message[0].pname.substring(1,res.message[0].pname.length));
+            descriptionMetaTag.setAttribute('content', res.message[0].description);
+            imageMetaTag.setAttribute('content', `${geimgturl()}/product-imgz/${res.message[0].pimgs[0]}`);
+            priceMetaTag.setAttribute('content', `${adcm(res.message[0].conditions[0].newprice)} RWF`);
             let phol = document.querySelector('div.prodname-hol')
             let pspectitlhol = document.querySelector('li.spestitle')
             let pspecs = document.querySelector('ul.pspecs')
