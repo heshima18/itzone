@@ -3706,7 +3706,7 @@ export function sf(aa,parent) {
   if ( aa.message.length > 0) {
     parent.innerHTML = null;
     aa.message.forEach(d=>{
-                  parent.innerHTML+=  `<div class="product w-100 h-a bc-white  p-10p bsbb ovh mr-10p mb-15p mt-15p iblock hover-2 ${(aa.message.indexOf(d) == (aa.message.length-1))? '': 'bb-1-s-g'}">
+                  parent.innerHTML+=  `<div class="product w-100 h-a bc-white  p-10p bsbb ovh mr-10p ${(aa.message.indexOf(d) == 0)? 'mt-15p': ''} iblock hover-2 ${(aa.message.indexOf(d) == (aa.message.length-1))? '': 'bb-1-s-g'}">
                       <div class="w-100 h-100 p-10p bsbb flex">
                           <div class="image p-10p bsbb iblock w-100p h-100p br-5p">
                               <span class="w-100 h-100">

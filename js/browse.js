@@ -3,55 +3,6 @@ import { getasked } from "./filter.js";
 import {sf} from './functions.js'
 import { request ,geturl,cc,adcm} from "./functions.js";
 let prodscont = document.querySelector('div.prods-cont');
-prodscont.innerHTML = null
-
-for (let i = 0; i <=10; i++) {
-    if (i == 10) {
-        prodscont.innerHTML+=`<div class="product w-100 h-150p bc-white  p-10p bsbb ovh mr-10p mb-15p mt-15p iblock hover-2">
-        <div class="w-100 h-100 p-10p bsbb center-2">
-            <div class="image p-10p bsbb iblock w-100p h-100p bc-dgray skel br-5p">
-                <span class="w-100 h-100">
-                    <img src="" class="w">
-                </span>
-            </div>
-            <div class="w-80 h-a iblock p-20p bsbb">
-                <div class="title w-100 h-30p p-5p bsbb">
-                    <span class="verdana left fs-16p p-5p bsbb black bc-gray skel w-30 h-100 br-5p"></span>
-                </div>
-                <div class="title w-100 h-10p p-5p bsbb m-10p">
-                    <span class="verdana left fs-16p p-5p bsbb black bc-gray skel w-80 h-100 br-5p"></span>
-                </div>
-                <div class="title w-100 h-10p p-5p bsbb m-10p">
-                    <span class="verdana left fs-16p p-5p bsbb black bc-gray skel w-70 h-100 br-5p"></span>
-                </div>
-            </div>
-        </div>
-    </div>`
-    } else {
-        
-        prodscont.innerHTML+=`<div class="product w-100 h-150p bc-white  p-10p bsbb ovh mr-10p mb-15p mt-15p iblock hover-2 bb-1-s-g">
-        <div class="w-100 h-100 p-10p bsbb center-2">
-            <div class="image p-10p bsbb iblock w-100p h-100p bc-dgray skel br-5p">
-                <span class="w-100 h-100">
-                    <img src="" class="w">
-                </span>
-            </div>
-            <div class="w-80 h-a iblock p-20p bsbb">
-                <div class="title w-100 h-30p p-5p bsbb">
-                    <span class="verdana left fs-16p p-5p bsbb black bc-gray skel w-30 h-100 br-5p"></span>
-                </div>
-                <div class="title w-100 h-10p p-5p bsbb m-10p">
-                    <span class="verdana left fs-16p p-5p bsbb black bc-gray skel w-80 h-100 br-5p"></span>
-                </div>
-                <div class="title w-100 h-10p p-5p bsbb m-10p">
-                    <span class="verdana left fs-16p p-5p bsbb black bc-gray skel w-70 h-100 br-5p"></span>
-                </div>
-            </div>
-        </div>
-    </div>`
-    }
-    
-}
 getparams(loc);
 async function getparams(url) {
     
@@ -77,7 +28,8 @@ async function getparams(url) {
         brttl.parentNode.parentNode.className='h-100 w-100 flex jc-sb'
         btitle.innerHTML = `<div class=" w-100 h-100 br-10p p-5p bsbb"><span class="w-100 h-20p br-5p flex verdana nowrap">browsing in &nbsp;<b>${asked[Object.keys(asked)]}</b></span></div>`
         brttl.innerHTML = `<span class="w-a h-a br-5p capitalize"> ${asked[Object.keys(asked)]}</span>`
-        document.title =  `${(asked[Object.keys(asked)].substring(0,1).toUpperCase()+asked[Object.keys(asked)].substring(1,asked[Object.keys(asked)].length))} | ITZONE +`
+        document.title =  `${(asked[Object.keys(asked)].substring(0,1).toUpperCase()+asked[Object.keys(asked)].substring(1,asked[Object.keys(asked)].length))} | ITZONE +`;
+        prodscont.innerHTML = null
         sf(a,prodscont)
     }else{
         prodscont.innerHTML = `<div class="w-100 h-a">
@@ -91,8 +43,6 @@ async function getparams(url) {
 										<span class="verdana fs-18p ta-c dgray">it seems like there are <br> no products in your selection</span>
 									</div>
 								</div>`;
-        // brttl.parentNode.parentNode.parentNode.childNodes[1].childNodes[3].classList.replace('center-2','hidden')
-        // brttl.parentNode.parentNode.parentNode.childNodes[1].childNodes[3].classList.replace('iblock','hidden')
     }
 
 }
