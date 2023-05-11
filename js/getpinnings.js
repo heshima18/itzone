@@ -48,7 +48,7 @@ if (res.success && tree.success) {
             ss.className = '#thetitle p-5p bsbb'
             sidenavpinnedcont.appendChild(ss)
             ss.innerHTML = `<div class="w-100 h-40p p-2p center-2 bsbb bb-1-s-g hover-6">
-                                    <a href="${geturl()}/browse/?category=${subcat.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
+                                    <a href="${geturl()}/browse/?subcategory=${subcat.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
                                         <span class="thetitle black hover-6 verdana fs-14p pl-10p bsbb w-100 capitalize">
                                             ${subcat.name}
                                         </span>
