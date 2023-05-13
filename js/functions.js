@@ -460,70 +460,86 @@ export function showrecs(cont,resp) {
 
     bdy.innerHTML = null;
   })
-  resp.message.categories.forEach(cat=>{
-    l = document.createElement('li');
-    l.className = 'w-100';
-    l.innerHTML = `<div class="w-100 h-100 flex">
-                    <div class="the-thumb w-50p h-50p m-5p iblock">
-                      <div class="w-50p h-50p br-50 m-5p">
-                        <img src="${geimgturl()}/images/${cat.image}" class="w-100 h-100 contain">
+  try {
+    resp.message.categories.forEach(cat=>{
+      l = document.createElement('li');
+      l.className = 'w-100';
+      l.innerHTML = `<div class="w-100 h-100 flex">
+                      <div class="the-thumb w-50p h-50p m-5p iblock">
+                        <div class="w-50p h-50p br-50 m-5p">
+                          <img src="${geimgturl()}/images/${cat.image}" class="w-100 h-100 contain">
+                        </div>
                       </div>
-                    </div>
-                    <div class="the-desc w-60 h-50p p-5p mt-5p bsbb iblock">
-                      <div class="w-80 h-15p br-5  m-5p"><a href="${geturl()}/browse/?category=${cat.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${cat.name}</span></a></div>
-                      <div class="w-60 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>in categories</span></div>
-                    </div>
-                  </div> `
-    b.appendChild(l)
-  })
-  resp.message.brands.forEach(brand=>{
-    l = document.createElement('li');
-    l.className = 'w-100';
-    l.innerHTML = `<div class="w-100 h-100 flex">
-                    <div class="the-thumb w-50p h-50p m-5p iblock">
-                      <div class="w-50p h-50p br-50  m-5p">
-                        <img src="${geimgturl()}/brands/${brand.image}" class="w-100 h-100 contain">
+                      <div class="the-desc w-60 h-50p p-5p mt-5p bsbb iblock">
+                        <div class="w-80 h-15p br-5  m-5p"><a href="${geturl()}/browse/?category=${cat.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${cat.name}</span></a></div>
+                        <div class="w-60 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>in categories</span></div>
                       </div>
-                    </div>
-                    <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
-                    <div class="w-80 h-15p br-5  m-5p"><a href="${geturl()}/browse/?brand=${brand.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${brand.name}</span></a></div>
-                    <div class="w-60 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>in brands</span></div>
-                    </div>
-                  </div> `
-    b.appendChild(l)
-  })
-  resp.message.series.forEach(serie=>{
-    l = document.createElement('li');
-    l.className = 'w-100';
-    l.innerHTML = `<div class="w-100 h-100 flex">
-                    <div class="the-thumb w-50p h-50p m-5p iblock">
-                      <div class="w-50p h-50p br-50 m-5p">
-                      <img src="${geimgturl()}/images/${serie.image}" class="w-100 h-100 contain">
+                    </div> `
+      b.appendChild(l)
+    })
+  } catch (error) {
+    
+  }
+  try {
+    resp.message.brands.forEach(brand=>{
+      l = document.createElement('li');
+      l.className = 'w-100';
+      l.innerHTML = `<div class="w-100 h-100 flex">
+                      <div class="the-thumb w-50p h-50p m-5p iblock">
+                        <div class="w-50p h-50p br-50  m-5p">
+                          <img src="${geimgturl()}/brands/${brand.image}" class="w-100 h-100 contain">
+                        </div>
                       </div>
-                    </div>
-                    <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
-                    <div class="w-100 h-15p br-5  m-5p"><a href="${geturl()}/browse/?serie=${serie.famname}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${serie.famname}</span></a></div>
-                    <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>a serie from <font class="theme hover-2"><a href="${geturl()}/browse/?brand=${serie.brandname}" class="td-none theme ls-n">${serie.brandname}</a></font> brand</span></div>
-                    </div>
-                  </div> `
-    b.appendChild(l)
-  })
-  resp.message.subcategories.forEach(subcat=>{
-    l = document.createElement('li');
-    l.className = 'w-100';
-    l.innerHTML = `<div class="w-100 h-100 flex">
-                    <div class="the-thumb w-50p h-50p m-5p iblock">
-                      <div class="w-50p h-50p br-50 m-5p">
-                      <img src="${geimgturl()}/images/${subcat.image}" class="w-100 h-100 contain">
+                      <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
+                      <div class="w-80 h-15p br-5  m-5p"><a href="${geturl()}/browse/?brand=${brand.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${brand.name}</span></a></div>
+                      <div class="w-60 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>in brands</span></div>
                       </div>
-                    </div>
-                    <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
-                    <div class="w-100 h-15p br-5  m-5p"><a href="${geturl()}/browse/?subcategory=${subcat.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${subcat.name}</span></a></div>
-                    <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>a subcategory from <font class="theme hover-2"><a href="${geturl()}/browse/?category=${subcat.catname}" class="td-none theme ls-n">${subcat.catname}</a></font></span></div>
-                    </div>
-                  </div> `
-    b.appendChild(l)
-  })
+                    </div> `
+      b.appendChild(l)
+    })
+  } catch (error) {
+    
+  }
+  try {
+    resp.message.series.forEach(serie=>{
+      l = document.createElement('li');
+      l.className = 'w-100';
+      l.innerHTML = `<div class="w-100 h-100 flex">
+                      <div class="the-thumb w-50p h-50p m-5p iblock">
+                        <div class="w-50p h-50p br-50 m-5p">
+                        <img src="${geimgturl()}/images/${serie.image}" class="w-100 h-100 contain">
+                        </div>
+                      </div>
+                      <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
+                      <div class="w-100 h-15p br-5  m-5p"><a href="${geturl()}/browse/?serie=${serie.famname}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${serie.famname}</span></a></div>
+                      <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>a serie from <font class="theme hover-2"><a href="${geturl()}/browse/?brand=${serie.brandname}" class="td-none theme ls-n">${serie.brandname}</a></font> brand</span></div>
+                      </div>
+                    </div> `
+      b.appendChild(l)
+    })
+  } catch (error) {
+    
+  }
+  try {
+    resp.message.subcategories.forEach(subcat=>{
+      l = document.createElement('li');
+      l.className = 'w-100';
+      l.innerHTML = `<div class="w-100 h-100 flex">
+                      <div class="the-thumb w-50p h-50p m-5p iblock">
+                        <div class="w-50p h-50p br-50 m-5p">
+                        <img src="${geimgturl()}/images/${subcat.image}" class="w-100 h-100 contain">
+                        </div>
+                      </div>
+                      <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
+                      <div class="w-100 h-15p br-5  m-5p"><a href="${geturl()}/browse/?subcategory=${subcat.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${subcat.name}</span></a></div>
+                      <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>a subcategory from <font class="theme hover-2"><a href="${geturl()}/browse/?category=${subcat.catname}" class="td-none theme ls-n">${subcat.catname}</a></font></span></div>
+                      </div>
+                    </div> `
+      b.appendChild(l)
+    })
+  } catch (error) {
+    
+  }
   if (resp.message.categories.length == 0 && resp.message.subcategories.length == 0 && resp.message.brands.length == 0 && resp.message.series.length == 0) {
     l = document.createElement('li');
     l.className = 'w-100';
