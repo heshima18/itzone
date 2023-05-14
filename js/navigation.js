@@ -16,25 +16,25 @@ u.innerHTML=`<a href="https://wa.me/250788247133/?text=Hello i have visited your
               </svg>
               </span>
 </div></a>`
-thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r" style="background: linear-gradient(130deg, rgb(24 37 98) 60%, rgba(0,178,238,1) 100%);">
+thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r bc-white" style="/*background: linear-gradient(130deg, rgb(24 37 98) 60%, rgba(0,178,238,1) 100%);*/">
 <div class="w-100 h-100 bsbb zi-10000 capitalize">
 <ul class="ls-none w-100 h-100 flex jc-sb p-0 m-0">
 <li class="ml-5p w-a h-a verdana"><a class="td-none ls-n black w-100 h-100 center" href="${geturl()}"><img src="${geturl()}/icons/favicon.png" class="w-65p h-65p cover"></a></li>
         <li class="hidden-resp">
           <div class="verdana center-2 h-100">
-          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/about/" class="td-none ls-n"><span class="nowrap hover-2 white">About us</span></a></span>
-          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/contact/" class="td-none ls-n"><span class="nowrap hover-2 white">contact us</span></a></span>
-          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/terms/" class="td-none ls-n"><span class="nowrap hover-2 white">policy</span></a></span>
+          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/about/" class="td-none ls-n"><span class="nowrap hover-2 black">About us</span></a></span>
+          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/contact/" class="td-none ls-n"><span class="nowrap hover-2 black">contact us</span></a></span>
+          <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/terms/" class="td-none ls-n"><span class="nowrap hover-2 black">policy</span></a></span>
           </div>
         </li>
         <li class="bfull-resp">
         <div class="p-6p w-100 h-100 bsbb gob-resp  p-r search-sec">
-        <div class=" w-800p h-90 bmt-10p p-r bfull-resp br-5p ovh">
+        <div class=" w-800p h-90 bmt-10p p-r bfull-resp ovh">
               <form action="" method="post" class="h-100 w-100 flex" id ="searchFrm">
-              <div class="#icon search-icon w-60p h-100 p-a r-0 center bc-orange">
+              <div class="#icon search-icon w-60p h-100 p-a r-0 center transparent">
                 <button type="submit" class="b-none p-0 m-0 transparent">
                 <span class="w-100 h-100 center #search-icon">
-                  <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" width="25" height="25" focusable="false" role="none" stroke="#fff" fill="#fff" style="stroke-width: 0px;">
+                  <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" width="25" height="25" focusable="false" role="none" stroke="#ccc" fill="#ccc" style="stroke-width: 0px;">
                     <g>
                       <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
                       </path>
@@ -43,7 +43,7 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r" style="background: li
                 </span>
                 </button>
               </div>
-                <input type="text" name="search" class="b-1-s-dgray br-2p w-100 h-100 pl-10p bsbb b-none" placeholder="what are you looking for..." id="searchTxt">
+                <input type="text" name="search" class="b-1-s-dgray w-100 h-100 pl-10p bsbb b-none" placeholder="what are you looking for..." id="searchTxt">
                 </form>
                 </div>
                 </div>
@@ -51,7 +51,7 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r" style="background: li
                 <li class="w-a h-100 center pr-10p bp-a-resp r-0 bmt--10p">
                 <div class="p-5p bsbb h-50p w-110p jc-sb flex p-r ics">
                 <span class="#icon h-100 center-2 w-a">
-                  <svg version="1.1" class="w-20p h-20p p-r hover-2 wishicon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 51.997 51.997" style="fill: white;" xml:space="preserve">
+                  <svg version="1.1" class="w-20p h-20p p-r hover-2 wishicon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 51.997 51.997" style="fill: #000;" xml:space="preserve">
                   <g>
                     <path d="M51.911,16.242C51.152,7.888,45.239,1.827,37.839,1.827c-4.93,0-9.444,2.653-11.984,6.905
                         c-2.517-4.307-6.846-6.906-11.697-6.906c-7.399,0-13.313,6.061-14.071,14.415c-0.06,0.369-0.306,2.311,0.442,5.478
@@ -67,7 +67,7 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r" style="background: li
                   <span class="hidden p-a br-50 w-15p h-15p theme bc-orange ml-20p cart-badge-hol ">
                     <font class="white consolas fs-12p center cart-badge iblock w-100 h-100">0</font>
 							    </span>
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="carticon hover-2"  width="20px" height="25px" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512" style="stroke: #fff; fill: #fff;">
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="carticon hover-2"  width="20px" height="25px" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512" style="stroke: #000; fill: #000;">
                     <g>
                     <g>
                     <g>
@@ -90,7 +90,7 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r" style="background: li
                 <span class="#icon user-icon h-100 center pt-7p bsbb mt--2p">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 24 24" fill="none" class="user--ic">
                 <g id="User / User_02">
-                <path id="Vector" d="M20 21C20 18.2386 16.4183 16 12 16C7.58172 16 4 18.2386 4 21M12 13C9.23858 13 7 10.7614 7 8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8C17 10.7614 14.7614 13 12 13Z" stroke="#fff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                <path id="Vector" d="M20 21C20 18.2386 16.4183 16 12 16C7.58172 16 4 18.2386 4 21M12 13C9.23858 13 7 10.7614 7 8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8C17 10.7614 14.7614 13 12 13Z" stroke="#000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
                 </g>
                 </svg>
               </span>
