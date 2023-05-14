@@ -14,12 +14,12 @@ let ops = {
 	  'accept': '*/*'
 
 	}}
+let cts = await request('getcats',ops);
 let aa = await request('gettopselling',ops);
 let disc = await request('getdiscounted',ops);
+let brnds = await request('getbrands',ops);
 a441618154(aa,prods_cont)
 sdisc(disc,diccont)
-let cts = await request('getcats',ops);
-let brnds = await request('getbrands',ops);
 if(cts.success){
 	s(cts.message)
 }
