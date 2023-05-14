@@ -1,6 +1,6 @@
 let q,w,e,r,t,y,u,o,p,a,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 var prods_cont = document.querySelector('div.ts-cont');
-import { cc,request,v_,geturl,adcm, dcrtmgc, checkCart,geimgturl,getdata,addsCard,postschema} from "./functions.js";
+import { cc,request,v_,geturl,adcm, dcrtmgc, checkCart,geimgturl,getdata,addsCard,postschema,alertMessage} from "./functions.js";
 let ts = document.querySelector('div.ts-cont');
 let ctscont = document.querySelector('div.cats-cont');
 let brndscont = document.querySelector('div.brands-cont')
@@ -127,10 +127,10 @@ export function a441618154(aa,parent){
 			});
 			let wish = Array.from(parent.querySelectorAll('span.wish-icon'))
                 wish.forEach(wishlistbut=>{
-                    wishlistbut.addEventListener('click',async()=>{
+					wishlistbut.addEventListener('click',async()=>{
                         u = getdata('user')
                         if (!u) {
-                            alertMessage('wish list is not available')
+                            alertMessage('wishlist is not available')
                         }else{
                             p = postschema
                             p.body = JSON.stringify({pid: wishlistbut.getAttribute('data-id'),token: u}) 
