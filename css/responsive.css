@@ -80,7 +80,11 @@
     .gob-resp.search-sec{
         margin-top: 47px;
         width: 100%;
-        padding-left: 25px;
+    }
+    .gob-resp .w-800p{
+        margin-top: 12px;
+        height: 85%;
+        margin-left: -10px;
     }
     .gob-resp.search-sec .bfull-resp{
         width: 100%;
