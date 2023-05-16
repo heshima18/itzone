@@ -41,7 +41,7 @@ function showprods(aa) {
     </div>`
     aa.categories.forEach(cat=>{
         l = document.createElement('div');
-        l.className = 'w-100 h-a p-5p bsbb mb-20p';
+        l.className = 'w-100 h-a p-5p bsbb';
         l.innerHTML = `<div class="w-100 h-100 flex">
                         <div class="the-thumb w-80p h-80p p-5p bsbb iblock">
                             <div class="w-100 h-100 br-50 center">
@@ -57,7 +57,7 @@ function showprods(aa) {
       })
       aa.brands.forEach(brand=>{
         l = document.createElement('div');
-        l.className = 'w-100 h-a p-5p bsbb mb-20p';
+        l.className = 'w-100 h-a p-5p bsbb';
         l.innerHTML = `<div class="w-100 h-100 flex">
                         <div class="the-thumb w-80p h-80p p-5p bsbb iblock">
                           <div class="w-100 h-100 br-50 center">
@@ -73,7 +73,7 @@ function showprods(aa) {
       })
       aa.series.forEach(serie=>{
         l = document.createElement('div');
-        l.className = 'w-100 h-a p-5p bsbb mb-20p';
+        l.className = 'w-100 h-a p-5p bsbb';
         l.innerHTML = `<div class="w-100 h-100 flex">
                         <div class="the-thumb w-80p h-80p p-5p bsbb iblock">
                             <div class="w-100 h-100 br-50 center">
@@ -89,7 +89,7 @@ function showprods(aa) {
       })
       aa.subcategories.forEach(subcat=>{
         l = document.createElement('div');
-        l.className = 'w-100 h-a p-5p bsbb mb-20p';
+        l.className = 'w-100 h-a p-5p bsbb';
         l.innerHTML = `<div class="w-100 h-100 flex">
                         <div class="the-thumb w-80p h-80p p-5p bsbb iblock">
                             <div class="w-100 h-100 br-50 center">

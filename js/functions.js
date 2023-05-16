@@ -3722,16 +3722,18 @@ export function sf(aa,parent) {
   if ( aa.message.length > 0) {
     parent.innerHTML = null;
     aa.message.forEach(d=>{
-                  parent.innerHTML+=  `<div class="product w-100 h-a bc-white  p-10p bsbb ovh mr-10p ${(aa.message.indexOf(d) == 0)? 'mt-15p': ''} iblock hover-2 ${(aa.message.indexOf(d) == (aa.message.length-1))? '': 'bb-1-s-g'}">
+                  parent.innerHTML+=  `<div class="product w-100 h-a bc-white bsbb ovh mr-10p ${(aa.message.indexOf(d) == 0)? 'mt-15p': ''} iblock hover-2 ${(aa.message.indexOf(d) == (aa.message.length-1))? '': 'bb-1-s-g'}">
                       <div class="w-100 h-100 bsbb flex">
                           <div class="image p-10p bsbb iblock w-100p h-100p br-5p">
-                              <span class="w-100 h-100">
+                          <span class="w-100 h-100">
+                            <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black w-100 h-100 flex">
                                <img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" alt="" class="w-100 h-100 b-none contain">
-                              </span>
+                            </a>
+                          </span>
                           </div>
                           <div class="w-80 h-100 iblock pl-20p bsbb">
                               <div class="title w-100 h-a p-5p bsbb">
-                              <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black w-100 h-100 flex"><span class="verdana left fs-16p bsbb black capitalize ">${d.pname}</span></a>
+                              <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black w-100 h-100 flex"><span class="verdana left fs-13p bsbb black capitalize ">${d.pname}</span></a>
                               </div>
                               <div class="desc w-100 h-a p-5p bsbb ">
                               <span class="verdana left fs-13p bsbb dgray wrap">in <a href="${geturl()}/browse/?category=${d.catname}" class="td-none ls-n"><font class="theme">${d.catname}</font></a> , <a href="${geturl()}/browse/?subcategory=${d.subcatname}" class="td-none ls-n"><font class="theme">${d.subcatname}</font></a> , <a href="${geturl()}/browse/?brand=${d.brandname}" class="td-none ls-n"><font class="theme">${d.brandname}</font></a> , <a href="${geturl()}/browse/?serie=${d.famname}" class="td-none ls-n"><font class="theme">${d.famname}</font></a> , <a href="${geturl()}/browse/?usedin=${d.usedinname}" class="td-none ls-n"><font class="theme">${d.usedinname}</font></a></span>

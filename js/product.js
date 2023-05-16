@@ -158,9 +158,8 @@ async function getparams(url) {
                                     </div>`
                 phol.innerHTML = `<div class="w-100 h-100 bsbb pttl bb-1-s-g">
                 <div class="w-100 h-a flex jc-sb right">
-                <span class="verdana h-100 w-100 capitalize bold fs-20p wrap left">${pd.pname}</span>
-                ${(pd.catname == 'services')? `<span class="verdana w-30 h-100 iblock  fs-17p orange price nowrap capitalize">negotiatable</span>` : `<span class="verdana w-30 h-100 iblock  fs-17p orange price nowrap">${adcm(pd.conditions[0].newprice)} <span class="consolas orange">RWF</span></span>`}
-                
+                    <span class="verdana h-100 w-100 capitalize bold fs-16p wrap left">${pd.pname}</span>
+                    </span>
                 </div>
                 <div class="w-100 h-40p bsbb p-5p rates-hol flex"></div>
                 
@@ -195,32 +194,33 @@ async function getparams(url) {
                         rateshol.innerHTML += `<span class="pl-10p bsbb fs-12p capitalize center-2 verdana">${rated} total rates</span>`
                     }
                 pspectitlhol.innerHTML = `<div class="w-100 h-100 p-5p">
-                ${(pd.catname == 'services')? `<span class="verdana h-100 w-100 capitalize fs-18p">service details</span>
-                </div>`: `<span class="verdana h-100 w-100 capitalize fs-18p">specitifations</span>`}
+                ${(pd.catname == 'services')? `<span class="verdana h-100 w-100 capitalize fs-16p">service details</span>
+                </div>`: `<span class="verdana h-100 w-100 capitalize fs-16p">specitifations</span>`}
                 </div>
                 `
                 
                 pspecs.innerHTML = null
+                pspecs.classList.add('bb-1-s-g')
                 pspecs.className = 'ls-none m-0 pl-10p bsbb pspecs'
-                tgsttl.innerHTML = `<div class="w-100 p-5p bsbb h-30p">
-                                        <span class="verdana h-100 w-100 capitalize fs-18p">tags</span>
+                tgsttl.innerHTML = `<div class="w-100 bsbb h-25p">
+                                        <span class="verdana h-100 w-100 capitalize fs-16p">tags</span>
                                     </div>`
                 Object.keys(pd.pspecs).forEach(spec=>{
                     let leli = document.createElement('li');
                     pspecs.appendChild(leli)
-                    leli.className = 'w-100 p-5p bsbb'
+                    leli.className = 'w-100 p-2p bsbb'
                     leli.innerHTML=`<div class="w-100 h-a flex">
-                                        <span class="verdana h-100 w-a capitalize fs-13p nowrap">${spec}:</span>
-                                        <span class="verdana h-100 w-a capitalize  fs-13p pl-10p dgray">${pd.pspecs[spec]}</span>
+                                        <span class="verdana h-100 w-a capitalize fs-12p nowrap">${spec}:</span>
+                                        <span class="verdana h-100 w-a capitalize  fs-12p pl-10p dgray">${pd.pspecs[spec]}</span>
                                     </div>`
                 })
 
                 proddescttlhol.className = 'w-100  proddesc'
-                proddescttlhol.innerHTML = '<div class="ls-none m-0 pl-10p bsbb"><span class="verdana h-100 w-100 capitalize fs-18p">description</span></div>'
+                proddescttlhol.innerHTML = '<div class="ls-none m-0 p-10p bsbb"><span class="verdana h-100 w-100 capitalize fs-16p">description</span></div>'
                 proddesc.innerHTML = `<div class="ls-none m-0 pl-10p bsbb"><span class="verdana h-100 w-100 fs-13p dgray">${pd.description}</span></div>`
                 tgscntnt.classList.replace('h-40p','h-a')
                 tgscntnt.classList.replace('flex','v')
-                tgscntnt.innerHTML = `  <li class="w-100 p-5p bsbb">
+                tgscntnt.innerHTML = `  <li class="w-100 bsbb">
                                                 <a class="td-none ls-n" href="${geturl()}/browse/?category=${pd.catname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.catname} </span></a>
                                                 <a class="td-none ls-n" href="${geturl()}/browse/?brand=${pd.brandname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.brandname} </span></a>
                                                 <a class="td-none ls-n" href="${geturl()}/browse/?subcategory=${pd.subcatname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.subcatname} </span></a>
@@ -229,7 +229,7 @@ async function getparams(url) {
                                                 <a class="td-none ls-n" href="${geturl()}/browse/?availability=${pd.availability}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.availability} </span></a>
                                         </li>
                                         `
-                prcttlhol.innerHTML = '<div class="ls-none m-0 pl-10p bsbb"><span class="verdana h-100 w-100 capitalize fs-18p">conditions</span></div>'
+                prcttlhol.innerHTML = '<div class="ls-none m-0 pl-10p bsbb"><span class="verdana h-100 w-100 capitalize fs-16p">conditions</span></div>'
                 prchol.innerHTML = null
                 prchol.classList.replace('m-10p','h-a')
                 pd.conditions.forEach(cond=>{
@@ -243,7 +243,7 @@ async function getparams(url) {
 
                 })
                 
-                prchol.innerHTML +=`<div class=" left m-5p bsbb w-100"><span class="verdana left m-5p  fs-18p bsbb center-2 pt-2p pb-4p  h-100"><span class="fs-13p pr-10p pt-2p ">starting at</span><span class="condprice" id="">${adcm(pd.conditions[0].newprice)}</span> <span class="fs-13p pl-10p pt-2p dgray">RWF</span></span></div>`
+                prchol.innerHTML +=`<div class=" left bsbb w-100"><span class="verdana left  fs-16p bsbb center-2 pt-2p pb-4p  h-100"><span class="fs-13p pr-10p pt-2p dgray">Price</span><span class="condprice bold-2 poppsins" id="">${adcm(pd.conditions[0].newprice)}</span> <span class="fs-13p pl-10p pt-2p dgray">RWF</span></span></div>`
                 conds= document.querySelectorAll('span.conds')
                 conds.forEach(bu=>{
                     bu.addEventListener('click',e=>{
@@ -254,7 +254,7 @@ async function getparams(url) {
                     })
                 })
                 bttnshol.innerHTML = `${(pd.catname == 'services')?`
-                <div class="w-a h-100 hover-2 ml-20p mr-20p right">
+                <div class="w-a h-100 hover-2 mr-20p right">
                     <span class="add-to-cart flex w-100 h-100">
                         <a class="bc-orange td-none b-none br-5p center-2 pl-10p pr-10p" href="${geturl()}/contact/?subject=requesting for a service&message=hello i am interested in this service of yours called ${pd.pname} can i get more information about it..">
                             <span class="white center-2 w-100 h-100 fs-15p capitalize verdana">request</span></a>
