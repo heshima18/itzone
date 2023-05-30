@@ -2323,7 +2323,19 @@ const s3 = new AWS.S3({
 									const base64Data = i.replace(/^data:image\/\w+;base64,/, '');
 									const bufferData = Buffer.from(base64Data, 'base64');
 									const filePath = path.join(__dirname,'..','feedback-imgz', n);
-									fs.writeFileSync(filePath, bufferData);
+									const params = {
+										Bucket: 'itzone',
+										Key: `feedback-imgz/${n}`,
+										Body: bufferData
+									  };
+									  s3.upload(params, function(err, data) {
+										if (err) {
+										  console.log("Error uploading file: ", err);
+										} else {
+										  console.log("File uploaded successfully. Location: ", data.Location);
+										}
+									  });
+									// fs.writeFileSync(filePath, bufferData);
 								}else{
 									n = null
 								}
