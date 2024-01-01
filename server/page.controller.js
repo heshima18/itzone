@@ -56,7 +56,7 @@ function page (req,res,page){
             title.text(prodinfo.pname)
             metaNameTag.attr('content', prodinfo.pname);
             metaImageTag.attr('content', 'https://itspace.rw/api/product-imgz/'+prodinfo.pimgs[0]);
-            metaPriceTag.attr('content', adcm(prodinfo.conditions[0].price));
+            metaPriceTag.attr('content', prodinfo.conditions[0].price);
             metaDescriptionTag.attr('content', prodinfo.description)
             res.end($.html());
         }else{
