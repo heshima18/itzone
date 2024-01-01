@@ -101,6 +101,18 @@ export function showCart(theshade){
       shwcrtcntn(a,x,items)
    	}
 }
+export function getPath(index) {
+  let i = new URL(window.location.href)
+  i = i.pathname
+  i = i.split('/')
+  // i.pop()
+  i.shift()
+  if (!index) {
+    return i
+  }
+  return decodeURIComponent(i[index])
+  
+}
 function shwcrtcntn(a,x,items) {
   if (a.length == 0) {
     x.innerHTML = '<font class="verdana fs-30p capitalize black">my&nbsp;cart</font>';
@@ -114,7 +126,7 @@ function shwcrtcntn(a,x,items) {
     })
     return z
   }
-  x.innerHTML = `<span class="shol left w-a center igrid h-100 ml-10p"><div class="w-100 h-100"><font class="black capitalize verdana left w-50p igrid">total:&nbsp;</font><font class="theme verdana fs-15p capitalize igrid p-2p">${adcm(p())} rwf</font></div></span><span class="igrid right center h-100 mr-10p"><a href="${geturl()}/checkout/?" class="td-none ls-none ls-n td-none"><button class="button bc-theme white br-2p verdana b-none p-10p hover-2 bsbb"><font class="fs-15p">Check out</font></button></a></span>`;
+  x.innerHTML = `<span class="shol left w-a center igrid h-100 ml-10p"><div class="w-100 h-100"><font class="black capitalize verdana left w-50p igrid">total:&nbsp;</font><font class="theme verdana fs-15p capitalize igrid p-2p">${adcm(p())} rwf</font></div></span><span class="igrid right center h-100 mr-10p"><a href="${geturl()}/checkout/" class="td-none ls-none ls-n td-none"><button class="button bc-theme white br-2p verdana b-none p-10p hover-2 bsbb"><font class="fs-15p">Check out</font></button></a></span>`;
   items.innerHTML = "";
    a.forEach(d=>{
     items.innerHTML += `<div class="w-100 h-80p p-r mt-5p bb-1-s-g">
@@ -130,7 +142,7 @@ function shwcrtcntn(a,x,items) {
         <td class="w-a">
           <div class="w-100 h-25p bc-white bsbb">
             <span class="w-100 h-100 p-4p bc-white w-100 __16141134">
-              <a href="${geturl()}/product/?id=${d.prodid}" class="td-none ls-n">
+              <a href="${geturl()}/product/${d.prodid}" class="td-none ls-n">
                 <font class="fs-16p black poppsins capitalize verdana hover-2 _16141134"  title="${d.pname}">
                   ${ellipsis(d.pname,20)}
                 </font>	
@@ -248,7 +260,7 @@ export async function request(url,options){
   if (url == 'tree') {
     t = getdata('tree')
     if (!t) {
-      z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+      z = await fetch(`${geturl()}/api/`+url,options);
       y = await z.json();
       Object.assign(y,{status: z.status})
       localStorage.setItem('tree',JSON.stringify(y))
@@ -259,7 +271,7 @@ export async function request(url,options){
   }else if (url == 'getprods') {
     t = getdata('getprods')
     if (!t) {
-      z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+      z = await fetch(`${geturl()}/api/`+url,options);
       y = await z.json();
       Object.assign(y,{status: z.status})
       localStorage.setItem('getprods',JSON.stringify(y))
@@ -270,7 +282,7 @@ export async function request(url,options){
   }else if (url == 'getpinned'){
     t = getdata('getpinned')
     if (!t) {
-      z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+      z = await fetch(`${geturl()}/api/`+url,options);
       y = await z.json();
       Object.assign(y,{status: z.status})
       localStorage.setItem('getpinned',JSON.stringify(y))
@@ -286,7 +298,7 @@ export async function request(url,options){
         socket.emit('refresh','data');
       }
     }
-    z = await fetch('https://itzoneshop.onrender.com/api/'+url,options);
+    z = await fetch(`${geturl()}/api/`+url,options);
     y = await z.json();
     Object.assign(y,{status: z.status})
     return y;
@@ -471,7 +483,7 @@ export function showrecs(cont,resp) {
                         </div>
                       </div>
                       <div class="the-desc w-60 h-50p p-5p mt-5p bsbb iblock">
-                        <div class="w-80 h-15p br-5  m-5p"><a href="${geturl()}/browse/?category=${cat.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${cat.name}</span></a></div>
+                        <div class="w-80 h-15p br-5  m-5p"><a href="${geturl()}/browse/category/${cat.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${cat.name}</span></a></div>
                         <div class="w-60 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>in categories</span></div>
                       </div>
                     </div> `
@@ -491,7 +503,7 @@ export function showrecs(cont,resp) {
                         </div>
                       </div>
                       <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
-                      <div class="w-80 h-15p br-5  m-5p"><a href="${geturl()}/browse/?brand=${brand.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${brand.name}</span></a></div>
+                      <div class="w-80 h-15p br-5  m-5p"><a href="${geturl()}/browse/brand/${brand.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${brand.name}</span></a></div>
                       <div class="w-60 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>in brands</span></div>
                       </div>
                     </div> `
@@ -511,8 +523,8 @@ export function showrecs(cont,resp) {
                         </div>
                       </div>
                       <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
-                      <div class="w-100 h-15p br-5  m-5p"><a href="${geturl()}/browse/?serie=${serie.famname}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${serie.famname}</span></a></div>
-                      <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>a serie from <font class="theme hover-2"><a href="${geturl()}/browse/?brand=${serie.brandname}" class="td-none theme ls-n">${serie.brandname}</a></font> brand</span></div>
+                      <div class="w-100 h-15p br-5  m-5p"><a href="${geturl()}/browse/serie/${serie.famname}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${serie.famname}</span></a></div>
+                      <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>a serie from <font class="theme hover-2"><a href="${geturl()}/browse/brand/${serie.brandname}" class="td-none theme ls-n">${serie.brandname}</a></font> brand</span></div>
                       </div>
                     </div> `
       b.appendChild(l)
@@ -531,8 +543,8 @@ export function showrecs(cont,resp) {
                         </div>
                       </div>
                       <div class="the-desc w-60 h-50p p-5p bsbb m-5p iblock">
-                      <div class="w-100 h-15p br-5  m-5p"><a href="${geturl()}/browse/?subcategory=${subcat.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${subcat.name}</span></a></div>
-                      <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>a subcategory from <font class="theme hover-2"><a href="${geturl()}/browse/?category=${subcat.catname}" class="td-none theme ls-n">${subcat.catname}</a></font></span></div>
+                      <div class="w-100 h-15p br-5  m-5p"><a href="${geturl()}/browse/subcategory/${subcat.name}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${subcat.name}</span></a></div>
+                      <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>a subcategory from <font class="theme hover-2"><a href="${geturl()}/browse/category/${subcat.catname}" class="td-none theme ls-n">${subcat.catname}</a></font></span></div>
                       </div>
                     </div> `
       b.appendChild(l)
@@ -562,8 +574,8 @@ export function showrecs(cont,resp) {
                       </div>
                     </div>
                     <div class="the-desc w-80 h-100 p-5p bsbb iblock">
-                    <div class="w-100 h-a"><a href="${geturl()}/product/?id=${prod.prodid}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${prod.pname}</span></a></div>
-                    <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>in <a href="${geturl()}/browse/?category=${prod.catname}" class="td-none black ls-n"><font class="theme hover-2">${prod.catname}</font></a> , <a href="${geturl()}/browse/?subcategory=${prod.subcatname}" class="td-none black ls-n"><font class="theme hover-2">${prod.subcatname}</font></a>, <a href="${geturl()}/browse/?brand=${prod.brandname}" class="td-none black ls-n"><font class="theme hover-2">${prod.brandname}</font></a>, <a href="${geturl()}/browse/?usedin=${prod.usedinname}" class="td-none black ls-n"><font class="theme hover-2">${prod.usedinname}</font></a>, <a href="${geturl()}/browse/?serie=${prod.famname}" class="td-none black ls-n"><font class="theme hover-2">${prod.famname}</font></a></span></div>
+                    <div class="w-100 h-a"><a href="${geturl()}/product/${prod.prodid}" class="td-none black ls-n"><span class='w-100 h-100 verdana  fs-15p'>${prod.pname}</span></a></div>
+                    <div class="w-100 h-20p br-5 m-5p"><span class='w-100 h-100 verdana dgray  fs-12p'>in <a href="${geturl()}/browse/category/${prod.catname}" class="td-none black ls-n"><font class="theme hover-2">${prod.catname}</font></a> , <a href="${geturl()}/browse/subcategory/${prod.subcatname}" class="td-none black ls-n"><font class="theme hover-2">${prod.subcatname}</font></a>, <a href="${geturl()}/browse/brand/${prod.brandname}" class="td-none black ls-n"><font class="theme hover-2">${prod.brandname}</font></a>, <a href="${geturl()}/browse/usedin/${prod.usedinname}" class="td-none black ls-n"><font class="theme hover-2">${prod.usedinname}</font></a>, <a href="${geturl()}/browse/serie/${prod.famname}" class="td-none black ls-n"><font class="theme hover-2">${prod.famname}</font></a></span></div>
                     </div>
                   </div> `
     k.appendChild(l)
@@ -731,7 +743,7 @@ export function geturl() {
    return i.origin
 }
 export function geimgturl() {
-  i = 'https://itzoneshop.onrender.com/api'
+  i = `${geturl()}/api`
   return i
 }
 export async function dcrtmgc(elem,aa,index,cond) {
@@ -3311,7 +3323,7 @@ export function getcinfo(prods) {
                               <div class="w-100 h-100 pl-20p bsbb">
                                   <div class="w-100 h-100">
                                       <div class="w-100 h-a br-3p  mb-10p">
-                                      <a href="${geturl()}/product/?id=${product.prodid}" class="td-none ls-n black">
+                                      <a href="${geturl()}/product/${product.prodid}" class="td-none ls-n black">
                                           <span class="w-100 h-a fs-18p bold verdana capitalize">${product.pname}</span>
                                       </a>
                                       </div>
@@ -3350,7 +3362,7 @@ export function getcinfo(prods) {
                      <div class="w-100 h-100 pl-20p bsbb">
                          <div class="w-100 h-100">
                              <div class="w-100 h-a br-3p  mb-10p">
-                             <a href="${geturl()}/product/?id=${product.prodid}" class="td-none ls-n black">
+                             <a href="${geturl()}/product/${product.prodid}" class="td-none ls-n black">
                               <span class="w-100 h-a fs-18p bold verdana capitalize">${product.pname}</span>
                              </a>
                              </div>
@@ -3726,17 +3738,17 @@ export function sf(aa,parent) {
                       <div class="w-100 h-100 bsbb flex">
                           <div class="image p-10p bsbb iblock w-100p h-100p br-5p">
                           <span class="w-100 h-100">
-                            <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black w-100 h-100 flex">
+                            <a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black w-100 h-100 flex">
                                <img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" alt="" class="w-100 h-100 b-none contain">
                             </a>
                           </span>
                           </div>
                           <div class="w-80 h-100 iblock pl-20p bsbb">
                               <div class="title w-100 h-a p-5p bsbb">
-                              <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black w-100 h-100 flex"><span class="verdana left fs-13p bsbb black capitalize ">${d.pname}</span></a>
+                              <a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black w-100 h-100 flex"><span class="verdana left fs-13p bsbb black capitalize ">${d.pname}</span></a>
                               </div>
                               <div class="desc w-100 h-a p-5p bsbb ">
-                              <span class="verdana left fs-13p bsbb dgray wrap">in <a href="${geturl()}/browse/?category=${d.catname}" class="td-none ls-n"><font class="theme">${d.catname}</font></a> , <a href="${geturl()}/browse/?subcategory=${d.subcatname}" class="td-none ls-n"><font class="theme">${d.subcatname}</font></a> , <a href="${geturl()}/browse/?brand=${d.brandname}" class="td-none ls-n"><font class="theme">${d.brandname}</font></a> , <a href="${geturl()}/browse/?serie=${d.famname}" class="td-none ls-n"><font class="theme">${d.famname}</font></a> , <a href="${geturl()}/browse/?usedin=${d.usedinname}" class="td-none ls-n"><font class="theme">${d.usedinname}</font></a></span>
+                              <span class="verdana left fs-13p bsbb dgray wrap">in <a href="${geturl()}/browse/category/${d.catname}" class="td-none ls-n"><font class="theme">${d.catname}</font></a> , <a href="${geturl()}/browse/subcategory/${d.subcatname}" class="td-none ls-n"><font class="theme">${d.subcatname}</font></a> , <a href="${geturl()}/browse/brand/${d.brandname}" class="td-none ls-n"><font class="theme">${d.brandname}</font></a> , <a href="${geturl()}/browse/serie/${d.famname}" class="td-none ls-n"><font class="theme">${d.famname}</font></a> , <a href="${geturl()}/browse/usedin/${d.usedinname}" class="td-none ls-n"><font class="theme">${d.usedinname}</font></a></span>
                               </div>
                               <div class="av w-100 h-a p-5p bsbb ">
                               <span class="verdana left fs-13p bsbb bc-gray pb-3p pl-10p pr-10p pt-1p br-3p center h-100 w-a ml-5p dgray">${d.availability}</span>

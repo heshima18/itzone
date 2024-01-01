@@ -1,5 +1,5 @@
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
-import { alertMessage, geturl,cc,request,adcm,checkCart,dcrtmgc,geimgturl,getdata,postschema,addsCard } from "./functions.js";
+import { alertMessage, geturl,cc,request,adcm,checkCart,dcrtmgc,geimgturl,getdata,postschema,addsCard, getPath } from "./functions.js";
 let prods_cont = document.querySelector('div.related-prods-cont')
 for (let i = 0; i < 20; i++) {
     prods_cont.innerHTML+= `<div class="product w-250p h-350p bc-white br-5p ovh ml-10p mr-10p mb-15p mt-15p iblock hover-4 bfull-500-resp bm-a-resp">
@@ -51,11 +51,10 @@ for (let i = 0; i < 20; i++) {
 getparams(window.location.href);
 async function getparams(url) {
     let i = new URL(url)
-    let id = {id : i.searchParams.get("id")}
+    let id = {id: getPath(1)}
     if (id.id == null) {
         alertMessage('product not found')
     }else{
-        document.title =  `${id[Object.keys(id)]} | ITZONE +`
         let opts = {
             mode: 'cors',
             method: "POST",
@@ -67,7 +66,7 @@ async function getparams(url) {
             }}
         let res = await request('getproduct',opts)
         if (res.success) {
-            document.title =  `${res.message[0].pname.substring(0,1).toUpperCase()+res.message[0].pname.substring(1,res.message[0].pname.length)} | ITZONE +`
+            document.title =  `${res.message[0].pname.substring(0,1).toUpperCase()+res.message[0].pname.substring(1,res.message[0].pname.length)} | ITSPACE`
             const titleMetaTag = document.querySelector('meta[property="og:title"]');
             const descriptionMetaTag = document.querySelector('meta[property="og:description"]');
             const imageMetaTag = document.querySelector('meta[property="og:image"]');
@@ -471,7 +470,7 @@ export function a441618154(aa,parent){
 								<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="${0}">${d.conditions[0].name}
 								</span>
 								<span class="w-100 h-100 p-5p bsbb block">
-                                    <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black block w-100 h-100">
+                                    <a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black block w-100 h-100">
 									<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
                                     </a>
 								</span>
@@ -479,7 +478,7 @@ export function a441618154(aa,parent){
                             </div>
 							<div class="w-100 h-200p">
                                 <div class="title w-100 h-100p p-5p bsbb center">
-                                    <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
+                                    <a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
                                 </div>
 								
 								<div class="w-100 h-a p-15p bsbb">

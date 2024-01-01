@@ -169,7 +169,7 @@ export function addfav(aa,parent){
 								<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="${0}">${d.conditions[0].name}
 								</span>
 								<span class="w-100 h-100 p-5p bsbb block">
-                                    <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black">
+                                    <a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black">
 									    <img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
                                     </a>    
 
@@ -177,7 +177,7 @@ export function addfav(aa,parent){
 							</div>
 							<div class="w-100 h-200p">
 								<div class="title w-100 h-100p p-5p bsbb">
-									<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black"><span class="verdana left fs-14p p-5p bsbb black capitalize">${d.pname}</span></a>
+									<a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black"><span class="verdana left fs-14p p-5p bsbb black capitalize">${d.pname}</span></a>
 								</div>
 								<div class="w-100 h-a p-15p bsbb">
 									<table class="w-100">

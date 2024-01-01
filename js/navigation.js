@@ -144,7 +144,7 @@ f = document.querySelector('form#searchFrm');
 f.addEventListener('submit',ff=>{
   ff.preventDefault();
   if (a.value.trim() != "") {
-    window.location.replace(`${geturl()}/search/?q=${a.value.trim()}`)
+    window.location.replace(`${geturl()}/search/${a.value.trim()}`)
   }
 })
 a.addEventListener('focus',cv=>{

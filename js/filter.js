@@ -1,5 +1,5 @@
 
-import {request,getschema,postschema, getParam} from './functions.js'
+import {request,getschema,postschema, getParam, getPath} from './functions.js'
 import {sf} from './functions.js'
 let r = await request('tree',getschema)
 
@@ -241,7 +241,7 @@ function d(r) {
         
     }
     
-    filnvd(getasked(window.location.href),arr)
+    filnvd({[getPath(1)]: getPath(2)},arr)
     let filbutton = filternav.querySelector('button.filbutton')
     filbutton.addEventListener('click',async ()=>{
         let ctn = []

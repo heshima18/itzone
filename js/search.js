@@ -1,11 +1,11 @@
-import { request,geturl,cc,adcm,sf,geimgturl } from "./functions.js";
+import { request,geturl,cc,adcm,sf,geimgturl, getPath } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 let catscont = document.querySelector('div.cats')
 let prodscont = document.querySelector('div.prods')
 
 try {
     i = new URL(window.location.href)
-    q = i.searchParams.get("q")
+    q = getPath(1)
     v = {
         mode: 'cors',
         method: "POST",
@@ -17,7 +17,7 @@ try {
         }
       } 
     if(q.length > 0) {
-      document.title =  `${q.substring(0,1).toUpperCase()+q.substring(1,q.length)} | ITZONE +`
+      document.title =  `${q.substring(0,1).toUpperCase()+q.substring(1,q.length)} | ITSPACE`
         r = await request(`search?b=${q}`,v);
         if(r.success) showprods(r.message);
     }

@@ -7,7 +7,8 @@ let fs = require('fs')
 let secretkey = "myguy";
 let path = require('path')
 let router = express.Router();
-let {server,database} = require('./handler')
+let {server,database} = require('./handler');
+const { assets, page } = require('./page.controller');
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 const io = require('socket.io')(server, {
   cors: {
@@ -35,7 +36,7 @@ const s3 = new AWS.S3({
 	accessKeyId: 'AKIAZ2FAYGUCPOJILUFM',
 	secretAccessKey: '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'
 });
-	router.get('/download/:folder', (req, res) => {
+	router.get('/api/download/:folder', (req, res) => {
 		const folderPath = path.join(__dirname, '..', req.params.folder); // assuming the target directory is in the parent directory
 		const zipFileName = `${req.params.folder}.zip`;
 		const output = fs.createWriteStream(zipFileName);
@@ -75,7 +76,7 @@ const s3 = new AWS.S3({
 		console.log(`${zipFileName} has been created and sent to the client.`);
 		});
 	});
-	router.get('/images/:filename', async (req, res) => {
+	router.get('/api/images/:filename', async (req, res) => {
 		const { filename } = req.params;
 		const params = {
 			Bucket: 'itzone',
@@ -107,7 +108,7 @@ const s3 = new AWS.S3({
 		// res.end(data);
 		// });
 	});
-	router.get('/feedback-imgz/:filename', async (req, res) => {
+	router.get('/api/feedback-imgz/:filename', async (req, res) => {
 		const { filename } = req.params;
 		const params = {
 			Bucket: 'itzone',
@@ -138,7 +139,7 @@ const s3 = new AWS.S3({
 		// res.end(data);
 		// });
 	});
-	router.get('/product-imgz/:filename', async (req, res) => {
+	router.get('/api/product-imgz/:filename', async (req, res) => {
 		const { filename } = req.params;
 		const params = {
 			Bucket: 'itzone',
@@ -170,7 +171,7 @@ const s3 = new AWS.S3({
 		// res.end(data);
 		// });
 	});
-	router.get('/brands/:filename', async (req, res) => {
+	router.get('/api/brands/:filename', async (req, res) => {
 		const { filename } = req.params;
 		const params = {
 			Bucket: 'itzone',
@@ -201,7 +202,7 @@ const s3 = new AWS.S3({
 		// res.end(data);
 		// });
 	});
-	router.post('/search', async (req, res) => {
+	router.post('/api/search', async (req, res) => {
 		try {
 			n = req.body.needle;
 			database.query(`SELECT products.id as prodid,products.availability, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) where  products.name like '%${n}%' or products.category like '%${n}%' or products.subcategory like '%${n}%' or products.brand like '%${n}%' or products.description like '%${n}%'`,(error,result)=>{
@@ -243,10 +244,10 @@ const s3 = new AWS.S3({
 		res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.get('/hello',async (req,res)=>{
+	router.get('/api/hello',async (req,res)=>{
 		res.send({response: 'hi'});
 	})
-	router.get('/getprods', async (req, res) => {
+	router.get('/api/getprods', async (req, res) => {
 		try {
 		  database.query("SELECT products.id as prodid,products.availability, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid,products.description, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) order by products.category,products.name asc ",(error,result)=>{
 			if (error) return res.send({ success: false, message: "oops an error occured"});
@@ -267,7 +268,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/getprodswthcndtn', async (req, res) => {
+	router.post('/api/getprodswthcndtn', async (req, res) => {
 		try {
 		let c = req.body.cntn;
 		c = gnrtctn(c)
@@ -290,7 +291,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/getprodswthorcndtn', async (req, res) => {
+	router.post('/api/getprodswthorcndtn', async (req, res) => {
 		try {
 			let c = req.body.cntn;
 			c = gnrtorctn(c)
@@ -313,7 +314,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: error});
 		}
 	});
-	router.post('/getproduct', async (req, res) => {
+	router.post('/api/getproduct', async (req, res) => {
 		try {
 		  database.query("SELECT products.id as prodid, products.quantity,products.availability,products.description, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)  where products.id = ?",[req.body.id],async (error,result)=>{
 			if (error) return res.send({ success: false, message: "oops an error occured"});
@@ -343,7 +344,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});	
-	router.post('/editprodinfo',async (req,res)=>{
+	router.post('/api/editprodinfo',async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -430,7 +431,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/editprodpri',async (req,res)=>{
+	router.post('/api/editprodpri',async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -465,7 +466,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/getusers',async (req,res)=>{
+	router.post('/api/getusers',async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -492,7 +493,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/getuserinfo',async (req,res)=>{
+	router.post('/api/getuserinfo',async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -526,7 +527,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/getuser',async (req,res)=>{
+	router.post('/api/getuser',async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -553,7 +554,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.get('/gettopselling',async (req,res)=>{
+	router.get('/api/gettopselling',async (req,res)=>{
 		try {
 			database.query("SELECT products.id as prodid, products.name as pname, products.availability, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) where orders >=(SELECT avg(orders) from products) and products.category != 'services' limit 0,10",(error,result)=>{
 				if (error) return res.send({ success: false, message: "oops an error occured"});
@@ -575,7 +576,7 @@ const s3 = new AWS.S3({
 			
 		}
 	})
-	router.post('/signup',async (req,res)=>{
+	router.post('/api/signup',async (req,res)=>{
 		try {
 			a= req.body.firstname
 			b = req.body.lastname
@@ -597,7 +598,7 @@ const s3 = new AWS.S3({
 			res.send({sucess: false, message: "Oops an error occured"});
 		}
 	})
-	router.post('/login',(req,res)=>{
+	router.post('/api/login',(req,res)=>{
 		d = req.body.email
 		e = req.body.password
 		try {
@@ -615,12 +616,12 @@ const s3 = new AWS.S3({
 			
 		}
 	})
-	router.post('/checkemail',(req,res)=>{
+	router.post('/api/checkemail',(req,res)=>{
 		checkemail(req,res, (dec)=>{
 			res.send(dec);
 		})
 	})
-	router.post('/addtowishlist', async(req,res)=>{
+	router.post('/api/addtowishlist', async(req,res)=>{
 		authenticateToken(req.body.token, async (tokendata)=>{
 			if (tokendata.success ==true) {
 				u = tokendata.token.id
@@ -682,13 +683,13 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.get('/addadmin', async(req,res)=>{
+	router.get('/api/addadmin', async(req,res)=>{
 		q = await query("update admin set username= 'Adminos', password = 'Adminos'")
 		if (!q) return res.send({success : false,message: 'oops an error occured'})
 		res.send({success : true,message: 'Admin info resetted successfully'})
 		io.emit('deleteadmintoken','dd')
 	})
-	router.post('/editadmin', async(req,res)=>{
+	router.post('/api/editadmin', async(req,res)=>{
 				u = req.body.username
 				p = req.body.password
 				try {
@@ -699,7 +700,7 @@ const s3 = new AWS.S3({
 					res.send({success: false, message: "Oops, an error occured"});
 				}
 	})
-	router.post('/adminlogin', async(req,res)=>{
+	router.post('/api/adminlogin', async(req,res)=>{
 		u = req.body.username
 		p = req.body.password
 		try {
@@ -718,7 +719,7 @@ const s3 = new AWS.S3({
 			res.send({success: false , message: "Oops an error occured"});
 		}
 	})
-	router.post('/addcategory',async(req,res)=>{
+	router.post('/api/addcategory',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -755,7 +756,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.get('/getcats',async(req,res)=>{
+	router.get('/api/getcats',async(req,res)=>{
 		try {
 			database.query(`select distinct subcategories.name,subcategories.image from categories inner join subcategories where categories.id = subcategories.category order by subcategories.dateadded asc`,(error,result)=>{
 				if (error) return res.status(500).send({success: false, message: "Oops an error occured"})
@@ -765,7 +766,7 @@ const s3 = new AWS.S3({
 			res.status(500).send({success: false, message: 'oops an error occured'})
 		}
 	})
-	router.get('/getcategories',async(req,res)=>{
+	router.get('/api/getcategories',async(req,res)=>{
 		try {
 			database.query(`select * from categories`,(error,result)=>{
 				if (error) return res.status(500).send({success: false, message: "Oops an error occured"})
@@ -775,7 +776,7 @@ const s3 = new AWS.S3({
 			res.status(500).send({success: false, message: 'oops an error occured'})
 		}
 	})
-	router.get('/getbrands',async(req,res)=>{
+	router.get('/api/getbrands',async(req,res)=>{
 		try {
 			database.query(`select distinct brands.name,brands.image from brands where brands.name != 'N/A'`,(error,result)=>{
 				if (error) return res.send({success: false, message: "Oops an error occured"})
@@ -785,7 +786,7 @@ const s3 = new AWS.S3({
 			res.send({success: false, message: 'oops an error occured'})
 		}
 	})
-	router.post('/addbrand',async(req,res)=>{
+	router.post('/api/addbrand',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -834,7 +835,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/addusedin',async(req,res)=>{
+	router.post('/api/addusedin',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -885,7 +886,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/addsubcategory',async(req,res)=>{
+	router.post('/api/addsubcategory',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -934,7 +935,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/addfamily',async(req,res)=>{
+	router.post('/api/addfamily',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -982,7 +983,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/deletecategory',async(req,res)=>{
+	router.post('/api/deletecategory',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1038,7 +1039,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/deletebrand',async(req,res)=>{
+	router.post('/api/deletebrand',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1095,7 +1096,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/deletefamily',async(req,res)=>{
+	router.post('/api/deletefamily',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1150,7 +1151,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/deletesubcategory',async(req,res)=>{
+	router.post('/api/deletesubcategory',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1205,7 +1206,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/deleteusedin',async(req,res)=>{
+	router.post('/api/deleteusedin',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1260,7 +1261,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/deleteprod',async(req,res)=>{
+	router.post('/api/deleteprod',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1317,7 +1318,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/addproduct',async(req,res)=>{
+	router.post('/api/addproduct',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1374,7 +1375,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/pin',async(req,res)=>{
+	router.post('/api/pin',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1406,7 +1407,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/unpin',async(req,res)=>{
+	router.post('/api/unpin',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1438,7 +1439,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/addavailability',async(req,res)=>{
+	router.post('/api/addavailability',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1468,7 +1469,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/deleteavailability',async(req,res)=>{
+	router.post('/api/deleteavailability',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1498,7 +1499,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.get('/getpinned',async(req,res)=>{
+	router.get('/api/getpinned',async(req,res)=>{
 		try {
 			let r ={categories: null,subcategories: null, brands: null, families: null,usedin: null,availability: null}
 			database.query(`select name from categories  where pinned = 1 order by dateadded asc`,(error,result)=>{
@@ -1534,7 +1535,7 @@ const s3 = new AWS.S3({
 		}
 			
 	})
-	router.get('/getdiscounted', async (req, res) => {
+	router.get('/api/getdiscounted', async (req, res) => {
 		try {
 		  database.query(`SELECT products.id as prodid,JSON_EXTRACT(products.conditions, '$') AS conditions,products.availability,products.description,products.availability, products.name as pname, products.specifications as pspecs,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name) where JSON_CONTAINS(conditions, '{"promotion": true}', '$') `,(error,result)=>{
 			if (error) return res.send({ success: false, message: error});
@@ -1562,7 +1563,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});	
-	router.post('/adddiscount',async (req,res)=>{
+	router.post('/api/adddiscount',async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1599,7 +1600,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/remdiscount',async (req,res)=>{
+	router.post('/api/remdiscount',async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1635,7 +1636,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/addorder',async (req,res)=>{
+	router.post('/api/addorder',async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1724,7 +1725,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.get('/tree',async(req,res)=>{
+	router.get('/api/tree',async(req,res)=>{
 		d = req.body.email
 		e = req.body.password
 		try {
@@ -1758,7 +1759,7 @@ const s3 = new AWS.S3({
 			console.log(error)
 		}
 	})
-	router.post('/getwishlist', async (req, res) => {
+	router.post('/api/getwishlist', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -1810,7 +1811,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/getneworders', async (req, res) => {
+	router.post('/api/getneworders', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -1848,7 +1849,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/getpendingorders', async (req, res) => {
+	router.post('/api/getpendingorders', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -1886,7 +1887,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/getdeliveredorders', async (req, res) => {
+	router.post('/api/getdeliveredorders', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -1924,7 +1925,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/getorders', async (req, res) => {
+	router.post('/api/getorders', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -1962,7 +1963,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/myorders', async (req, res) => {
+	router.post('/api/myorders', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -2006,7 +2007,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/getorder', async (req, res) => {
+	router.post('/api/getorder', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -2038,7 +2039,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/chorst', async (req, res) => {
+	router.post('/api/chorst', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -2066,7 +2067,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/addquery', async(req,res)=>{
+	router.post('/api/addquery', async(req,res)=>{
 		f = req.body.firstname+" "+req.body.lastname
 		e = req.body.email
 		p = req.body.phonenumber
@@ -2077,7 +2078,7 @@ const s3 = new AWS.S3({
 			res.send({ success: true, message: "Query sent successfully i will reply you as soon as possible" });
 		
 	})
-	router.post('/getqueries', async (req, res) => {
+	router.post('/api/getqueries', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -2099,7 +2100,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/getnewqueries', async (req, res) => {
+	router.post('/api/getnewqueries', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -2121,7 +2122,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/chquest', async (req, res) => {
+	router.post('/api/chquest', async (req, res) => {
 		try {
 			authenticateToken(req.body.token, async (tokendata)=>{
 				if (tokendata.success) {
@@ -2149,7 +2150,7 @@ const s3 = new AWS.S3({
 		  res.send({ success: false, message: "oops an error occured" });
 		}
 	});
-	router.post('/ftchnbrs',async (req,res)=>{
+	router.post('/api/ftchnbrs',async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -2191,7 +2192,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/deleteuser',async(req,res)=>{
+	router.post('/api/deleteuser',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -2225,7 +2226,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/ban',async(req,res)=>{
+	router.post('/api/ban',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -2262,7 +2263,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/edituser',async(req,res)=>{
+	router.post('/api/edituser',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -2303,7 +2304,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/addfeedback',async(req,res)=>{
+	router.post('/api/addfeedback',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -2359,7 +2360,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/deletefeedback',async(req,res)=>{
+	router.post('/api/deletefeedback',async(req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -2393,6 +2394,14 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
+	router.get('/js/*',(req, res) => assets(req, res, 'js'));
+	router.get('/images/*',(req, res) => assets(req, res, 'images'));
+	router.get('/slider-imgz/*',(req, res) => assets(req, res, 'slider-imgz'));
+	router.get('/team-imgz/*',(req, res) => assets(req, res, 'team-imgz'));
+	router.get('/icons/*',(req, res) => assets(req, res, 'icons'));
+	router.get('/css/*',(req, res) => assets(req, res, 'css'));
+	router.get('/', (req, res) => page(req, res, 'admin'));
+	router.get('/:user/:filename*?', (req, res) => page(req, res, 'admin'));
 			
 				 
 				//========================================= FUNCTIONS ==========================================

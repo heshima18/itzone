@@ -146,7 +146,7 @@ sidenav.innerHTML = `<div class="w-100 h-100 ovys #thebody">
           <div class="w-100 h-100 p-10p bsbb hover-2 center">
             <span class="thetitle black verdana bsbb dgray">
               <span class="fs-10p">
-                &copy; ${new Date().getFullYear()} ITZONE PLUS 
+                &copy; ${new Date().getFullYear()} IT SPACE 
               </span>
               <span class="fs-18p p-5p bsbb ta-c">
                 .

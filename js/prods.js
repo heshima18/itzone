@@ -66,14 +66,14 @@ export function a441618154(aa,parent){
 								<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="${0}">${d.conditions[0].name}
 								</span>
 								<span class="w-100 h-100 p-5p bsbb block">
-								<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black">
+								<a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black">
 									<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
 								</a>
 								</span>
 							</div>
 							<div class="w-100 h-200p">
 								<div class="title w-100 h-110p p-5p bsbb">
-									<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
+									<a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
 								</div>
 								
 								<div class="w-100 h-a p-15p bsbb">
@@ -181,7 +181,7 @@ export function sdisc(aa,parent){
 					<span class="verdana r-0 fs-14p bsbb p-a t-0 ${cc(d.conditions[0].name)} bc-gray p-10p center h-30p bblr-3p w-a capitalize" id="0">${d.conditions[0].name}
 					</span>
 					<span class="w-100 h-100 block">
-						<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black">
+						<a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black">
 							<img src="${geimgturl()}/product-imgz/${d.pimgs[0]}" class="w-100 h-100 contain">
 						</a>
 					</span>
@@ -189,7 +189,7 @@ export function sdisc(aa,parent){
 				</div>
 				<div class="w-100 h-a">
 					<div class="title w-100 h-a p-5p bsbb center">
-						<a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
+						<a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black block w-100 h-a"><span class="verdana left fs-16p p-5p bsbb black capitalize w-100 wrap fs-14p">${d.pname}</span></a>
 					</div>
 					
 					<div class="w-100 h-a p-15p bsbb">
@@ -272,7 +272,7 @@ export function sdisc(aa,parent){
 function s(cats) {
 	ctscont.innerHTML = null
 	cats.forEach(subcat=>{
-		ctscont.innerHTML+= `<a href="${geturl()}/browse/?subcategory=${subcat.name}" class="td-none ls-n black">
+		ctscont.innerHTML+= `<a href="${geturl()}/browse/subcategory/${subcat.name}" class="td-none ls-n black">
 								<div class="cat w-200p bw-100p-resp h-100 p-5p bsbb iblock m-10p bm-a-resp bc-white hover-4 br-10p">
 									<div class="the-img center mb-10p p-5p bsbb">
 										<div class="img w-100 h-100p  br-50">
@@ -298,7 +298,7 @@ function brnd(brands) {
 	brndscont.classList.replace('scroll-3','no-scroll')
 	brndscont.classList.add("smooth")
 	brands.forEach(brand=>{
-		brndscont.innerHTML+= `<a href="${geturl()}/browse/?brand=${brand.name}" class="td-none ls-n black hover-6">
+		brndscont.innerHTML+= `<a href="${geturl()}/browse/brand/${brand.name}" class="td-none ls-n black hover-6">
 								<div class="brand w-250p h-100 p-5p bsbb iblock m-a">
 									<div class="the-img center mb-10p">
 										<div class="img w-200p h-100p"><img src="${geimgturl()}/brands/${brand.image}" alt="${brand.name}" class="w-100 h-100 contain"></div>

@@ -45,7 +45,7 @@ export function getcinfo(prods) {
                                 <div class="w-100 h-100 pl-20p bsbb">
                                     <div class="w-100 h-100">
                                         <div class="w-100 h-a br-3p  mb-10p">
-                                        <a href="${geturl()}/product/?id=${product.prodid}" class="td-none ls-n black">
+                                        <a href="${geturl()}/product/${product.prodid}" class="td-none ls-n black">
                                             <span class="w-100 h-a fs-15p bold verdana capitalize">${ellipsis(product.pname,40)}</span>
                                         </a>
                                         </div>
@@ -84,7 +84,7 @@ export function getcinfo(prods) {
                        <div class="w-100 h-100 pl-20p bsbb">
                            <div class="w-100 h-100">
                                <div class="w-100 h-a br-3p  mb-10p">
-                                <a href="${geturl()}/product/?id=${product.prodid}" class="td-none ls-n black">
+                                <a href="${geturl()}/product/${product.prodid}" class="td-none ls-n black">
                                      <span class="w-100 h-a fs-15p bold verdana capitalize">${ellipsis(product.pname,40)}</span>
                                 </a>
                                </div>

@@ -113,7 +113,7 @@ export async function initiatewishlist() {
                               </div>
                               <div class="w-100 h-200p">
                                   <div class="title w-100 h-100p p-5p bsbb">
-                                      <a href="${geturl()}/product?id=${d.prodid}" class="td-none ls-n black"><span class="verdana left fs-16p p-5p bsbb black">${d.pname}</span></a>
+                                      <a href="${geturl()}/product/${d.prodid}" class="td-none ls-n black"><span class="verdana left fs-16p p-5p bsbb black">${d.pname}</span></a>
                                   </div>
                                   <div class="w-100 h-a p-15p bsbb">
                                       <table class="w-100">

@@ -29,7 +29,7 @@ if (res.success && tree.success) {
         ss.className = '#thetitle p-5p bsbb'
         sidenavpinnedcont.appendChild(ss)
         ss.innerHTML = `<div class="w-100 h-40p p-2p center-2 bsbb bb-1-s-g hover-6">
-                                <a href="${geturl()}/browse/?category=${c.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
+                                <a href="${geturl()}/browse/category/${c.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
                                     <span class="thetitle black hover-6 verdana fs-14p pl-10p bsbb w-100 capitalize">
                                         ${c.name}
                                     </span>
@@ -48,7 +48,7 @@ if (res.success && tree.success) {
             ss.className = '#thetitle p-5p bsbb'
             sidenavpinnedcont.appendChild(ss)
             ss.innerHTML = `<div class="w-100 h-40p p-2p center-2 bsbb bb-1-s-g hover-6">
-                                    <a href="${geturl()}/browse/?subcategory=${subcat.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
+                                    <a href="${geturl()}/browse/subcategory/${subcat.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
                                         <span class="thetitle black hover-6 verdana fs-14p pl-10p bsbb w-100 capitalize">
                                             ${subcat.name}
                                         </span>
@@ -77,7 +77,7 @@ if (res.success && tree.success) {
         ss.className = '#thetitle p-5p bsbb'
         sidenavpinnedcont.appendChild(ss)
         ss.innerHTML = `<div class="w-100 h-40p p-2p center-2 bsbb bb-1-s-g hover-6">
-                                <a href="${geturl()}/browse/?brand=${b.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
+                                <a href="${geturl()}/browse/brand/${b.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
                                     <span class="thetitle black hover-6 verdana fs-14p pl-10p bsbb w-100 capitalize">
                                         ${b.name}
                                     </span>
@@ -105,7 +105,7 @@ if (res.success && tree.success) {
         ss.className = '#thetitle p-5p bsbb'
         sidenavpinnedcont.appendChild(ss)
         ss.innerHTML = `<div class="w-100 h-40p p-2p center-2 bsbb bb-1-s-g hover-6">
-                                <a href="${geturl()}/browse/?usedin=${b.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
+                                <a href="${geturl()}/browse/usedin/${b.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
                                     <span class="thetitle black hover-6 verdana fs-14p pl-10p bsbb w-100 capitalize">
                                         ${b.name}
                                     </span>
@@ -133,7 +133,7 @@ if (res.success && tree.success) {
         ss.className = '#thetitle p-5p bsbb'
         sidenavpinnedcont.appendChild(ss)
         ss.innerHTML = `<div class="w-100 h-40p p-2p center-2 bsbb bb-1-s-g hover-6">
-                                <a href="${geturl()}/browse/?availability=${b.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
+                                <a href="${geturl()}/browse/availability/${b.name}" class="td-none h-100 ls-n w-100 center-2 jc-sb hover-6"> 
                                     <span class="thetitle black hover-6 verdana fs-14p pl-10p bsbb w-100 capitalize">
                                         ${b.name}
                                     </span>
@@ -153,36 +153,36 @@ if (res.success && tree.success) {
         let s = document.createElement('li');
             s.className = 'w-a h-a'
             navpinnedcont.appendChild(s)
-            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/?category=${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
+            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/category/${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
     })
     pins.subcategories.forEach(p=>{
         let s = document.createElement('li');
             s.className = 'w-a h-a'
             navpinnedcont.appendChild(s)
-            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/?subcategory=${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
+            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/subcategory/${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
     })
     pins.brands.forEach(p=>{
         let s = document.createElement('li');
             s.className = 'w-a h-a'
             navpinnedcont.appendChild(s)
-            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/?brand=${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
+            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/brand/${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
     })
     pins.families.forEach(p=>{
         let s = document.createElement('li');
             s.className = 'w-a h-a'
             navpinnedcont.appendChild(s)
-            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/?serie=${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
+            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/serie/${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
     })
     pins.usedin.forEach(p=>{
         let s = document.createElement('li');
             s.className = 'w-a h-a'
             navpinnedcont.appendChild(s)
-            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/?usedin=${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
+            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/usedin/${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
     })
     pins.availability.forEach(p=>{
         let s = document.createElement('li');
             s.className = 'w-a h-a'
             navpinnedcont.appendChild(s)
-            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/?availability=${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
+            s.innerHTML = `<span class="verdana w-a pl-15p pr-15p capitalize hover-6"><a href="${geturl()}/browse/availability/${p.name}" class="td-none ls-n white hover-6">${p.name}</a></span>`
     })
 }

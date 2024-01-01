@@ -1,13 +1,13 @@
 let loc = window.location.href
 import { getasked } from "./filter.js";
-import {sf} from './functions.js'
+import {getPath, sf} from './functions.js'
 import { request ,geturl,cc,adcm} from "./functions.js";
 let prodscont = document.querySelector('div.prods-cont');
 getparams(loc);
 async function getparams(url) {
     
     let btitle = document.querySelector('div.the-title');
-    var asked = getasked(url)  
+    var asked = {[getPath(1)]: getPath(2)} 
     let brttl = document.querySelector('span.br-ttl'); 
 
     
@@ -28,7 +28,7 @@ async function getparams(url) {
         brttl.parentNode.parentNode.className='h-100 w-100 flex jc-sb'
         btitle.innerHTML = `<div class=" w-100 h-100 br-10p p-5p bsbb"><span class="w-100 h-20p br-5p flex verdana nowrap">browsing in &nbsp;<b>${asked[Object.keys(asked)]}</b></span></div>`
         brttl.innerHTML = `<span class="w-a h-a br-5p capitalize"> ${asked[Object.keys(asked)]}</span>`
-        document.title =  `${(asked[Object.keys(asked)].substring(0,1).toUpperCase()+asked[Object.keys(asked)].substring(1,asked[Object.keys(asked)].length))} | ITZONE +`;
+        document.title =  `${(asked[Object.keys(asked)].substring(0,1).toUpperCase()+asked[Object.keys(asked)].substring(1,asked[Object.keys(asked)].length))} | ITSPACE`;
         prodscont.innerHTML = null
         sf(a,prodscont)
     }else{
