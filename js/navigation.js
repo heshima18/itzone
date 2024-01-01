@@ -19,7 +19,7 @@ u.innerHTML=`<a href="https://wa.me/250788247133/?text=Hello i have visited your
 thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r bc-white" style="/*background: linear-gradient(130deg, rgb(24 37 98) 60%, rgba(0,178,238,1) 100%);*/">
 <div class="w-100 h-100 bsbb zi-10000 capitalize">
 <ul class="ls-none w-100 h-100 flex jc-sb p-0 m-0">
-<li class="ml-5p w-a h-a verdana"><a class="td-none ls-n black w-100 h-100 center" href="${geturl()}"><img src="${geturl()}/icons/favicon.png" class="w-65p h-65p cover"></a></li>
+<li class="ml-5p w-a h-a verdana"><a class="td-none ls-n black w-100 h-100 center" href="${geturl()}"><img src="${geturl()}/icons/favicon.png" class="w-95p h-65p contain"></a></li>
         <li class="hidden-resp">
           <div class="verdana center-2 h-100">
           <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/about/" class="td-none ls-n"><span class="nowrap hover-2 black">About us</span></a></span>

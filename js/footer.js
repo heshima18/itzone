@@ -23,7 +23,7 @@ thef.innerHTML = `<div class="bc-white w-90 m-a bfull-resp h-100 black pt-20p bs
                     <div class="w-a p-r h-100  p-20p bsbb">
                         <img class="w-80p h-80p contain" src="${geturl()}/icons/favicon.png">
                     </div>
-                    <span class="fs-12p verdana dgray h-100">ITZONEPLUS LTD is a Rwandan technology company which deals with ,  SUPPLY-INSTALLATION-MAINTAINACE of all ICT & electronic devices, ICT consultancy services, as well as logistics services, Web services Training and internships.<br>
+                    <span class="fs-12p verdana dgray h-100">IT SPACE LTD is a Rwandan technology company which deals with ,  SUPPLY-INSTALLATION-MAINTAINACE of all ICT & electronic devices, ICT consultancy services, as well as logistics services, Web services Training and internships.<br>
                     our main goal is to serve our current customers and at all potential customers on socioeconomic levels sustainably. We believe that technology is a 7th sense that human use to create and recreate all possible solutions that the world is facing in nowa days. 
                     </span>
                 </div>
@@ -60,7 +60,7 @@ thef.innerHTML = `<div class="bc-white w-90 m-a bfull-resp h-100 black pt-20p bs
                     </li>
                     <li class="pt-0 pl-5p pr-5p">
                        <span class="icon #instagram-icon w-30p h-30p center">
-                            <a href="https://www.instagram.com/itzoneplus/">
+                            <a href="https://www.instagram.com/itspace_rwanda/">
                                     <svg xmlns="http://www.w3.org/2000/svg"class="hover-5" width="20" height="20" viewBox="0 0 24 24">
                                         <path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM12 15.88C9.86 15.88 8.12 14.14 8.12 12C8.12 9.86 9.86 8.12 12 8.12C14.14 8.12 15.88 9.86 15.88 12C15.88 14.14 14.14 15.88 12 15.88ZM17.92 6.88C17.87 7 17.8 7.11 17.71 7.21C17.61 7.3 17.5 7.37 17.38 7.42C17.26 7.47 17.13 7.5 17 7.5C16.73 7.5 16.48 7.4 16.29 7.21C16.2 7.11 16.13 7 16.08 6.88C16.03 6.76 16 6.63 16 6.5C16 6.37 16.03 6.24 16.08 6.12C16.13 5.99 16.2 5.89 16.29 5.79C16.52 5.56 16.87 5.45 17.19 5.52C17.26 5.53 17.32 5.55 17.38 5.58C17.44 5.6 17.5 5.63 17.56 5.67C17.61 5.7 17.66 5.75 17.71 5.79C17.8 5.89 17.87 5.99 17.92 6.12C17.97 6.24 18 6.37 18 6.5C18 6.63 17.97 6.76 17.92 6.88Z" fill="#555555"/>
                                     </svg>
@@ -196,7 +196,7 @@ thef.innerHTML = `<div class="bc-white w-90 m-a bfull-resp h-100 black pt-20p bs
                             </span>	
                         </div>
                         <div class="iblock p-5p p-r">
-                            <span class="verdana t-0 w-150p fs-12p">Kigali, Rwanda, Nyarugenge, CHIC building floor 0, near access bank, left side shop, ITZONE+, D20-09</span>
+                            <span class="verdana t-0 w-150p fs-12p">Kigali, Rwanda, Nyarugenge, CHIC building floor 0, near access bank, left side shop, IT SPACE, D20-09</span>
                         </div>
                     </li>
                     <li class="w-100 flex">
@@ -245,7 +245,7 @@ thef.innerHTML = `<div class="bc-white w-90 m-a bfull-resp h-100 black pt-20p bs
                             </span>
                         </div>
                         <div class="iblock p-2p bsbb p-r w-100">
-                            <span class="verdana t-0 p-a verdana fs-14p h-100 center"><a href="mailto::itzoneplus250@gmail.com" class="theme td-none ls-n ">itzoneplus250@gmail.com</a></span>
+                            <span class="verdana t-0 p-a verdana fs-14p h-100 center"><a href="mailto::itzoneplus250@gmail.com" class="theme td-none ls-n ">itspace250@gmail.com</a></span>
                         </div>
                     </li>
                 </ul>
@@ -313,7 +313,7 @@ thef.innerHTML = `<div class="bc-white w-90 m-a bfull-resp h-100 black pt-20p bs
                         <span class="left capitalize verdana fs-10p dgray p-10p bsbb center">
                             <span class="center-2">
                                 <span class="nowrap hover-6 dgray fs-8p">
-                                    &copy; ${new Date().getFullYear()} IT ZONE PLUS
+                                    &copy; ${new Date().getFullYear()} IT SPACE
                                 </span>
                                 <span class="fs-18p p-5p bsbb center mt--10p">
                                 .
