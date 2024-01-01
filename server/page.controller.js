@@ -49,10 +49,13 @@ function page (req,res,page){
             const metaNameTag = $('meta[name="title"]'),
             metaImageTag = $('meta[name="image"]'),
             metaPriceTag = $('meta[name="price"]'),
-            metaDescriptionTag = $('meta[name="description"]'),title = $('title');
+            metaDescriptionTag = $('meta[name="description"]'),
+            title = $('title'),
+            metaURLTag = $('meta[name="url"]');
+            metaURLTag.attr('content', 'https://itspace.rw/product/'+filename)
             title.text(prodinfo.pname)
             metaNameTag.attr('content', prodinfo.pname);
-            metaImageTag.attr('content', 'https://itspace.rw/product-imgz/'+prodinfo.pimgs[0]);
+            metaImageTag.attr('content', 'https://itspace.rw/api/product-imgz/'+prodinfo.pimgs[0]);
             metaPriceTag.attr('content', adcm(prodinfo.conditions[0].price));
             metaDescriptionTag.attr('content', prodinfo.description)
             res.end($.html());
