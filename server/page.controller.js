@@ -53,7 +53,7 @@ function page (req,res,page){
             title = $('title'),
             metaURLTag = $('meta[name="url"]'),
             metaRatingTag = $('meta[name="rating"]'),
-            metaRatingTotalTag = $('meta[name="rating"]')
+            metaRatingTotalTag = $('meta[name="total_r"]')
             metaRatingTag.attr('content',prodinfo.fb_rate)
             metaRatingTotalTag.attr('content',prodinfo.fb_count)
             metaURLTag.attr('content', 'https://itspace.rw/product/'+filename)
