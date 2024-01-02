@@ -3511,11 +3511,25 @@ export function showOrder(orderinfo) {
                       </div>
                     </div>
                     <div class="w-100 h-60p p-10p bsbb p-a b-0 l-0">
-                      <span class="p-7p bsbb white bc-theme capiatilze br-2p verdana right hover-2" onlick="()=>{window.print()}">print</span>
+                      <span class="p-7p bsbb white bc-theme capiatilze br-2p verdana right hover-2" id="print_b"">print</span>
                     </div>
                     </div>
                     `
-  let theb = c.querySelector('table');
+  let theb = c.querySelector('table'),print_b = c.querySelector('#print_b');
+  print_b.onclick =  function (event) {
+    event.preventDefault();
+    var printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>Print</title></head><body>');
+    var linkElement = document.createElement('link');
+      linkElement.rel = 'stylesheet';
+      linkElement.type = 'text/css';
+      linkElement.href = '/css/styling.css';
+      printWindow.document.head.appendChild(linkElement);
+    printWindow.document.write(c.innerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  }
   let products = orderinfo.products
   i = 1
   products.forEach(pinfo=>{

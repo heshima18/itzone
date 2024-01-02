@@ -18,6 +18,15 @@ function page (req,res,page){
         }else{
             file = path.join(__dirname,'..',user, 'dashboard.html') 
         }
+    }else if (user == 'user') {
+        if (!filename) {
+            file = path.join(__dirname,'..',user, 'index.html')
+            
+        }else if (filename && filename != 'dashboard') {
+           return assets(req, res,'user/js')
+        }else{
+            file = path.join(__dirname,'..',user, 'dashboard.html') 
+        }
     }else {
         file = path.join(__dirname,'..',user, 'index.html')
     }
