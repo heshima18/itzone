@@ -140,7 +140,7 @@ let assets = (req, res,dir) => {
       res.writeHead(200, {
         'Content-Type': header,
         'Content-Length': contentLength,
-        'Cache-Control': 'public'
+        'Cache-Control': 'public, max-age=604800'
       });
       res.end(data);
     });
