@@ -41,7 +41,9 @@ function page (req,res,page){
         
                 res.writeHead(404, {
                   'Content-Type': 'text/html',
-                  'Content-Length': errorPageData.length
+                  'Content-Length': errorPageData.length,
+                  'Cache-Control': 'public'
+
                 });
                 res.end(errorPageData);
             })
@@ -50,7 +52,8 @@ function page (req,res,page){
 
         res.writeHead(200, {
             'Content-Type': "text/html",
-            'Content-Length': data.length
+            'Content-Length': data.length,
+            'Cache-Control': 'public'
         });
         if (user == 'product') {
             let prodinfo = await getProdInfo(filename)
@@ -137,6 +140,7 @@ let assets = (req, res,dir) => {
       res.writeHead(200, {
         'Content-Type': header,
         'Content-Length': contentLength,
+        'Cache-Control': 'public'
       });
       res.end(data);
     });

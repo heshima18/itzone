@@ -220,12 +220,12 @@ async function getparams(url) {
                 tgscntnt.classList.replace('h-40p','h-a')
                 tgscntnt.classList.replace('flex','v')
                 tgscntnt.innerHTML = `  <li class="w-100 bsbb">
-                                                <a class="td-none ls-n" href="${geturl()}/browse/?category=${pd.catname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.catname} </span></a>
-                                                <a class="td-none ls-n" href="${geturl()}/browse/?brand=${pd.brandname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.brandname} </span></a>
-                                                <a class="td-none ls-n" href="${geturl()}/browse/?subcategory=${pd.subcatname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.subcatname} </span></a>
-                                                <a class="td-none ls-n" href="${geturl()}/browse/?serie=${pd.famname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.famname} </span></a>
-                                                <a class="td-none ls-n" href="${geturl()}/browse/?usedin=${pd.usedinname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.usedinname} </span></a>
-                                                <a class="td-none ls-n" href="${geturl()}/browse/?availability=${pd.availability}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.availability} </span></a>
+                                                <a class="td-none ls-n" href="${geturl()}/browse/category/${pd.catname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.catname} </span></a>
+                                                <a class="td-none ls-n" href="${geturl()}/browse/brand/${pd.brandname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.brandname} </span></a>
+                                                <a class="td-none ls-n" href="${geturl()}/browse/subcategory/${pd.subcatname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.subcatname} </span></a>
+                                                <a class="td-none ls-n" href="${geturl()}/browse/serie/${pd.famname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.famname} </span></a>
+                                                <a class="td-none ls-n" href="${geturl()}/browse/usedin/${pd.usedinname}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.usedinname} </span></a>
+                                                <a class="td-none ls-n" href="${geturl()}/browse/availability/${pd.availability}"><span class="w-a h-a iblock mt-5p bc-tr-theme theme consolas fs-14p br-2p pl-6p pr-6p ml-5p bsbb nowrap">${pd.availability} </span></a>
                                         </li>
                                         `
                 prcttlhol.innerHTML = '<div class="ls-none m-0 pl-10p bsbb"><span class="verdana h-100 w-100 capitalize fs-16p">conditions</span></div>'
