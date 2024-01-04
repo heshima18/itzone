@@ -7,7 +7,6 @@ async function getProdInfo(product){
         product.conditions = JSON.parse(product.conditions)
         product.pspecs = JSON.parse(product.pspecs)
         product.pimgs = JSON.parse(product.pimgs)
-        console.log(product)
         return product
     }
 }

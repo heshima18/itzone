@@ -418,14 +418,14 @@ function adsb(name,image,condition,price,element) {
             }else if(x == 'instagram'){
 
             }else if(x == 'whatsapp'){
-                window.open(`whatsapp://send?text= check out this ${condition} ${name} which is pricing ${adcm(price)} RWF at ${window.location.href}`,'_blank')
+                window.open(`whatsapp://send?text= check out this ${condition} ${name} which is pricing ${(price)} RWF at ${window.location.href}`,'_blank')
             }
         })
     })
 
 }
 function mkwhtspdeal(name,image,condition,price) {
-    window.open(`https://wa.me/250788247133/?text= hello i've been surfing through your business website and found this ${condition} ${name} which is pricing ${adcm(price)} RWF can i get more information`,'_blank') 
+    window.open(`https://wa.me/250788247133/?text= hello i've been surfing through your business website and found this ${condition} ${name} which is pricing ${(price)} RWF can i get more information`,'_blank') 
 }
 function chpri(index,conds,prihol,key) {
     let thepri = conds[index].newprice

@@ -780,10 +780,13 @@ export async function dcrtmgc(elem,aa,index,cond) {
   }
 	
 }
-
 export function adcm(n) {
   try {
-    n= Array.from(n.toString()).reverse()
+    if (!Number(n)) {
+      return n
+    }
+    d = n.toString().split('.')
+    n= Array.from(n.toString().split('.')[0]).reverse()
     let s = "";
     let i = 0;
     for(const t of n ){
@@ -796,12 +799,16 @@ export function adcm(n) {
     }
     s= Array.from(s).reverse().toString().replace(/,/gi,"")
     s=s.replace(/p/gi,",")
+    if (d[1]) {
+      s+=`.${d[1]}`
+    }
     return (s)
     
   } catch (error) {
     return n
   }
 }
+
 export function cc(cond) {
 	if (cond == "new") {
 		return 'theme'
