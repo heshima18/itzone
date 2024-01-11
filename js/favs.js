@@ -97,7 +97,7 @@ if (f) {
                     if (v) {
                         v = {[v.type] : v.name}
                         d.push(v)
-                        if (d.length >= 3) {
+                        if (d.length >= 1) {
                             b.classList.replace('bc-dgray','bc-theme');
                         }
                         cat.classList.replace('b-1-s-gray','b-1-s-theme')
@@ -123,7 +123,7 @@ if (f) {
         q = new Array(v,n,m)
         b.addEventListener('click',async(e)=>{
             e.preventDefault();
-            if (d.length >= 3 ) {
+            if (d.length >= 1 ) {
                 localStorage.setItem('favs',JSON.stringify(d))
                 q.forEach(el=>{
                     if (el != null) {
@@ -184,7 +184,7 @@ export function addfav(aa,parent){
 										<tr>
 											<td>
 												<div class="w-100 h-100 bsbb center-2 mb-10p">
-													<span class="verdana w-a  fs-14p black price 0" id="${d.conditions[0].name}">${adcm(d.conditions[0].newprice)} RWF</span>
+													<span class="verdana w-a  fs-14p black price 0 bold-2" id="${d.conditions[0].name}">${adcm(d.conditions[0].newprice)} RWF</span>
 												</div>
 											</td>
 										</tr>

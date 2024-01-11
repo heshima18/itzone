@@ -6,19 +6,19 @@ let r = await request('tree',getschema)
 let cont = document.getElementById("bodycont");
 let filternav=document.createElement("div");
 let prodscont = document.querySelector('div.prods-cont');
-filternav.className=`w-100 h-0 p-r  bsbb t-0 zi-0 filter-nav tr-0-3 bfull-resp ovh nowrap bmb-10p`;
+filternav.className=`w-100 h-a bh-0-resp p-r  bsbb t-0 zi-0 filter-nav bfull-resp ovh nowrap bmb-10p`;
 let fc = cont.firstChild;
 cont.insertBefore(filternav, fc);
-filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
-<div class="w-100 h-a bsbb p-10p bsbb">
+filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-10p bsbb ovh">
+<div class="w-100 h-a bsbb p-0p bsbb">
 <div class="w-100 h-40p ">
 <span class="capitalize verdana left fs-20 p-5p">
    filters
 </span>
 </div>
 </div>
-<div class="w-100 h-a p-10p bsbb bblock-resp horizontal">
-    <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
+<div class="w-100 h-a bsbb bblock-resp">
+    <div class="w-100 m-a h-a bsbb bblock-resp bfull-resp">
         <div class="w-100 h-40p ">
             <span class="capitalize verdana left fs-17 p-5p">
                 price range
@@ -26,23 +26,23 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
         </div>
                 <div class="theslider w-90 bfull-resp m-a p-r h-a">
                     <div id="slider" class="p-r mt-10p h-ap w-100">
-                    <div class="w-100 h-60p mt-10p mb-10p p-10p bsbb flex">
+                    <div class="w-100 h-60p mt-10p mb-10p bsbb flex">
                     <div class="w-100 mr-10p left parent flex">
-                        <input type="number" min="0" name="min" placeholder="Min (0)" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input w-70">
-                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p pb-10p iblock">
+                        <input type="number" min="0" name="min" placeholder="Min (0)" class="p-10p h-40p  no-outline bsbb b-1-s-dgray bc-white main-input w-70">
+                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p h-40p pb-10p iblock">
                             <div class="consolas fs-14p dgray center">RWF</div>
                         </div>
                     </div>
                     <div class="p-r w-100 parent flex">
-                        <input type="number" min="1" name="max" placeholder="Max" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input w-70">
-                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p pb-10p iblock">
+                        <input type="number" min="1" name="max" placeholder="Max" class="p-10p no-outline h-40p bsbb b-1-s-dgray bc-white main-input w-70">
+                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p pb-10p iblock h-40p">
                             <div class="consolas fs-14p dgray center">RWF</div>
                         </div>
                     </div>
                 </div>
             </div>
     </div>
-    <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
+    <div class="w-100 m-a h-a p-5p bsbb bblock-resp bfull-resp">
         <div class="w-100 h-40p ">
             <span class="capitalize verdana left fs-17 p-5p">
                 categories
@@ -59,7 +59,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
             </span>
         </div>
     </div>
-    <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
+    <div class="w-a m-a h-a p-5p bsbb bblock-resp bfull-resp va-t">
         <div class="w-100 h-40p ">
             <span class="capitalize verdana left fs-17 p-5p">
                 sub categories
@@ -84,7 +84,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
             </span>
         </div>
     </div>
-    <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
+    <div class="w-a m-a h-a p-5p bsbb bblock-resp bfull-resp va-t">
         <div class="w-100 h-40p ">
             <span class="capitalize verdana left fs-17 p-5p">
                 Brands
@@ -106,7 +106,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
             </span>
         </div>
     </div>
-    <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
+    <div class="w-a m-a h-a p-5p bsbb bblock-resp bfull-resp va-t">
         <div class="w-100 h-40p ">
             <span class="capitalize verdana left fs-17 p-5p">
                 availability
@@ -122,7 +122,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
             </span>
         </div>
     </div>
-    <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
+    <div class="w-a m-a h-a p-5p bsbb bblock-resp bfull-resp va-t">
         <div class="w-100 h-40p ">
             <span class="capitalize verdana left fs-17 p-5p">
                 usability
@@ -138,7 +138,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
             </span>
         </div>
     </div>
-        <div class="w-a m-a h-a p-5p bsbb iblock bblock-resp bfull-resp va-t">
+        <div class="w-a m-a h-a p-5p bsbb bblock-resp bfull-resp va-t">
             <div class="w-100 h-40p ">
                 <span class="capitalize verdana left fs-17 p-5p">
                     sort by
@@ -160,8 +160,8 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-20p bsbb ovh">
 </div>
 <div class="w-100 h-60p p-10p bsbb">
     <div class="w-100 igrid">
-        <span class="bcenter-500p-resp iblock">
-            <button type="button" class="bc-theme br-2p hover-2 p-10p b-none w-150p center-2 right h-50p filbutton">
+        <span class="bcenter-500p-resp">
+            <button type="button" class="bc-theme br-2p hover-2 p-10p b-none w-a center-2 right h-40p br-5p filbutton">
                 <span class="#icon filter-icon center w-40p h-40p bsbb  hover-2">
                     <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" stroke="#fff" fill="#fff" focusable="false" class="w-20p h-20p"><g class=""><path d="M15,17h6v1h-6V17z M11,17H3v1h8v2h1v-2v-1v-2h-1V17z M14,8h1V6V5V3h-1v2H3v1h11V8z M18,5v1h3V5H18z M6,14h1v-2v-1V9H6v2H3v1 h3V14z M10,12h11v-1H10V12z" class=""></path></g></svg>
                 </span>
@@ -244,6 +244,8 @@ function d(r) {
     filnvd({[getPath(1)]: getPath(2)},arr)
     let filbutton = filternav.querySelector('button.filbutton')
     filbutton.addEventListener('click',async ()=>{
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
         let ctn = []
         let fils = Array.from(filternav.querySelectorAll('input#checkbox'))
         let fila = Array.from(filternav.querySelectorAll('input#radio'))

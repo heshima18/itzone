@@ -3774,7 +3774,7 @@ export function sf(aa,parent) {
                               <div class="av w-100 h-a p-5p bsbb ">
                               <span class="verdana left fs-13p bsbb bc-gray pb-3p pl-10p pr-10p pt-1p br-3p center h-100 w-a ml-5p dgray">${d.availability}</span>
                               <span class="verdana left fs-13p bsbb bc-gray pb-3p pl-10p pr-10p pt-1p br-3p center h-100 w-a ml-5p ${cc(d.conditions[0].name)}">${d.conditions[0].name}</span>
-                              <span class="verdana left fs-14p bsbb center-2 ml-20p h-100"><span class="condprice" id="">${adcm(d.conditions[0].newprice)}</span> <span class="fs-11p pl-10p pt-2p dgray consolas">RWF</span></span>
+                              <span class="verdana left fs-14p bsbb center-2 ml-20p h-100"><span class="condprice bold-2" id="">${adcm(d.conditions[0].newprice)}</span> <span class="fs-11p pl-10p pt-2p dgray consolas">RWF</span></span>
                               </div>
                           </div>
                       </div>

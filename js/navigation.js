@@ -32,9 +32,9 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r bc-white" style="/*bac
         <div class=" w-800p h-90 bmt-10p p-r bfull-resp ovh">
               <form action="" method="post" class="h-100 w-100 flex" id ="searchFrm">
               <div class="#icon search-icon w-60p h-100 p-a r-0 center transparent">
-                <button type="submit" class="b-none p-0 m-0 transparent">
+                <button type="submit" class="b-none p-0 m-0 w-50p bc-orange p-5p br-20p">
                 <span class="w-100 h-100 center #search-icon">
-                  <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" width="25" height="25" focusable="false" role="none" stroke="#ccc" fill="#ccc" style="stroke-width: 0px;">
+                  <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" width="25" height="25" focusable="false" role="none" stroke="#fff" fill="#fff" style="stroke-width: 0px;">
                     <g>
                       <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
                       </path>
@@ -43,7 +43,7 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r bc-white" style="/*bac
                 </span>
                 </button>
               </div>
-                <input type="text" name="search" class="b-1-s-dgray w-100 h-100 pl-10p bsbb b-none" placeholder="what are you looking for..." id="searchTxt">
+                <input type="text" name="search" class="b-2-s-orange no-outline br-20p w-100 h-100 pl-10p bsbb b-none" placeholder="what are you looking for..." id="searchTxt">
                 </form>
                 </div>
                 </div>

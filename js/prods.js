@@ -81,7 +81,7 @@ export function a441618154(aa,parent){
 										<tr>
 											<td>
 												<div class="w-100 h-100 bsbb center-2 mb-10p">
-													<span class="verdana w-a  fs-14p black price 0" id="${d.conditions[0].name}">${adcm(d.conditions[0].newprice)} RWF</span>
+													<span class="verdana w-a  fs-14p black price 0 bold-2" id="${d.conditions[0].name}">${adcm(d.conditions[0].newprice)} RWF</span>
 												</div>
 											</td>
 										</tr>
@@ -195,7 +195,7 @@ export function sdisc(aa,parent){
 					<div class="w-100 h-a p-15p bsbb">
 						<div class="w-100 h-100 bsbb ">
 							<div class="center p-10p bsbb">
-								<span class="verdana w-100 center-2 fs-14p black price ${d.conditions.indexOf(d.conditions[0])} nowrap" id="${d.conditions[0].name}">${adcm(d.conditions[0].newprice)}
+								<span class="verdana w-100 center-2 fs-14p black price bold-2 ${d.conditions.indexOf(d.conditions[0])} nowrap" id="${d.conditions[0].name}">${adcm(d.conditions[0].newprice)}
 									<span class="consolas dgray fs-14p pl-5p">RWF</span>
 								</span>
 								<span class="verdana w-100 center-2 fs-15p black red"><del>${adcm(d.conditions[0].price)} <span class="consolas">RWF</span></del></span>
