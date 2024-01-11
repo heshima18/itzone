@@ -28,14 +28,14 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-10p bsbb ovh">
                     <div id="slider" class="p-r mt-10p h-ap w-100">
                     <div class="w-100 h-60p mt-10p mb-10p bsbb flex">
                     <div class="w-100 mr-10p left parent flex">
-                        <input type="number" min="0" name="min" placeholder="Min (0)" class="p-10p h-40p  no-outline bsbb b-1-s-dgray bc-white main-input w-70">
-                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p h-40p pb-10p iblock">
+                        <input type="number" min="0" name="min" placeholder="Min (0)" class="p-5p h-30p  no-outline bsbb b-1-s-dgray bc-white main-input w-70">
+                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p h-30p pb-10p iblock">
                             <div class="consolas fs-14p dgray center">RWF</div>
                         </div>
                     </div>
                     <div class="p-r w-100 parent flex">
-                        <input type="number" min="1" name="max" placeholder="Max" class="p-10p no-outline h-40p bsbb b-1-s-dgray bc-white main-input w-70">
-                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p pb-10p iblock h-40p">
+                        <input type="number" min="1" name="max" placeholder="Max" class="p-5p no-outline h-30p bsbb b-1-s-dgray bc-white main-input w-70">
+                        <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-10p pb-10p iblock h-30p">
                             <div class="consolas fs-14p dgray center">RWF</div>
                         </div>
                     </div>
@@ -235,7 +235,7 @@ function d(r) {
         r.usedin.forEach((usedin)=>{
             let leuli = document.createElement('li');
             arr[4].appendChild(leuli)
-            leuli.innerHTML  = `<input type="radio" name="" id="checkbox" value="${usedin.name}" data-zon="usedin"> ${usedin.name}`
+            leuli.innerHTML  = `<input type="radio" name="usedin" id="checkbox" value="${usedin.name}" data-zon="usedin"> ${usedin.name}`
         })
     } catch (error) {
         
@@ -266,8 +266,12 @@ function d(r) {
         
         if (ctn.length) {
             let p = postschema
-            let g = getParam('q')
-            if (g) ctn.push({namelike :g})
+            if (getPath(0)[0] == 'search') {
+                let g = getPath(1)
+                console.log(getPath(1))
+                if (g) ctn.push({namelike :g})
+                
+            }
             p.body = JSON.stringify({cntn: ctn})
             let res = await request('getprodswthcndtn',p)
             sf(res,prodscont)

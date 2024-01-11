@@ -44,6 +44,7 @@ async function getparams(url) {
 									</div>
 								</div>`;
     }
+    
 
 }
 
