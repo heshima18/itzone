@@ -1483,7 +1483,7 @@ export async function sendmessage(inputs,type,form,formdata) {
          })
         form.reset();
         localStorage.setItem("admin",JSON.stringify(r.message.token));
-        window.location.href = 'dashboard.html'
+        window.location.href = 'dashboard'
       }
   }else if (type == 'placeorder') {
     m = form.name;
