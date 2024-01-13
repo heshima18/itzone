@@ -533,15 +533,30 @@ const s3 = new AWS.S3({
 				try {
 					t = tokendata.token.id
 					try {
-						r = await query(`select * from users where id = '${t}'`)
+						r = await query(`select
+						 CONCAT(firstname," ",lastname) as Full_name, 
+						 phone, 
+						 email,
+						 users.status as status,
+						 addresses,
+						 COUNT(o.id) as t_orders, 
+						 COUNT(po.id) as p_orders 
+						 from 
+						 users
+						 inner join orders as o on o.uid = '${t}' and o.status != 'delivered'
+						 inner join orders as po on po.uid = '${t}' and po.status = 'delivered'
+						  where users.id = '${t}'`)
 						if(!r) return res.status(500).send({success: false, message : 'internal server error'})
 						if (r.length) {
-							res.send({success:true, message: r[0]});
+							r = r[0]
+							r.addresses = JSON.parse(r.addresses)
+							res.send({success:true, message: r});
 						}else{
 							res.status(404).send({success:false, message: "user not found"});
 							
 						}
 					} catch (err) {
+						console.log(err)
 						res.send({success: false, message: "err"})
 					}
 						
@@ -587,7 +602,7 @@ const s3 = new AWS.S3({
 					if (dec.success) {
 						res.send({success: false, message: "the submitted email is in use"})
 					} else {
-						database.query(`insert into users (id,firstname,lastname,email,password) values ('${e}','${a}','${b}','${c}','${d}')`,(error,result,fields)=>{
+						database.query(`insert into users (id,firstname,lastname,email,password,addresses) values ('${e}','${a}','${b}','${c}','${d}','[]')`,(error,result,fields)=>{
 							if (error) return res.send({success: false, message: error})
 							res.send({success: true, message: "account created successfully"})
 						})
@@ -2286,8 +2301,18 @@ const s3 = new AWS.S3({
 									b = await query(`update users set password = '${req.body.newpassword}' where id = '${t}'`)
 									if (!b) return res.status(500).send({success: false, message: 'internal server error'})
 									return res.status(200).send({success: true, message: 'password changed successfully'})
+								}else if(s == 'phone'){
+									b = await query(`update users set phone = '${req.body.value}' where id = '${t}'`)
+									if (!b) return res.status(500).send({success: false, message: 'internal server error'})
+									return res.status(200).send({success: true, message: 'phone number changed successfully'})
+								}
+								else if(s == 'email'){
+									b = await query(`update users set email = '${req.body.value}' where id = '${t}'`)
+									if (!b) return res.status(500).send({success: false, message: 'internal server error'})
+									return res.status(200).send({success: true, message: 'email changed successfully'})
 								}
 							} catch (error) {
+								console.log(error)
 								res.send({success: false, message: 'oops an error occured'})
 								
 							}
@@ -2296,6 +2321,42 @@ const s3 = new AWS.S3({
 						}
 					})
 				} catch (error) {
+					console.log(error)
+					res.send({success: false, message: 'oops an error occured'})
+					
+				}
+			}else{
+				res.send({success: false, message: 'oops an error occured'})
+			}
+		})
+	})
+	router.post('/api/add-address',async(req,res)=>{
+		authenticateToken(req.body.token,async (tokendata)=>{
+			if (tokendata.success) {
+				try {
+					t = tokendata.token.id
+					database.query(`select * from users where id = '${t}' and status='active'`,async (error,result)=>{
+						if (error) return res.send({success: false, message: 'oops an error occured'})
+						if (result.length > 0) {
+							try {
+								p = await query(`select password from users where id = '${t}' and status = 'active'`)
+								if (!p) return res.status(500).send({success: false, message: 'oops an error occured'})
+								if (!p.length) return res.status(404).send({success: false, message: 'user not found'})
+								let {address} = req.body
+									b = await query(`update users set addresses = '${JSON.stringify(address)}' where id = '${t}'`)
+									if (!b) return res.status(500).send({success: false, message: 'internal server error'})
+									return res.status(200).send({success: true, message: 'address recorded successfully'})
+							} catch (error) {
+								console.log(error)
+								res.send({success: false, message: 'oops an error occured'})
+								
+							}
+						} else {
+							res.send({success: false, message: "user not found"})
+						}
+					})
+				} catch (error) {
+					console.log(error)
 					res.send({success: false, message: 'oops an error occured'})
 					
 				}

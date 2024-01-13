@@ -1,5 +1,5 @@
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
-import { getParam, postschema, request,getdata, adcm, geturl,showOrder,addshade,setErrorFor,setSuccessFor,alertMessage,getschema,setFocusFor,setBlurFor,checkFileType,checkFileSize,ai,getcips,geimgturl } from "../../js/functions.js";
+import { getParam, postschema, request,getdata, adcm, geturl,showOrder,addshade,setErrorFor,setSuccessFor,alertMessage,getschema,setFocusFor,setBlurFor,checkFileType,checkFileSize,ai,getcips,geimgturl, checkEmpty, addSpinner, removeSpinner, promptPassword, initializeCleave, deletechild, vdtins } from "../../js/functions.js";
 import{ initiatewishlist } from '../../js/wishlist.controller.js'
 let pages = new Array(0,1,2);
 a = getParam('page')
@@ -179,21 +179,191 @@ async  function cpgcntn(step) {
     }else if (x == 'my-account') {
         t = postschema
         t.body = JSON.stringify({token: getdata('user')})
-        r = await request('getuser',t)
-        if (!r.success) return 0
-        r=r.message
-        n = page.querySelector('span.n-img')
-        n.textContent = r.firstname.substring(0,1)
-        b = page.querySelector('span.name')
-        b.innerHTML = r.firstname+'&nbsp;'+r.lastname
-        let editbuts = Array.from(page.querySelectorAll('span.icon-edit-icon'))
-        for (const button of editbuts) {
-            button.addEventListener('click',()=>{
-                l = button.getAttribute('data-target')
-                shedtpopup(l,r);
-            })
+        z = await request('getuser',t)
+        if (!z.success) return 0
+        z=z.message
+        n = page.querySelector('span.name')
+        n.textContent = z.Full_name
+        i = page.querySelector('span.n-img');
+        i.textContent = z.Full_name.substring(0,1)
+        let dataHolders = Array.from(page.querySelectorAll('span[data-holder="true"]')),
+        mbuts = Array.from(page.querySelectorAll('.mini-buts')),
+        minidivs = Array.from(page.querySelectorAll('.minidivs')),val,
+        addaddr = page.querySelector('#add-address-b')
+        f = document.querySelector('form#add-address-form');
+        i = Array.from(f.querySelectorAll('input.main-input'));
+        addaddr.onclick = function (event) {
+            event.preventDefault();
+            var element = page.querySelector(".pg-cntnt");
+            element.scrollTop = element.scrollHeight;
         }
+        f.addEventListener('submit',async (e)=>{
+            e.preventDefault();
+            i.forEach(inp=>{
+                if (inp.name == "email") {
+                      if (inp.value == "") {
+                        setErrorFor(inp,"enter your email");
+                        val = 0;
+                      }else{
+                        val = vdtins('email',inp.value)
+                        if (val == 0) {setErrorFor(inp,'invalid email')}else{setSuccessFor(inp)}
+                      }
+                }else if (inp.name == "apartment") {
+                      if (inp.value == "") {
+                        setErrorFor(inp,"enter your apartment");
+                        val = 0;
+                      }else{setSuccessFor(inp)}
+                }else if (inp.name == "address") {
+                  if (inp.value == "") {
+                    setErrorFor(inp,"enter your address");
+                    val = 0;
+                  }else{setSuccessFor(inp)}
+                }else if (inp.name == "street") {
+                  if (inp.value == "") {
+                    setErrorFor(inp,"enter your street");
+                    val = 0;
+                  }else{setSuccessFor(inp)}
+                }else if (inp.name == "phonenumber") {
+                  if (inp.value == "") {
+                    setErrorFor(inp,"enter your phone number");
+                    val = 0;
+                  }else{
+                    val = vdtins('phonenumber',inp.value)
+                    if (val == 0) {
+                        setErrorFor(inp,'invalid phone number')
+                    }else{setSuccessFor(inp)}
+                  }
+                }else if (inp.name == "firstname") {
+                  if (inp.value == "") {
+                    setErrorFor(inp,"enter your firstname");
+                    val = 0;
+                  }else{setSuccessFor(inp)}
+                }else if (inp.name == "lastname") {
+                  if (inp.value == "") {
+                    setErrorFor(inp,"enter your lastname");
+                    val = 0;
+                  }else{setSuccessFor(inp)}
+                }
+              })
+              v = {}
+              if(val == 1){
+                i.forEach(inm=>{
+                  Object.assign(v,{[inm.name]: inm.value})
+                })
+                v.phonenumber = '+250'+v.phonenumber
+                a = z.addresses
+                if (a){
+                  a.push(v);
+                  postschema.body = JSON.stringify({
+                    token : getdata('user'),
+                    address: a
+                  })
+                  addSpinner(f.querySelector('button'))
+                  let addaddrrss = await request('add-address',postschema)
 
+                  removeSpinner(f.querySelector('button'))
+                  if (addaddrrss.success) {
+                    f.reset()
+                  }
+                  alertMessage(addaddrrss.message)
+                  addAress(v,addMan)
+                }
+              }
+        })
+        mbuts.forEach(button=>{
+            button.onclick = function(event) {
+              event.preventDefault();
+              let l = mbuts.find(function(but) {
+                return button.id != but.id
+              }),i=mbuts.indexOf(button),li = mbuts.indexOf(l)
+              l.querySelector('a').classList.replace('theme','ddgray')
+              this.querySelector('a').classList.replace('ddgray','theme')
+              minidivs[i].classList.remove('hidden')
+              minidivs[li].classList.add('hidden')
+            }
+        })
+        let info = z,editPform = page.querySelector('form#change-password')
+        dataHolders.forEach(holder=>{
+            let id = holder.id
+            holder.innerText = info[id]
+        })
+        let editbuts = Array.from(page.querySelectorAll('span.edit-p-info'))
+        for (const button of editbuts) {
+            button.onclick = function (){
+                let id = button.id
+                shedtpopup(id,info)
+            }
+        }
+        let ins = Array.from(editPform.querySelectorAll('input')),shbuts = Array.from(editPform.querySelectorAll('span.showP')),addMan = page.querySelector('div.add-management')
+        z.addresses.map(function (address) {
+            addAress(address,addMan)
+        })
+        function addAress(data,holder) {
+            let div = document.createElement('div')
+            holder.appendChild(div)
+            div.className = `address p-10p bsbb`
+                div.innerHTML = `
+                <div class="w-100 h-150p br-5p b-1-s-gray">
+                    <div class="w-100 px-10p bsbb">
+                        <ul class="ls-none flex bsbb p-0 jc-sb">
+                            <li class="p-3p">
+                                <span class="bold capitalize">${data.firstname} ${data.lastname}</span>
+                            </li>
+                            <li class="p-3p">
+                                <span class="dgray">${data.phonenumber}</span>
+                            </li>
+                        </ul>
+                        <ul class="ls-none flex bsbb p-0 jc-sb">
+                            <li class="p-3p">
+                                <span class="dgray">${data.address}, ${data.street}, ${data.apartment}</span>
+                            </li>	
+                        </ul>
+                        <ul class="ls-none flex bsbb p-0 jc-sb right">
+                            <li class="p-3p mx-5p hover-2">
+                                <span class="dgray"><i class="fas fa-edit"></i></span>
+                            </li>	
+                            <li class="p-3p mx-5p hover-2">
+                                <span class="dgray"><i class="fas fa-trash"></i></span>
+                            </li>	
+                        </ul>
+                    </div>
+                </div>`
+        }
+        shbuts.forEach(button=>{
+            button.onclick = function (event) {
+                event.preventDefault();
+                if (ins[shbuts.indexOf(this)].type == 'password') {
+                    this.querySelector('i').classList.replace('fa-eye','fa-eye-slash')
+                    ins[shbuts.indexOf(this)].type = 'text'
+                }else{
+                    this.querySelector('i').classList.replace('fa-eye-slash','fa-eye')
+                    ins[shbuts.indexOf(this)].type = 'password'
+                }
+            }
+        })
+        editPform.onsubmit = async function (event) {
+            event.preventDefault();
+            let v = 1,s = 1
+            let password = ins.find(function (input) {return input.name == 'password'}),confirm = ins.find(function (input) {return input.name == 'confirm'})
+
+            v = checkEmpty(password)
+            s = checkEmpty(confirm)
+            if(!v || !s) return 0
+        
+            if (password.value.length < 6) {
+                return setErrorFor(password, 'this password does not meet minimum requirements')
+            }else if (password.value != confirm.value) {
+                return setErrorFor(password, 'passwords do not match')
+            }else{
+                postschema.body = JSON.stringify({
+                    token: getdata('user'),
+                    type : 'password',
+                    value : password.value
+                })
+                let response = await request('edit-profile',postschema)
+                alertMessage(response.message)
+            }
+        }
     }else{
         initiatewishlist()
     }
@@ -216,201 +386,77 @@ async  function cpgcntn(step) {
         return 'bc-gray'
     }
   }
-function shedtpopup(type,basicinfo) {
-    s = addshade()
-	a = document.createElement('div')
+  export function shedtpopup(type,info,isP) {
+    let s = addshade(),
+	a = document.createElement('div'),f 
 	s.appendChild(a)
-    if (type == 'names') {
-        a.className = "w-500p h-a p-20p bsbb bc-white cntr zi-10000 br-5p b-mgc-resp" 
-            a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg">
-                                <span class="fs-18p black capitalize igrid center h-100 verdana">edit names</span>
-                            </div>
-                            <div class="body w-100 h-a p-5p grid mt-10p">
-                                <form method="post" id="edit-names-form" name="edit-names-form">
-                                    <div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
-                                        <div class="p-r w-100 igrid mr-10p left parent">
-                                            <input type="text" name="name" placeholder="first name" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input" id="name" value="${basicinfo.firstname}">
-                                            <span class="p-a r-0 mt-10p mr-5p">
-                                                <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="10" cy="10" r="10" fill="#FF0000"></circle>
-                                                    <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"></path>
-                                                </svg>
-                                                <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="10" cy="10" r="10" fill="#68D753"></circle>
-                                                    <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"></line>
-                                                    <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"></line>
-                                                </svg>
-                                            </span>
-                                            <small class="red verdana hidden ml-5p">error mssg</small>
-                                        </div>
-                                    </div>
-                                    <div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
-                                        <div class="p-r w-100 igrid mr-10p left parent">
-                                            <input type="text" name="lastname" placeholder="last name" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input" id="lastname" value="${basicinfo.lastname}">
-                                            <span class="p-a r-0 mt-10p mr-5p">
-                                                <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="10" cy="10" r="10" fill="#FF0000"></circle>
-                                                    <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"></path>
-                                                </svg>
-                                                <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="10" cy="10" r="10" fill="#68D753"></circle>
-                                                    <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"></line>
-                                                    <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"></line>
-                                                </svg>
-                                            </span>
-                                            <small class="red verdana hidden ml-5p">error mssg</small>
-                                        </div>
-                                    </div>
-                                    <div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
-                                        <div class="p-r w-100 igrid mr-10p left parent">
-                                            <input type="password" name="password" placeholder="password" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input" id="password">
-                                            <span class="p-a r-0 mt-10p mr-5p">
-                                                <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="10" cy="10" r="10" fill="#FF0000"></circle>
-                                                    <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"></path>
-                                                </svg>
-                                                <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="10" cy="10" r="10" fill="#68D753"></circle>
-                                                    <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"></line>
-                                                    <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"></line>
-                                                </svg>
-                                            </span>
-                                            <small class="red verdana hidden ml-5p">error mssg</small>
-                                        </div>
-                                    </div>
-                                    <div class="w-a  h-60p mt-10p p-r right mb-10p p-10p bsbb">
-                                        <div class="w-100 igrid">
-                                            <span class="center iblock">
-                                                <button type="submit" class="bc-theme br-2p hover-2 p-10p b-none w-100">
-                                                    <span class="verdana white fs-15p capitalize"> proceed</span>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>`
-            f = a.querySelector('form#edit-names-form')
-            f.addEventListener('submit',async (e)=>{
-                e.preventDefault()
-                i = Array.from(f.querySelectorAll('input.main-input'))
-                let name,lastname,password
-                for(const input of i){
-                  if (input.value == '') {
-                    setErrorFor(input,'this is a required field')
-                  }else(
-                    setSuccessFor(input)
-                  )
-                  if (input.id == 'name') {
-                     name = input.value
-                  }
-                  if (input.id == 'lastname') {
-                    lastname = input.value
-                 }
-                 if (input.id == 'password') {
-                    password = input.value
-                 }
-                }
-                if(name != '' && lastname != '' && password != ''){
-                    o = postschema
-                    o.body = JSON.stringify({token: getdata('user'),firstname:name,lastname,password,reqtype:'names'})
-                    r = await request('edituser',o)
-                    console.log(r)
-                    if (r.success) {
-                        alertMessage(r.message)
-                        f.reset()
-                    }else{
-                        console.log(r.status)
-                        alertMessage(r.message)
-                    }
-                }else{
-                }
-            })
-    }else if (type == 'password') {
-        a.className = "w-500p h-a p-20p bsbb bc-white cntr zi-10000 br-5p b-mgc-resp" 
-        a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg">
-                            <span class="fs-18p black capitalize igrid center h-100 verdana">edit password</span>
+    a.className = "w-500p h-a p-20p bsbb bc-white cntr zi-10000 br-10p b-mgc-resp card-1 verdana" 
+    a.innerHTML = `<div class="head w-100 h-40p p-5p bsbb bb-1-s-dg">
+                        <span class="fs-18p black capitalize igrid center h-100">edit profile info</span>
+                    </div>
+                    <div class="body w-100 h-a p-5p grid mt-10p">
+                        <form method="post" id="edit-profile-form" name="edit-profile-form">
+                        ${(type == 'email') ? `
+                        <div class="my-10p">
+                            <label class="form-label my-10p block" for="email">New Email</label>
+                            <input class="form-control p-10p bsbb b-none w-100 no-outline br-5p b-1-s-dgray block main-input" type="text" name="email" id="email" placeholder="email" value="${info[type]}">
+                            <small class="hidden red"></small>
                         </div>
-                        <div class="body w-100 h-a p-5p grid mt-10p">
-                            <form method="post" id="edit-password-form" name="edit-password-form">
-                                <div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
-                                    <div class="p-r w-100 igrid mr-10p left parent">
-                                        <input type="text" name="newpassword" placeholder="new password" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input" id="newpassword">
-                                        <span class="p-a r-0 mt-10p mr-5p">
-                                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="10" cy="10" r="10" fill="#FF0000"></circle>
-                                                <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"></path>
-                                            </svg>
-                                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="10" cy="10" r="10" fill="#68D753"></circle>
-                                                <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"></line>
-                                                <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"></line>
-                                            </svg>
-                                        </span>
-                                        <small class="red verdana hidden ml-5p">error mssg</small>
-                                    </div>
-                                </div>
-                                
-                                <div class="w-100 h-60p mt-10p mb-10p p-10p bsbb">
-                                    <div class="p-r w-100 igrid mr-10p left parent">
-                                        <input type="password" name="password" placeholder="password" class="p-10p no-outline bsbb b-1-s-dgray bc-white main-input" id="password">
-                                        <span class="p-a r-0 mt-10p mr-5p">
-                                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="10" cy="10" r="10" fill="#FF0000"></circle>
-                                                <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"></path>
-                                            </svg>
-                                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="10" cy="10" r="10" fill="#68D753"></circle>
-                                                <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"></line>
-                                                <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"></line>
-                                            </svg>
-                                        </span>
-                                        <small class="red verdana hidden ml-5p">error mssg</small>
-                                    </div>
-                                </div>
-                                <div class="w-a  h-60p mt-10p p-r right mb-10p p-10p bsbb">
-                                    <div class="w-100 igrid">
-                                        <span class="center iblock">
-                                            <button type="submit" class="bc-theme br-2p hover-2 p-10p b-none w-100">
-                                                <span class="verdana white fs-15p capitalize"> proceed</span>
-                                            </button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>`
-        f = a.querySelector('form#edit-password-form')
-        f.addEventListener('submit',async (e)=>{
-            e.preventDefault()
-            i = Array.from(f.querySelectorAll('input.main-input'))
-            let newpassword,password
-            for(const input of i){
-              if (input.value == '') {
-                setErrorFor(input,'this is a required field')
-              }else(
-                setSuccessFor(input)
-              )
-              if (input.id == 'newpassword') {
-                 newpassword = input.value
-              }
-             if (input.id == 'password') {
-                password = input.value
-             }
-            }
-            if(newpassword != '' && password != ''){
-                o = postschema
-                o.body = JSON.stringify({token: getdata('user'),newpassword,password,reqtype:'password'})
-                r = await request('edituser',o)
-                if (r.success) {
-                    alertMessage(r.message)
-                    f.reset()
-                }else{
-                    alertMessage(r.message)
-                }
-            }else{
-            }
-        })
+                        ` : (type == 'username') ? `
+                        <div class="my-10p">
+                            <label class="form-label my-10p block" for="username">New Username</label>
+                            <input class="form-control p-10p bsbb b-none w-100 no-outline br-5p b-1-s-dgray block main-input" type="text" name="username" id="username" placeholder="username" value="${info[type]}">
+                            <small class="hidden red"></small>
+                        </div>
+                        ` : (type == 'phone') ? `
+                        <div class="my-10p">
+                            <label class="form-label my-10p block" for="phone">New Phone Number</label>
+                            <input class="form-control p-10p bsbb b-none w-100 no-outline br-5p b-1-s-dgray block main-input" type="text" name="phone" id="phone" placeholder="phone" value="${info[type]}">
+                            <small class="hidden red"></small>
+                        </div>
+                        `: ''}
+                        <div class="my-10p col-12">
+                            <button class=" b-none bc-theme white py-10p hover-2 px-15p bsbb br-5p" type="submit">proceed</button>
+                        </div>
+                        </form>
+                    </div>`
+    f = a.querySelector('form#edit-profile-form')
+    let phone = f.querySelector('#phone')
+    if (phone) {
+        initializeCleave(phone,null)
     }
+
+    let input = f.querySelector('input.main-input')
+    input.select()
+    input.focus()
+    f.onsubmit= async function(e){
+        e.preventDefault()
+        let dec = checkEmpty(input)
+        if (dec) {
+
+            let value = (type == "phone") ? input.value.replace(/ /g, "") : input.value,password = await promptPassword();
+            postschema.body = JSON.stringify({
+                token: getdata('user'),
+                reqtype: type,
+                value,
+                password
+            })
+            addSpinner(f.querySelector('button'))
+            let response
+            if (!isP) {
+                response = await request('edituser',postschema)
+            }
+            removeSpinner(f.querySelector('button'))
+            if (response.success) {
+                deletechild(s,s.parentElement)
+            }
+            alertMessage(response.message)
+        }
+        
+    }
+    
 }
+
 async function addfbpopup(orderinfo) {
     s = addshade();
   a = document.createElement('div')
@@ -559,7 +605,7 @@ async function addfbpopup(orderinfo) {
         o.innerHTML = `<div class="w-100 h-100 block verdana black capitalize">${product.pname}</div>`
         s[0].appendChild(o)
 		}
-		f.addEventListener('submit',async (e)=>{
+		f.onsubmit = async function(e){
 			e.preventDefault()
 			i = Array.from(f.querySelectorAll('.main-input'))
             z = f.querySelector('div.previewpanel');
@@ -598,7 +644,7 @@ async function addfbpopup(orderinfo) {
 			  }
 			}else{
 			}
-		})
+		}
         let litbuts = Array.from(a.querySelectorAll('span.virtualitbut'));
         litbuts.forEach(button=>{
             button.addEventListener('click',()=>{

@@ -32,18 +32,21 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r bc-white" style="/*bac
         <div class=" w-800p h-90 bmt-10p p-r bfull-resp ovh">
               <form action="" method="post" class="h-100 w-100 flex" id ="searchFrm">
               <div class="#icon search-icon w-60p h-100 p-a r-0 center transparent">
-                <button type="submit" class="b-none p-0 m-0 w-50p bc-orange p-5p br-20p">
-                <span class="w-100 h-100 center #search-icon">
-                  <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" width="25" height="25" focusable="false" role="none" stroke="#fff" fill="#fff" style="stroke-width: 0px;">
+                <button type="submit" class="b-none p-0 ml--23p bc-orange py-10p px-10p br-20p white hover-2">
+                <span class="p-5p capitalize">
+                  search
+                </span>
+                </button>
+              </div>
+                <span class="w-30p h-30p p-a #search-icon mt-8p ml-10p">
+                  <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" width="25" height="25" focusable="false" role="none" stroke="#ccc" fill="#ccc" style="stroke-width: 0px;">
                     <g>
                       <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
                       </path>
                     </g>
                   </svg>
                 </span>
-                </button>
-              </div>
-                <input type="text" name="search" class="b-2-s-orange no-outline br-20p w-100 h-100 pl-10p bsbb b-none" placeholder="what are you looking for..." id="searchTxt">
+                <input type="text" name="search" class="b-2-s-orange no-outline br-20p w-100 h-100 pl-35p bsbb b-none" placeholder="what are you looking for..." id="searchTxt">
                 </form>
                 </div>
                 </div>
@@ -87,7 +90,7 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r bc-white" style="/*bac
                         </g>
                       </svg>
                 </span>
-                <span class="#icon user-icon h-100 center pt-7p bsbb mt--2p">
+                <span class="#icon user-icon h-100 center pt-7p bsbb mt--2p hover-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 24 24" fill="none" class="user--ic">
                 <g id="User / User_02">
                 <path id="Vector" d="M20 21C20 18.2386 16.4183 16 12 16C7.58172 16 4 18.2386 4 21M12 13C9.23858 13 7 10.7614 7 8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8C17 10.7614 14.7614 13 12 13Z" stroke="#000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>

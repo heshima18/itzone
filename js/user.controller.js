@@ -4,7 +4,6 @@ let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 let usericon = document.querySelector('svg.user--ic');
 usericon.addEventListener('click',(e)=>{
     e.preventDefault();
-    console.log('dd')
     u = getdata('user');
     if (u) {
         c = document.createElement('div')

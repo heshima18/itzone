@@ -3,7 +3,7 @@ import {chagecontent,validateForm,geturl,setSuccessFor,setErrorFor,getParam,vdte
 var signup_form = document.getElementById('signup-form');
 var editadminform = document.getElementById('myaccount-form');
 
-localStorage.setItem('next',`${geturl()}/admin/dashboard.html`)
+localStorage.setItem('next',`${geturl()}/admin/dashboard`)
 var titles = Array.from(document.querySelectorAll('li.titles'));
 let menuBut = document.querySelector('span.menu-icon');
 var linkSwitcher = Array.from(document.querySelectorAll('li.linkSwitcher'));

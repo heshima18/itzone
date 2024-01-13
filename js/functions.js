@@ -126,7 +126,7 @@ function shwcrtcntn(a,x,items) {
     })
     return z
   }
-  x.innerHTML = `<span class="shol left w-a center igrid h-100 ml-10p"><div class="w-100 h-100"><font class="black capitalize verdana left w-50p igrid">total:&nbsp;</font><font class="theme verdana fs-15p capitalize igrid p-2p">${adcm(p())} rwf</font></div></span><span class="igrid right center h-100 mr-10p"><a href="${geturl()}/checkout/" class="td-none ls-none ls-n td-none"><button class="button bc-theme white br-2p verdana b-none p-10p hover-2 bsbb"><font class="fs-15p">Check out</font></button></a></span>`;
+  x.innerHTML = `<span class="shol left w-a center igrid h-100 ml-10p"><div class="w-100 h-100"><font class="black capitalize verdana left w-50p igrid">total:&nbsp;</font><font class="theme verdana fs-15p capitalize igrid p-2p">${adcm(p())} rwf</font></div></span><span class="igrid right center h-100 mr-10p"><a href="${geturl()}/checkout/" class="td-none ls-none ls-n td-none"><button class="button bc-theme white br-5p center verdana b-none py-7p px-15p hover-2 bsbb"><font class="fs-15p fs-15p center mt--2p">Check out</font></button></a></span>`;
   items.innerHTML = "";
    a.forEach(d=>{
     items.innerHTML += `<div class="w-100 h-80p p-r mt-5p bb-1-s-g">
@@ -309,35 +309,28 @@ export async function request(url,options){
 
 
 }
+export function addSpinner(element) {
+  element.setAttribute(`data-innertext`,element.innerHTML)
+  element.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">loading...</span>`
+  element.setAttribute('disabled',true)
+}
+export function removeSpinner(element) {
+  element.innerHTML = element.getAttribute(`data-innertext`)
+  element.removeAttribute('disabled')
+}
 export function addshade(){
-  let body = document.querySelector('div#body');
-  let nav = document.querySelector('div.navigation'); 
-  let sidenav = document.querySelector('div.sidenav');  
-  let thea = new Array(body,nav,sidenav)
-  thea.forEach(el=>{
-    if (el != null) {
-      el.classList.add('tr-0-4')
-      el.classList.add('blur')
-    }
-  })
   let thebody = document.querySelector('div.cont'); 
   var shaddow = document.createElement('div');
   thebody.appendChild(shaddow);
-  shaddow.className = "w-100 h-100 ovh p-f bsbb bc-tblack t-0 zi-10000 blur-bc";	
+  shaddow.className = "w-100 h-100 ovh p-f bsbb bc-tblack t-0 zi-10000 blur";	
   var close = document.createElement('div');
   close.className = "p-a t-0 r-0 w-50p h-50p m-20p center ovh";
-  close.innerHTML = `<span class='w-100 h-100 white p-10p bsbb center '><font class='fs-50p white w-100 p-r hover-2'><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="64px" height="64px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve"><g><line fill="none" stroke="#fff" stroke-width="2" stroke-miterlimit="10" x1="18.947" y1="17.153" x2="45.045" y2="43.056"/></g><g><line fill="none" stroke="#fff" stroke-width="2" stroke-miterlimit="10" x1="19.045" y1="43.153" x2="44.947" y2="17.056"/></g></svg></font></span>`;
+  close.innerHTML = `<span class='w-100 h-100 white p-10p bsbb center'><font class='fs-50p white w-100 p-r hover-2'><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="64px" height="64px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve"><g><line fill="none" stroke="#fff" stroke-width="2" stroke-miterlimit="10" x1="18.947" y1="17.153" x2="45.045" y2="43.056"/></g><g><line fill="none" stroke="#fff" stroke-width="2" stroke-miterlimit="10" x1="19.045" y1="43.153" x2="44.947" y2="17.056"/></g></svg></font></span>`;
   shaddow.appendChild(close)
   close.addEventListener('click',e=>{
 	  e.preventDefault();
-    thea.forEach(el=>{
-      if (el != null) {
-        el.classList.remove('blur')
-      }
-    })
 		closetab(shaddow,thebody);
 	});
-  document.body.classList.add('ovh');
   return shaddow;
 }
 export function closetab(element,parent){
@@ -355,7 +348,6 @@ export function getdata(item){
     return null 
   }
 }
-
 export function alertMessage(message){
   q =  addshade();
   a = document.createElement('div')
@@ -397,7 +389,6 @@ export function showsidemenu(){
   } else {
     // f.classList.add('hidden');
     v.classList.remove('tr-0-4');
-
     v.classList.remove('blur');
     f.classList.add('ml--100');
     f.classList.remove('ml-0');
@@ -406,6 +397,12 @@ export function showsidemenu(){
     document.body.classList.remove('ovh')
     g.innerHTML = null;
 
+  }
+}
+export function deletechild(element,parent) {
+  try {
+    parent.removeChild(element);
+  } catch (error) {
   }
 }
 export function searchFunc(input){
@@ -870,7 +867,7 @@ export function setErrorFor(input,message) {
     rep.classList.remove('success');
     rep.classList.add('error');
   }catch(error){
-    console.log(error)
+   
   }
   
 }
@@ -879,12 +876,83 @@ export function setSuccessFor(input) {
   // rep.classList.remove('focus');
   rep.classList.remove('error');
   rep.classList.add('success');
-  let _err = rep.querySelector('span').childNodes[1];
-  let _succ = rep.querySelector('span').childNodes[3];
-  _err.classList.add('hidden');
-  _succ.classList.remove('hidden');
+  if ( rep.querySelector('span')) {
+    let _err = rep.querySelector('span').childNodes[1];
+    let _succ = rep.querySelector('span').childNodes[3];
+    _err.classList.add('hidden');
+    _succ.classList.remove('hidden');
+  }
   const small = rep.querySelector('small');
   small.classList.add('hidden');
+}
+export async function promptPassword() {
+  let b = addshade(),
+  a = document.createElement('div');
+  b.appendChild(a)
+  a.className = "w-400p h-a p-10p bsbb bc-white cntr zi-10000 br-5p verdana" 
+  a.innerHTML = `<div class="head w-100 h-a py-10p px-15p bsbb">
+                                  <span class="fs-17p dgray capitalize igrid h-100 verdana">Password Authentication</span>
+                              </div>
+                              <div class="body w-100 h-a p-5p grid">
+                                <small class="dgray p-10p bsbb">you need to enter your current password for this action</small>
+                                  <form method="post" id="rec-password-form" name="rec-password-form">
+                                    <div class="mx-10p p-10p">
+                                      <label for="password " class="form-label my-10p block">current password</label>
+                                      <input type="password" class="form-control p-10p bsbb b-none w-100 no-outline br-5p b-1-s-dgray block main-input" placeholder="password" name="password" id="password">
+                                      <small class="w-100 red pl-3p verdana capitalize"></small>
+                                    </div>
+                                    <div class="my-10p col-12">
+                                      <button type="submit" class=" b-none bc-theme white py-10p hover-2 px-15p bsbb br-5p">Proceed</button>
+                                    </div>
+                                  </form>
+                              </div>`
+  let m = a.querySelector('form#rec-password-form'),
+  v = a.querySelector('input#password');
+  v.focus()
+  return new Promise((resolve, reject) => {
+    m.onsubmit =  (event)=>{
+      event.preventDefault()
+      if (v.value.trim() != '') {
+          resolve(v.value)
+        deletechild(b,b.parentNode)
+      }else{
+        setErrorFor(v,'enter the password')
+      }
+    }
+  })
+}
+export async function initializeCleave(phoneElement, idElement) {
+  if (phoneElement) {
+    const phoneNumber = new Cleave(phoneElement, { phone: true, phoneRegionCode: "RW", prefix: '+250' });
+  }
+  if (idElement) {
+    const nationalID = new Cleave(idElement, {
+        numericOnly: true,
+        blocks: [1, 4, 1, 7, 1, 2],
+        delimiter: ' ',
+        delimiterLazyShow: true,
+        onValueChanged: function (e) {
+            const formattedValue = e.target.rawValue;
+            if (formattedValue.length > 16) {
+                nationalID.setRawValue(formattedValue.substring(0, 16));
+            }
+        }
+    });
+  }
+}
+export function initializeSpecialCleave(element,blocks,length,delimitator) {
+  const nationalID = new Cleave(element, {
+    numericOnly: true,
+    blocks,
+    delimiter: delimitator || ' ',
+    delimiterLazyShow: true,
+    onValueChanged: function (e) {
+        const formattedValue = e.target.rawValue;
+        if (formattedValue.length > length) {
+            nationalID.setRawValue(formattedValue.substring(0, length));
+        }
+    }
+  });
 }
 export function vdtins(type,value) {
   if (type == 'phonenumber') {
@@ -1339,6 +1407,31 @@ export async function validateForm(form,inputs,formdata) {
       })
       sendmessage(inputs,'placeorder',form,v);
     }
+  }
+}
+export function checkEmpty(input){
+  try {
+    if (input.classList.contains('optional')) {
+      setSuccessFor(input)
+      return 1
+    }
+    if (input.value == '' || input.value == '+250') {
+      if (input.getAttribute('data-optional') || input.classList.contains('optional')) {
+        return 1
+      }else if (input.getAttribute('data-custom-inp')) {
+        setErrorFor(input,`please answer this question`)
+        return 0
+      }else{
+        setErrorFor(input,`please ${(input.tagName == "SELECT")? 'select' : 'enter'} the ${input.name}`)
+        return 0
+      }
+    }else{
+        setSuccessFor(input)
+      return 1
+    }
+    
+  } catch (error) {
+    console.log(error)
   }
 }
 export async function sendmessage(inputs,type,form,formdata) {
@@ -2953,9 +3046,6 @@ export function getParam(param) {
   return val
   
 }
-export function deletechild(element,parent) {
-  parent.removeChild(element);
-}
 export function rs(string){
   string=string.replace(/,/gi,"")
   return string
@@ -3804,7 +3894,6 @@ export function sf(aa,parent) {
             product.children[0].children[0].classList.replace('h-200p','h-100p')
             product.children[0].children[1].classList.replace('w-100','w-80')
             pnameHol.innerText = pinfo.pname
-            console.log(product.id)
           })
         }else{
           prods.forEach(product=>{
@@ -3818,7 +3907,6 @@ export function sf(aa,parent) {
             product.children[0].children[1].classList.replace('pl-20p','p-10p')
             product.children[0].children[0].classList.replace('h-100p','h-200p')
             pnameHol.innerText = ellipsis(pinfo.pname,70)
-            console.log(product.id)
           })
         }
       }
