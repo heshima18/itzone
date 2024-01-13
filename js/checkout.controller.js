@@ -1,11 +1,20 @@
 
-import { adcm, cc, getdata, getschema, geturl, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr,geimgturl, ellipsis } from "./functions.js";
+import { adcm, cc, getdata, getschema, geturl, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr,geimgturl, ellipsis, postschema } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 
 m = document.querySelector('span.ttl-m')
 r = await request('getprods',getschema)
 c = getdata('cart')
+t = postschema
+t.body = JSON.stringify({token: getdata('user')})
+z = await request('getuser',t)
+if (!z.success) {
+    console.log(z.message)
+}else{
+    z=z.message
+    console.log(z)
 
+}
 if (r.success) {
     getcinfo(r.message)
 }
