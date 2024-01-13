@@ -51,10 +51,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-10p bsbb ovh">
         <div class="w-100 p-10p bsbb h-a ovys left">
             <span class="w-100 h-100 verdana">
                 <ul class="p-5p m-0 ls-none categories">
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> computes</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> phones</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> printers</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> accessories</li>
+                   
                 </ul>
             </span>
         </div>
@@ -68,18 +65,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-10p bsbb ovh">
         <div class="w-100 p-10p bsbb h-a ovys left">
             <span class="w-100 h-100 verdana">
                 <ul class="p-5p m-0 ls-none subcategories">
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> laptops</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> desktops</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> all in one</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> smart phones</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> fixed phones</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> laptop accessoriess</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> watches</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> phone accessories</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> cameras</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> earphones</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> headphones</li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> printer accessories</li>
+                    
                 </ul>
             </span>
         </div>
@@ -93,15 +79,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-10p bsbb ovh">
         <div class="w-100 p-10p bsbb h-a left">
             <span class="w-100 h-100 verdana">
                 <ul class="p-5p m-0 ls-none brands">
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    
                 </ul>
             </span>
         </div>
@@ -115,9 +93,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-10p bsbb ovh">
         <div class="w-100 p-10p bsbb h-a ovys left">
             <span class="w-100 h-100 verdana">
                 <ul class="p-5p m-0 ls-none availability">
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    
                 </ul>
             </span>
         </div>
@@ -131,9 +107,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-10p bsbb ovh">
         <div class="w-100 p-10p bsbb h-a ovys left">
             <span class="w-100 h-100 verdana">
                 <ul class="p-5p m-0 ls-none usability">
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
-                    <li class="pb-10p bsbb"><span class="br-3p w-70p h-20p block"> </span></li>
+                    
                 </ul>
             </span>
         </div>
@@ -147,10 +121,7 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-10p bsbb ovh">
             <div class="w-100 p-10p bsbb h-a ovys left">
                 <span class="w-100 h-100 verdana">
                     <ul class="p-5p m-0 ls-none">
-                        <li><input type="radio" id="radio" data-zon="order-by" name="order" value="name-asc"> Name (A-Z)</li>
-                        <li><input type="radio" id="radio" data-zon="order-by" name="order" value="name-desc"> Name (Z-A)</li>
-                        <li><input type="radio" id="radio" data-zon="order-by" name="order" value="price-asc"> Price (Min-Max)</li>
-                        <li><input type="radio" id="radio" data-zon="order-by" name="order" value="price-desc"> Price (Max-Min)</li>
+                        
                     </ul>
                 </span>
             </div>
@@ -202,10 +173,12 @@ function d(r) {
     try {
         r.categories.forEach((category)=>{
             let lecli = document.createElement('li');
+            lecli.className = 'capitalize fs-15p'
             arr[0].appendChild(lecli)
             lecli.innerHTML  = `<input type="radio" name="category" id="checkbox" value="${category.name}" data-zon="category"> ${category.name}`
             category.subcategories[0].forEach(subcategory=>{
                 let lesli = document.createElement('li');
+                lesli.className = 'capitalize fs-15p'
                 arr[1].appendChild(lesli)
                 lesli.innerHTML  = `<input type="radio" name="subcategory" id="checkbox" value="${subcategory.name}" data-zon="subcategory" data-parent="${category.name}"> ${subcategory.name}`
             })
@@ -216,6 +189,7 @@ function d(r) {
     try {
         r.brands.forEach((brand)=>{
             let lebli = document.createElement('li');
+            lebli.className = 'capitalize fs-15p'
             arr[2].appendChild(lebli)
             lebli.innerHTML  = `<input type="radio" name="brand" id="checkbox" value="${brand.name}" data-zon="brand"> ${brand.name}`
         })
@@ -225,6 +199,7 @@ function d(r) {
     try {
         r.availability.forEach((availability)=>{
             let leali = document.createElement('li');
+            leali.className = 'capitalize fs-15p'
             arr[3].appendChild(leali)
             leali.innerHTML  = `<input type="radio" name="availability" id="checkbox" value="${availability.name}" data-zon="availability"> ${availability.name}`
         }) 
@@ -234,6 +209,7 @@ function d(r) {
     try {
         r.usedin.forEach((usedin)=>{
             let leuli = document.createElement('li');
+            leuli.className = 'capitalize fs-15p'
             arr[4].appendChild(leuli)
             leuli.innerHTML  = `<input type="radio" name="usedin" id="checkbox" value="${usedin.name}" data-zon="usedin"> ${usedin.name}`
         })

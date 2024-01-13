@@ -294,7 +294,7 @@ export async function request(url,options){
   }
   try {
     if (url.indexOf('edit') !=-1 || url.indexOf('add') !=-1 || url.indexOf('delete') !=-1 || url.indexOf('remdiscount') !=-1 || url.indexOf('pin') != -1) {
-      if (url != 'addorder' && url != 'addfeedback' && url != 'deletefeedback') {
+      if (url != 'addorder' && url != 'addfeedback' && url != 'add-address' && url != 'deletefeedback' ) {
         socket.emit('refresh','data');
       }
     }
@@ -1335,8 +1335,32 @@ export async function validateForm(form,inputs,formdata) {
       a = getdata('address');
       if (a){
         a.push(v);
-        localStorage.setItem('address',JSON.stringify(a))
+        let addrrr = a
+        postschema.body = JSON.stringify({
+          token : getdata('user'),
+          address: a
+        })
+        addSpinner(form.querySelector('button'))
+        let addaddrrss = await request('add-address',postschema)
+        removeSpinner(form.querySelector('button'))
+        if (addaddrrss.success) {
+          form.reset();
+        }
+        alertMessage(addaddrrss.message)
+        console.log(addrrr)
+        localStorage.setItem('address',JSON.stringify(addrrr))
       }else{
+        postschema.body = JSON.stringify({
+          token : getdata('user'),
+          address: [v]
+        })
+        addSpinner(form.querySelector('button'))
+        let addaddrrss = await request('add-address',postschema)
+        removeSpinner(form.querySelector('button'))
+        if (addaddrrss.success) {
+          form.reset();
+        }
+        alertMessage(addaddrrss.message)
         localStorage.setItem('address',JSON.stringify([v]))
       }
       chaastep(1) 
@@ -1548,7 +1572,7 @@ export async function sendmessage(inputs,type,form,formdata) {
             if (inp.value != "") {
                 Object.assign(values,{username: inp.value});
             }else{
-              setErrorFor(input,"fill this field");
+              setErrorFor(inp,"fill this field");
             }
           }else if (inp.name == "password") {
             if (inp.value != "") {
@@ -1576,7 +1600,9 @@ export async function sendmessage(inputs,type,form,formdata) {
          })
         form.reset();
         localStorage.setItem("admin",JSON.stringify(r.message.token));
-        window.location.href = 'dashboard'
+        let url = new URL(window.location.href);
+        url.pathname = `/admin/dashboard`;
+        window.location.href = url.toString()
       }
   }else if (type == 'placeorder') {
     m = form.name;
@@ -2137,19 +2163,20 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counti = 1;
     o = postschema
     o.body = JSON.stringify({token: getdata('admin')})
     t = await request('getneworders',o)
     if (!t.success) {
       return 0
     }
+
     t.message.forEach(order=>{
       a = document.createElement('tr');
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counti}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${order.id}</span>
@@ -2166,7 +2193,7 @@ export async function showcontent(data,targetdiv) {
               <td class="p-10p flex jc-sb">
                 <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${order.id}'>view</span>
               </td>`;
-              i+=1;
+              counti+=1;
     })
     var viewlink = Array.from(targetdiv.querySelectorAll('span.viewlink'));
       viewlink.forEach(s=>{

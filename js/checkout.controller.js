@@ -9,11 +9,10 @@ t = postschema
 t.body = JSON.stringify({token: getdata('user')})
 z = await request('getuser',t)
 if (!z.success) {
-    console.log(z.message)
+
 }else{
     z=z.message
-    console.log(z)
-
+    localStorage.setItem('address',JSON.stringify(z.addresses))
 }
 if (r.success) {
     getcinfo(r.message)

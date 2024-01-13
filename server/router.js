@@ -1835,7 +1835,7 @@ const s3 = new AWS.S3({
 						r = await query(`select * from admin where id = '${t}'`)
 							if (!r) return res.status(500).send({success: false, message: 'oops an error occured'})
 						if (r.length > 0) {
-							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.status = 'new'`)
+							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.status = 'new' order by orders.date`)
 							if (!h) return res.status(500).send({success: false, message: "internal server error"})
 							
 							if (h.length > 0) {
