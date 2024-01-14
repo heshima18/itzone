@@ -1,6 +1,6 @@
 
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m;
-const socket = io('https://itzoneshop.onrender.com/');
+const socket = io(geturl());
 // Listen for the 'connect' event
 socket.on('connect', () => {
   console.log('Connected to the server');
@@ -1811,7 +1811,7 @@ export async function showcontent(data,targetdiv) {
         i.push(select)
       })
       p = Array.from(f.querySelectorAll('div.previewpanel'));
-      let images,conditions,specifications
+      let images,conditions,specifications,dinfos
       for (const panel of p) {
         if (panel.title == 'images') {
            images = getcips(panel)
@@ -1819,7 +1819,9 @@ export async function showcontent(data,targetdiv) {
            conditions = getcips(panel)
         }else if (panel.title == 'specifications') {
            specifications = getcips(panel)
-        }
+        }else if (panel.title == 'dinfo') {
+          dinfos = getcips(panel)
+       }
       }
       let name,quantity,description,catid,subcatid,brandid,famid,usedin,availability
       for(const input of i){
@@ -1856,7 +1858,7 @@ export async function showcontent(data,targetdiv) {
           
         }
       }
-      if(name != '' && quantity != '' && description != '' && catid != '' && subcatid != '' && brandid != '' && famid != '' && usedin != '' && availability != '' && images.length > 0 && conditions.length > 0 && Object.keys(specifications).length > 0){
+      if(name != '' && quantity != '' && description != '' && catid != '' && subcatid != '' && brandid != '' && famid != '' && usedin != '' && availability != '' && images.length > 0 && conditions.length > 0 && Object.keys(specifications).length > 0 && Object.keys(dinfos).length > 0){
         o = {
           name: name,
           quantity: quantity,
@@ -1869,6 +1871,7 @@ export async function showcontent(data,targetdiv) {
           availability: availability,
           images: images,
           conditions: conditions,
+          dinfos,
           specifications: specifications,
           token: getdata('admin')
         }
@@ -3147,11 +3150,15 @@ export function getcips(parent) {
       d = []
   }else if(parent.title == 'images'){
       d = []
+  }else if (parent.title == 'dinfo') {
+      d = {}
   }
   c.forEach(chip=>{
       if (parent.title == 'specifications') {
           Object.assign(d,{[chip.childNodes[0].textContent]: chip.childNodes[2].textContent})
-      }else if (parent.title == 'conditions') {
+      }else if (parent.title == 'dinfo') {
+        Object.assign(d,{[chip.childNodes[0].textContent]: chip.childNodes[2].textContent})
+      } else if (parent.title == 'conditions') {
           d.push({name:chip.childNodes[0].textContent,price:parseInt(rs(chip.childNodes[2].textContent))})
       }else if (parent.title == 'images') {
           d.push(chip.querySelector('img').src)
@@ -4570,6 +4577,58 @@ async function sheditproductform(product) {
                         <span class="placeholder w-100 h-100p p-10p center verdana dgray fs-13p capitalize bsbb">add conditions to preview them here</span></div>
                       </div>
                     </div>
+                  </div>
+                  <div class="4th w-100 h-a p-5p bsbb">
+                    <div class="title black bb-1-s-g p-5p">
+                      <span class="fs-20p bold capitalize verdana">shipment and delivery info</span>
+                    </div>
+                    <div class="w-100 h-a mt-10p mb-10p p-10p bsbb flex bblock-resp">
+                      <div class="p-10p bsbb w-100">
+                        <div class="w-100 parent p-10p bsbb p-r">
+                          <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">shipment info name</label>
+                          <input type="text" id="dinfo-name" name="dinfo-name" class="black b-1-s-dgray consolas w-100 no-outline bsbb p-10p mt--2p fs-15p br-2p">
+                          <span class="p-a r-0 t-0 mt-20p mr-20p">
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                              <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                            </svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                              <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                              <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                            </svg>
+                          </span>
+                          <small class="red verdana left hidden ml-5p">error mssg</small>				
+                        </div>
+                        <div class="w-100 parent p-10p bsbb p-r">
+                          <label class="dgray p-a fs-13p label pi-none capitalize us-none zi-1000 verdana">shipment info value</label>
+                          <input type="text" id="dinfo-value" name="dinfo-value" class="black b-1-s-dgray consolas w-100 no-outline bsbb p-10p mt--2p fs-15p br-2p">
+                          <span class="p-a r-0 t-0 mt-20p mr-20p">
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#FF0000"/>
+                              <path d="M11.0717 5.27273L10.8757 11.3281H9.12429L8.92827 5.27273H11.0717ZM9.99787 14.1236C9.69389 14.1236 9.43253 14.0156 9.21378 13.7997C8.99787 13.5838 8.88991 13.3224 8.88991 13.0156C8.88991 12.7145 8.99787 12.4574 9.21378 12.2443C9.43253 12.0284 9.69389 11.9205 9.99787 11.9205C10.2905 11.9205 10.5476 12.0284 10.7692 12.2443C10.9936 12.4574 11.1058 12.7145 11.1058 13.0156C11.1058 13.2202 11.0533 13.4062 10.9482 13.5739C10.8459 13.7415 10.7109 13.875 10.5433 13.9744C10.3786 14.0739 10.1967 14.1236 9.99787 14.1236Z" fill="white"/>
+                            </svg>
+                            <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <circle cx="10" cy="10" r="10" fill="#68D753"/>
+                              <line x1="6.38765" y1="8.96481" x2="9.54712" y2="12.8401" stroke="white"/>
+                              <line x1="8.80605" y1="12.7273" x2="14.8872" y2="6.64614" stroke="white"/>
+                            </svg>
+                          </span>
+                          <small class="red verdana left hidden ml-5p">error mssg</small>				
+                        </div>
+                        <div class="w-100 h-a bsbb p-10p">
+                          <div class="butt-hol">
+                            <span class="w-100 p-10p bsbb h-a verdana bc-orange white center hover-2 us-none litbuts" id="dinfo" >add shipment info</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="p-r w-90  right h-100 parent p-10p bsbb bsbb bfull-resp">
+                          <div class="no-outline previewpanel bsbb b-1-s-dgray bc-white w-100 h-a left" title="dinfo">
+                          <span class="bsbb placeholder w-100 h-100p p-10p center verdana dgray fs-13p 	capitalize">add required infos to preview them here</span>
+                        </div>
+                      </div>
+                    </div>
                     <div class="buttons w-100 h-a mt-p p-10p bsbb ovh">
                       <div class="button-hol w-100 h-100 p-10p bsbb">
                         <button type="submit" class="b-none br-2p bc-theme white p-15p bsbb right verdana center hover-2">
@@ -4619,7 +4678,23 @@ async function sheditproductform(product) {
                   })
                   as(d,v)
               }
-          }else if (button.id == 'images') {
+          
+          }else if (button.id == 'dinfo') {
+            p =  button.parentNode.parentNode.parentNode
+            i = Array.from(p.querySelectorAll('input'));
+            i.forEach(input=>{
+                (input.value == '')? setErrorFor(input,'') : setSuccessFor(input);
+            })
+            if(i[0].value != '' && i[1].value != ''){
+                v = p.parentElement.childNodes[3].childNodes[1]
+                d = {[i[0].value]: i[1].value}
+                i.forEach(input=>{
+                    input.value = null;
+                    setBlurFor(input)
+                })
+                as(d,v)
+              }
+            }else if (button.id == 'images') {
               p =  button.parentNode.parentNode.parentNode.parentNode
               i = Array.from(p.querySelectorAll('input'));
               i.forEach(inp=>{
@@ -4660,7 +4735,12 @@ async function sheditproductform(product) {
       Object.keys(product.pspecs).forEach(spec=>{
         as({[spec] : product.pspecs[spec]},panel)
       })
+    }else if (panel.title == 'dinfo') {
+      Object.keys(product.shipment_info).forEach(sinfo=>{
+        as({[sinfo] : product.shipment_info[sinfo]},panel)
+      })
     }
+
   }
   i.forEach(input=>{
     if (input.value != '') {
@@ -4708,7 +4788,7 @@ async function sheditproductform(product) {
         i.push(select)
       })
       p = Array.from(f.querySelectorAll('div.previewpanel'));
-      let images,conditions,specifications
+      let images,conditions,specifications,dinfos
       for (const panel of p) {
         if (panel.title == 'images') {
            images = getcips(panel)
@@ -4716,7 +4796,9 @@ async function sheditproductform(product) {
           conditions = getcips(panel)
         }else if (panel.title == 'specifications') {
            specifications = getcips(panel)
-        }
+        }else if (panel.title == 'dinfo') {
+          dinfos = getcips(panel)
+       }
       }
       let name,quantity,description,catid,subcatid,brandid,famid,usedin,availability
       for(const input of i){
@@ -4766,6 +4848,7 @@ async function sheditproductform(product) {
             usedin: usedin,
             availability: availability,
             images: images,
+            dinfos,
             conditions: conditions,
             specifications: specifications
           },

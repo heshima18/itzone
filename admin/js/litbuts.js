@@ -33,6 +33,21 @@ litbuts.forEach(button=>{
                 })
                 as(d,v)
             }
+        }else if (button.id == 'dinfo') {
+            p =  button.parentNode.parentNode.parentNode
+            i = Array.from(p.querySelectorAll('input'));
+            i.forEach(input=>{
+                (input.value == '')? setErrorFor(input,'') : setSuccessFor(input);
+            })
+            if(i[0].value != '' && i[1].value != ''){
+                v = p.parentElement.childNodes[3].childNodes[1]
+                d = {[i[0].value]: i[1].value}
+                i.forEach(input=>{
+                    input.value = null;
+                    setBlurFor(input)
+                })
+                as(d,v)
+            }
         }else if (button.id == 'images') {
             p =  button.parentNode.parentNode.parentNode.parentNode
             i = Array.from(p.querySelectorAll('input'));

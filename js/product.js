@@ -79,6 +79,8 @@ async function getparams(url) {
             let phol = document.querySelector('div.prodname-hol')
             let pspectitlhol = document.querySelector('li.spestitle')
             let pspecs = document.querySelector('ul.pspecs')
+            let pshinfo = document.querySelector('ul.pshinfo')
+            let shinfotitle = document.querySelector('ul.shinfotitle')
             let proddescttlhol = document.querySelector('li.proddesc')
             let proddesc = document.querySelector('li.proddesccntnt')
             let tgsttl = document .querySelector('li.tgsttl');
@@ -197,10 +199,16 @@ async function getparams(url) {
                 </div>`: `<span class="verdana h-100 w-100 capitalize fs-16p">specitifations</span>`}
                 </div>
                 `
-                
+                shinfotitle.innerHTML = `<div class="w-100 h-100 p-5p">
+                ${(pd.catname == 'services')? `
+                </div>`: `<span class="verdana h-100 w-100 capitalize fs-16p">shipment and delivery info</span>`}
+                </div>
+                `
                 pspecs.innerHTML = null
+                pshinfo.innerHTML = null
                 pspecs.classList.add('bb-1-s-g')
                 pspecs.className = 'ls-none m-0 pl-10p bsbb pspecs'
+                pshinfo.className = 'ls-none m-0 pl-10p bsbb pshinfo'
                 tgsttl.innerHTML = `<div class="w-100 bsbb h-25p">
                                         <span class="verdana h-100 w-100 capitalize fs-16p">tags</span>
                                     </div>`
@@ -213,7 +221,15 @@ async function getparams(url) {
                                         <span class="verdana h-100 w-a capitalize  fs-12p pl-10p dgray">${pd.pspecs[spec]}</span>
                                     </div>`
                 })
-
+                Object.keys(pd.shipment_info).forEach(info=>{
+                    let leli = document.createElement('li');
+                    pshinfo.appendChild(leli)
+                    leli.className = 'w-100 p-2p bsbb'
+                    leli.innerHTML=`<div class="w-100 h-a flex">
+                                        <span class="verdana h-100 w-a capitalize fs-12p nowrap">${info}:</span>
+                                        <span class="verdana h-100 w-a capitalize  fs-12p pl-10p dgray">${pd.shipment_info[info]}</span>
+                                    </div>`
+                })
                 proddescttlhol.className = 'w-100  proddesc'
                 proddescttlhol.innerHTML = '<div class="ls-none m-0 p-10p bsbb"><span class="verdana h-100 w-100 capitalize fs-16p">description</span></div>'
                 proddesc.innerHTML = `<div class="ls-none m-0 pl-10p bsbb"><span class="verdana h-100 w-100 fs-13p dgray">${pd.description}</span></div>`

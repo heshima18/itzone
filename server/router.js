@@ -90,7 +90,7 @@ const s3 = new AWS.S3({
 			});
 			res.send(data.Body);
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 			res.status(500).send('Error retrieving file from S3');
 		}
 		// const path = `../images/${filename}`; 
@@ -153,7 +153,7 @@ const s3 = new AWS.S3({
 			});
 			res.send(data.Body);
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 			res.status(500).send('Error retrieving file from S3');
 		}
 		// const path = `../product-imgz/${filename}`;
@@ -316,7 +316,7 @@ const s3 = new AWS.S3({
 	});
 	router.post('/api/getproduct', async (req, res) => {
 		try {
-		  database.query("SELECT products.id as prodid, products.quantity,products.availability,products.description, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)  where products.id = ?",[req.body.id],async (error,result)=>{
+		  database.query("SELECT products.id as prodid, products.quantity,products.availability,products.description,products.shipment_info, products.name as pname, products.specifications as pspecs,JSON_EXTRACT(products.conditions, '$') AS conditions,products.images as pimgs, products.orders as porders, categories.name as catname,categories.id as catid, subcategories.name as subcatname,subcategories.id as subcatid, brands.name as brandname,brands.id as brandid,families.name as famname, families.id as famid, usedin.id as usedinid, usedin.name as usedinname FROM (((((products inner join brands on products.brand = brands.name)inner join families on products.family = families.name)inner join categories on products.category = categories.name)inner join subcategories on  products.subcategory = subcategories.name)inner join usedin on products.usedin = usedin.name)  where products.id = ?",[req.body.id],async (error,result)=>{
 			if (error) return res.send({ success: false, message: "oops an error occured"});
 			const products = JSON.parse(JSON.stringify(result))
 			products.forEach(prods=>{
@@ -324,6 +324,7 @@ const s3 = new AWS.S3({
 					products[products.indexOf(prods)].conditions = JSON.parse(products[products.indexOf(prods)].conditions)
 					products[products.indexOf(prods)].pspecs = JSON.parse(products[products.indexOf(prods)].pspecs)
 					products[products.indexOf(prods)].pimgs = JSON.parse(products[products.indexOf(prods)].pimgs)
+					products[products.indexOf(prods)].shipment_info = JSON.parse(products[products.indexOf(prods)].shipment_info)
 					
 				} catch (error) {
 					
@@ -406,7 +407,7 @@ const s3 = new AWS.S3({
 								c.forEach(condition=>{
 									Object.assign(c[c.indexOf(condition)],{newprice: condition.price, promotion: null})
 								})
-								database.query(`update products set name= ?, category= '${i.catid}', subcategory= '${i.subcatid}', usedin= '${i.usedin}', brand= '${i.brandid}', family= '${i.famid}', quantity= '${i.quantity}', description= ?, specifications= '${JSON.stringify(i.specifications)}', images = '${JSON.stringify(a)}',conditions = '${JSON.stringify(c)}',availability='${i.availability}' where id = '${p}'`,[i.name,i.description],(error,result)=>{
+								database.query(`update products set name= ?, category= '${i.catid}', subcategory= '${i.subcatid}', usedin= '${i.usedin}', brand= '${i.brandid}', family= '${i.famid}', quantity= '${i.quantity}', description= ?, specifications= '${JSON.stringify(i.specifications)}', images = '${JSON.stringify(a)}',conditions = '${JSON.stringify(c)}',availability='${i.availability}', shipment_info='${JSON.stringify(i.dinfos)}' where id = '${p}'`,[i.name,i.description],(error,result)=>{
 									console.log(error)
 									if (error) return res.send({success: false, message: "Oops an error occured"})
 									if(result.affectedRows > 0){
@@ -1361,7 +1362,7 @@ const s3 = new AWS.S3({
 									  };
 									  s3.upload(params, function(err, data) {
 										if (err) {
-										  console.log("Error uploading file: ", err);
+										//   console.log("Error uploading file: ", err);
 										} else {
 										  console.log("File uploaded successfully. Location: ", data.Location);
 										}
@@ -1370,8 +1371,8 @@ const s3 = new AWS.S3({
 									a.push(n)
 								}
 								z = generateUniqueId();
-								database.query(`insert into products(id,name,category,subcategory,usedin,brand,family,quantity,description,specifications,images,conditions,availability,orders,status) values('${z}',?,'${req.body.catid}','${req.body.subcatid}','${req.body.usedin}','${req.body.brandid}','${req.body.famid}','${req.body.quantity}',?,'${JSON.stringify(req.body.specifications)}','${JSON.stringify(a)}','${JSON.stringify(c)}','${req.body.availability}',0,'active')`,[req.body.name,req.body.description],(error,result)=>{
-									if (error) return res.send({success: false, message: error})
+								database.query(`insert into products(id,name,category,subcategory,usedin,brand,family,quantity,description,specifications,images,conditions,availability,orders,status,shipment_info) values('${z}',?,'${req.body.catid}','${req.body.subcatid}','${req.body.usedin}','${req.body.brandid}','${req.body.famid}','${req.body.quantity}',?,'${JSON.stringify(req.body.specifications)}','${JSON.stringify(a)}','${JSON.stringify(c)}','${req.body.availability}',0,'active',?)`,[req.body.name,req.body.description,JSON.stringify(req.body.dinfos)],(error,result)=>{
+									if (error) return res.status(500).send({success: false, message: 'internal server error'})
 									res.send({success:true, message: "product inserted successfully"})
 								})
 							} catch (error) {

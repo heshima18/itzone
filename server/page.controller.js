@@ -42,7 +42,7 @@ function page (req,res,page){
                 res.writeHead(404, {
                   'Content-Type': 'text/html',
                   'Content-Length': errorPageData.length,
-                  'Cache-Control': 'public'
+                  // 'Cache-Control': 'public'
 
                 });
                 res.end(errorPageData);
@@ -53,10 +53,15 @@ function page (req,res,page){
         res.writeHead(200, {
             'Content-Type': "text/html",
             'Content-Length': data.length,
-            'Cache-Control': 'public'
+            // 'Cache-Control': 'public'
         });
         if (user == 'product') {
             let prodinfo = await getProdInfo(filename)
+            console.log(prodinfo)
+            if (!prodinfo ) {
+            res.end('product not found');
+            return 
+            }
             const $ = cheerio.load(data);
             const metaNameTag = $('meta[name="title"]'),
             metaImageTag = $('meta[name="image"]'),
@@ -140,7 +145,7 @@ let assets = (req, res,dir) => {
       res.writeHead(200, {
         'Content-Type': header,
         'Content-Length': contentLength,
-        'Cache-Control': 'public, max-age=604800'
+        // 'Cache-Control': 'public, max-age=604800'
       });
       res.end(data);
     });

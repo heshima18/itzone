@@ -877,7 +877,7 @@ async function addparentfunc(type) {
 							</form>
 						</div>`
 		f = a.querySelector('form#add-availability-form')
-		f.addEventListener('submit',async (e)=>{
+		f.onsubmit = async (e)=>{
 			e.preventDefault()
 			i = Array.from(f.querySelectorAll('input.main-input'))
 			let name
@@ -914,11 +914,11 @@ async function addparentfunc(type) {
 			  }
 			}else{
 			}
-		  })
+		  }
 	}
 	let litbuts = Array.from(a.querySelectorAll('span.virtualitbut'));
 	litbuts.forEach(button=>{
-		button.addEventListener('click',()=>{
+		button.onclick = ()=>{
 			 if (button.id == 'images') {
 				p =  button.parentNode.parentNode.parentNode.parentNode
 				i = Array.from(p.querySelectorAll('input'));
@@ -940,6 +940,6 @@ async function addparentfunc(type) {
 					}
 				})
 			}
-		})
+		}
 	})
 }
