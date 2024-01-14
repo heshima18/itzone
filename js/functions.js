@@ -1704,7 +1704,7 @@ export async function showcontent(data,targetdiv) {
                   <span class="fs-15p verdana p-10p">action</span>
                 </td>
                 `;
-      i = 1;
+      let counter = 1;
       p = postschema
       p.body =  JSON.stringify({token :getdata('admin')});
       r = await request('getusers',p)
@@ -1717,7 +1717,7 @@ export async function showcontent(data,targetdiv) {
         targetdiv.childNodes[3].childNodes[1].appendChild(a);
         a.innerHTML = `
                 <td class="p-10p bsbb">
-                  <span class="fs-14p verdana">${i}</span>
+                  <span class="fs-14p verdana">${counter}</span>
                 </td>
                 <td class="p-10p bsbb">
                   <span class="fs-14p verdana">${users.firstname}</span>
@@ -1733,7 +1733,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-14p verdana theme center hover-2 us-none viewlink capitalize" id='${users.id}'>view</span>
                   <span class="fs-14p verdana red center hover-2 us-none deletelink capitalize" id='${users.id}'>delete</span>
                 </td>`;
-                i+=1;
+                counter+=1;
       })
       const ban = Array.from(targetdiv.querySelectorAll('span.banlink'));
       const deletee = Array.from(targetdiv.querySelectorAll('span.deletelink'));
@@ -1915,7 +1915,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">edit</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = {
       mode: 'cors',
       method: "GET",
@@ -1932,7 +1932,7 @@ export async function showcontent(data,targetdiv) {
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counter}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${prod.pname}</span>
@@ -1951,7 +1951,7 @@ export async function showcontent(data,targetdiv) {
               </div>
               </td>
               `;
-              i+=1;
+              counter+=1;
     })
 
     const adddiscount = Array.from(document.querySelectorAll('span.adddiscountlink'));
@@ -2024,7 +2024,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     p = postschema
     p.body = JSON.stringify({token: getdata('admin')})
     r = await request('getnewqueries',p)
@@ -2035,7 +2035,7 @@ export async function showcontent(data,targetdiv) {
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counter}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${queries.fullname}</span>
@@ -2050,7 +2050,7 @@ export async function showcontent(data,targetdiv) {
               <span class="fs-14p verdana green  hover-2 us-none view" id='${queries.id}'>view</span>
                 <span class="fs-14p verdana orange right hover-2 us-none seen nowrap" id='${queries.id}'>mark as seen</span>
               </td>`;
-              i+=1;
+              counter+=1;
     })
     const view = Array.from(document.querySelectorAll('span.view'));
     const seen = Array.from(document.querySelectorAll('span.seen'));
@@ -2088,7 +2088,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     p = postschema
     p.body = JSON.stringify({token: getdata('admin')})
     r = await request('getqueries',p)
@@ -2099,7 +2099,7 @@ export async function showcontent(data,targetdiv) {
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counter}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${queries.fullname}</span>
@@ -2113,7 +2113,7 @@ export async function showcontent(data,targetdiv) {
               <td class="p-10p">
               <span class="fs-14p verdana green  hover-2 us-none view" id='${queries.id}'>view</span>
               </td>`;
-              i+=1;
+              counter+=1;
     })
     const view = Array.from(document.querySelectorAll('span.view'));
       view.forEach(vl=>{
@@ -2238,7 +2238,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = postschema
     o.body = JSON.stringify({token: getdata('admin')})
     t = await request('getpendingorders',o)
@@ -2250,7 +2250,7 @@ export async function showcontent(data,targetdiv) {
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counter}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${order.id}</span>
@@ -2268,7 +2268,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-14p verdana green center-2 hover-2 us-none viewlink" id='${order.id}'>view</span>
                 <span class="fs-14p verdana theme center-2 hover-2 us-none deliverlink" id='${order.id}'>deliver</span>
               </td>`;
-              i+=1;
+              counter+=1;
     })
     var viewlink = Array.from(targetdiv.querySelectorAll('span.viewlink'));
     var deliverlink = Array.from(targetdiv.querySelectorAll('span.deliverlink'));
@@ -2318,7 +2318,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = postschema
     o.body = JSON.stringify({token: getdata('admin')})
     t = await request('getdeliveredorders',o)
@@ -2330,7 +2330,7 @@ export async function showcontent(data,targetdiv) {
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counter}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${order.id}</span>
@@ -2347,7 +2347,7 @@ export async function showcontent(data,targetdiv) {
               <td class="p-10p flex jc-sb">
                 <span class="fs-14p verdana green center-2 hover-2 us-none viewlink capitalize" id='${order.id}'>view</span>
               </td>`;
-              i+=1;
+              counter+=1;
     })
     var viewlink = Array.from(targetdiv.querySelectorAll('span.viewlink'));
       viewlink.forEach(s=>{
@@ -2386,7 +2386,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = postschema
     o.body = JSON.stringify({token: getdata('admin')})
     t = await request('getorders',o)
@@ -2398,7 +2398,7 @@ export async function showcontent(data,targetdiv) {
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counter}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${order.id}</span>
@@ -2415,7 +2415,7 @@ export async function showcontent(data,targetdiv) {
               <td class="p-10p flex jc-sb">
                 <span class="fs-14p verdana green center-2 hover-2 us-none viewlink capitalize" id='${order.id}'>view</span>
               </td>`;
-              i+=1;
+              counter+=1;
     })
     var viewlink = Array.from(targetdiv.querySelectorAll('span.viewlink'));
       viewlink.forEach(s=>{
@@ -2450,7 +2450,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = {
       mode: 'cors',
       method: "GET",
@@ -2467,7 +2467,7 @@ export async function showcontent(data,targetdiv) {
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counter}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${category.id}</span>
@@ -2479,7 +2479,7 @@ export async function showcontent(data,targetdiv) {
                 ${(category.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${category.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${category.id}'>pin</span>`}
                 <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${category.id}'>delete</span>
               </td>`;
-              i+=1;
+              counter+=1;
     })
 
     const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
@@ -2543,7 +2543,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = {
       mode: 'cors',
       method: "GET",
@@ -2561,7 +2561,7 @@ export async function showcontent(data,targetdiv) {
         targetdiv.childNodes[3].childNodes[1].appendChild(a);
         a.innerHTML = `
                 <td class="p-10p bsbb">
-                  <span class="fs-14p verdana">${i}</span>
+                  <span class="fs-14p verdana">${counter}</span>
                 </td>
                 <td class="p-10p bsbb">
                   <span class="fs-14p verdana">${subcategories.id}</span>
@@ -2576,7 +2576,7 @@ export async function showcontent(data,targetdiv) {
                 ${(subcategories.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${subcategories.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${subcategories.id}'>pin</span>`}
                 <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${subcategories.id}'>delete</span>
               </td>`;
-              i+=1;
+              counter+=1;
     })
   })
 
@@ -2637,7 +2637,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = {
       mode: 'cors',
       method: "GET",
@@ -2654,7 +2654,7 @@ export async function showcontent(data,targetdiv) {
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counter}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${brands.id}</span>
@@ -2666,7 +2666,7 @@ export async function showcontent(data,targetdiv) {
               ${(brands.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${brands.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${brands.id}'>pin</span>`}
               <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${brands.id}'>delete</span>
             </td>`;
-            i+=1;
+            counter+=1;
   })
 
   const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
@@ -2730,7 +2730,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = {
       mode: 'cors',
       method: "GET",
@@ -2748,7 +2748,7 @@ export async function showcontent(data,targetdiv) {
         targetdiv.childNodes[3].childNodes[1].appendChild(a);
         a.innerHTML = `
                 <td class="p-10p bsbb">
-                  <span class="fs-14p verdana">${i}</span>
+                  <span class="fs-14p verdana">${counter}</span>
                 </td>
                 <td class="p-10p bsbb">
                   <span class="fs-14p verdana">${series.id}</span>
@@ -2763,7 +2763,7 @@ export async function showcontent(data,targetdiv) {
                 ${(series.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${series.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${series.id}'>pin</span>`}
                 <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${series.id}'>delete</span>
               </td>`;
-              i+=1;
+              counter+=1;
     })
   })
 
@@ -2825,7 +2825,7 @@ export async function showcontent(data,targetdiv) {
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = {
       mode: 'cors',
       method: "GET",
@@ -2842,7 +2842,7 @@ export async function showcontent(data,targetdiv) {
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
           <td class="p-10p bsbb">
-            <span class="fs-14p verdana">${i}</span>
+            <span class="fs-14p verdana">${counter}</span>
           </td>
           <td class="p-10p bsbb">
             <span class="fs-14p verdana">${avs.id}</span>
@@ -2854,7 +2854,7 @@ export async function showcontent(data,targetdiv) {
           ${(avs.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${avs.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${avs.id}'>pin</span>`}
           <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${avs.id}'>delete</span>
         </td>`;
-        i+=1;
+        counter+=1;
 })
 
 const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
@@ -2915,7 +2915,7 @@ deletelink.forEach(s=>{
                 <span class="fs-15p verdana p-10p">action</span>
               </td>
               `;
-    i = 1;
+    let counter = 1;
     o = {
       mode: 'cors',
       method: "GET",
@@ -2932,7 +2932,7 @@ deletelink.forEach(s=>{
       targetdiv.childNodes[3].childNodes[1].appendChild(a);
       a.innerHTML = `
               <td class="p-10p bsbb">
-                <span class="fs-14p verdana">${i}</span>
+                <span class="fs-14p verdana">${counter}</span>
               </td>
               <td class="p-10p bsbb">
                 <span class="fs-14p verdana">${usability.id}</span>
@@ -2944,7 +2944,7 @@ deletelink.forEach(s=>{
               ${(usability.pinned == 1)? `<span class="fs-14p verdana orange center-2 hover-2 us-none unpinlink" id='${usability.id}'>unpin</span>`: `<span class="fs-14p verdana green center-2 hover-2 us-none pinlink" id='${usability.id}'>pin</span>`}
               <span class="fs-14p verdana red center-2 hover-2 us-none deletelink" id='${usability.id}'>delete</span>
             </td>`;
-            i+=1;
+            counter+=1;
   })
 
   const pinlink = Array.from(targetdiv.querySelectorAll('span.pinlink'));
@@ -4835,7 +4835,9 @@ async function sheditproductform(product) {
           
         }
       }
-      if(name != '' && quantity != '' && description != '' && catid != '' && subcatid != '' && brandid != '' && famid != '' && usedin != '' && availability != '' && images.length > 0 && conditions.length > 0 && Object.keys(specifications).length > 0){
+      let info = dinfos
+      // return console.log(info)
+      if(name != '' && quantity != '' && description != '' && catid != '' && subcatid != '' && brandid != '' && famid != '' && usedin != '' && availability != '' && images.length > 0 && conditions.length > 0 && Object.keys(specifications).length > 0 && Object.keys(dinfos).length > 0){
         o = {
           prodinfo: {
             name: name,
