@@ -49,132 +49,175 @@ async  function cpgcntn(step) {
     })
   }
   async function gsd(page) {
-    x = page.id
+    let x = page.id
     if (x == 'my-orders') {
-        k = page.querySelector('div.orders')
+        k = page.querySelector('div#all-orders')
+        let ohols = Array.from(page.querySelectorAll('div.orders-hol')),targetD,tdata
+        m = Array.from(page.querySelectorAll('li.o-chips'))
+        m.forEach(chip=>{
+            chip.onclick = function (event) {
+                event.preventDefault()
+                this.classList.replace('ddgray','orange')
+                this.classList.add('bc-tr-orange')
+                this.classList.add('active')
+                targetD = ohols.find(div=>{
+                    return div.id == this.id
+                })
+                if (this.id == 'all-orders') {
+                    tdata = r.message
+                }else if (this.id =='pending-orders') {
+                   tdata = r.message.filter(order=>{
+                        return order.status == 'pending'
+                    })
+                }else if (this.id =='delivered-orders') {
+                    tdata = r.message.filter(order=>{
+                         return order.status == 'delivered'
+                     })
+                 }
+                m.map((elem) => {
+                  if (elem != this) {
+                    elem.classList.replace('orange','ddgray')
+                    elem.classList.remove('bc-tr-orange')
+                    elem.classList.remove('active')
+                  }  
+                })
+                targetD.classList.remove('hidden')
+                console.log(tdata)
+                showOs({message: tdata},targetD)
+                ohols.map((div) => {
+                    if (div != targetD) {
+                      div.classList.add('hidden')
+                    }  
+                  })
+            }
+        })
         v = postschema
         v.body = JSON.stringify({token: getdata('user')})
         r = await request('myorders',v)
-        if (!r.success) {
-            k.innerHTML = `<div class="w-100 h-a">
-            <div class="center p-10p bsbb w-100 h-100p svg-hol">
-                <span class="verdana fs-15p"><svg class="w-100p h-100p" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="removeIconTitle" stroke="#ccc" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#ccc"> <title id="removeIconTitle">Remove</title> <path d="M17,12 L7,12"/> <circle cx="12" cy="12" r="10"/> </svg></span>
-            </div>
-            <div class="center p-10p bsbb w-100 h-100">
-                <span class="verdana fs-18p ta-c dgray">there was an error while connecting to the servers</span>
-            </div>
-        </div>`
-        }
-        if (r.message.length <= 0) {
-            k.innerHTML = `<div class="w-100 h-a">
-            <div class="center p-10p bsbb w-100 h-100p svg-hol">
-                <span class="verdana fs-15p"><svg class="w-100p h-100p" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="removeIconTitle" stroke="#ccc" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#ccc"> <title id="removeIconTitle">Remove</title> <path d="M17,12 L7,12"/> <circle cx="12" cy="12" r="10"/> </svg></span>
-            </div>
-            <div class="center p-10p bsbb w-100 h-100">
-                <span class="verdana fs-18p ta-c dgray">it seems like there are <br> no orders in your order history</span>
-            </div>
-        </div>`
-           return  0
-        }
-        k.innerHTML = null
-        for (const order of r.message) {
-            h = document.createElement('div')
-            k.appendChild(h)
-            h.className = 'w-100 h-a p-10p bsbb'
-            h.innerHTML = `<div class="w-100 h-100 b-1-s-gray br-10p hover-2 ordr" >
-                            <div class="w-100 h-100 obody flex bblock-resp p-10p bsbb">
-                                <div class="imgs-cont w-100p h-100p bfull-resp bcenter-500p-resp p-r ordr" data-wrap="${order.id}">
-                                    
-                                </div>
-                                <div class="odesc w-80 h-100 ml-10p bsbb flex  bblock-resp bfull-resp bm-a-resp">
-                                    <div class="ordr left w-90 h-100 m-0 bfull-resp bmt-10p" data-wrap="${order.id}">
-                                        <div class="oidhol w-100 h-30p p-5p bsbb">
-                                            <div class="flex">
-                                                <span class="w-a h-20p verdana dgray fs-12p pr-10p bsbb capitalize br-5p center">
-                                                    order:
-                                                </span>
-                                                <span class="w-a h-20p verdana theme consolas br-5p">
-                                                    #${order.id}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="odeschol w-80 h-a p-5p bsbb bfull-resp ">
-                                            <div class="thedesc p-10p bsbb ">
-                                                <ul class="flex bblock-resp p-0 m-0">
-                                                    <li class="w-100 h-a flex">
-                                                        <span class="w-a h-20p verdana dgray fs-10p pr-10p bsbb capitalize br-5p center">
-                                                            products:
-                                                        </span>
-                                                        <span class="w-a h-20p verdana theme consolas br-5p">
-                                                            X${order.products.length}
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="w-150p h-100 p-10p bsbb bh-a-resp bfull-resp ">
-                                        <div class="w-100 h-100  osthol ">
-                                            <div class="w-100 h-a mb-10p center">
-                                                <span class="w-a h-20p verdana dgray fs-10p pr-10p bsbb capitalize br-5p center nowrap">
-                                                    total price:
-                                                </span>
-                                                <span class="w-a h-20p fs-13p verdana black consolas br-5p nowrap">
-                                                    ${adcm(order.totalprice)} RWF
-                                                </span>
-                                            </div>
-                                            <div class="w-100 h-a mb-10p center-2">
-                                                <span class="w-a p-5p courier bold-2 ${coc(order.status)} bsbb h-a ${cobc(order.status)} br-2p fs-12p block">
-                                                    ${order.status}
-                                                </span>
-                                            </div>
-                                            ${(order.status == 'delivered')?    `<div class="w-100 h-a mb-10p center-2">
-                                            <span class="w-a p-5p courier bold-2 addfb dgray bsbb h-a bc-tr-theme br-3p bb-1-s-theme fs-12p block capitalize" data-wrap="${order.id}">
-                                                add feedback
-                                            </span>
-                                        </div>` : ''}
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`
-            i = h.querySelector('div.imgs-cont')
-            q = 1
-            for (const product of order.products) {
-
-                i.innerHTML+= `<div class="w-60p h-60p br-5p bc-white b-1-s-gray p-a ml-${q}p bcntr-resp">
-                    <img src="${geimgturl()}/product-imgz/${product.image}" class="contain w-100 h-100">
-                </div>`
-                q+=5
+        showOs(r,k)
+        function showOs(r,k) {
+            if (!r.success) {
+                k.innerHTML = `<div class="w-100 h-a">
+                <div class="center p-10p bsbb w-100 h-100p svg-hol">
+                    <span class="verdana fs-15p"><svg class="w-100p h-100p" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="removeIconTitle" stroke="#ccc" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#ccc"> <title id="removeIconTitle">Remove</title> <path d="M17,12 L7,12"/> <circle cx="12" cy="12" r="10"/> </svg></span>
+                </div>
+                <div class="center p-10p bsbb w-100 h-100">
+                    <span class="verdana fs-18p ta-c dgray">there was an error while connecting to the servers</span>
+                </div>
+            </div>`
             }
-        }
-        let ordr = Array.from(k.querySelectorAll('div.ordr'))
-        let addfb = Array.from(k.querySelectorAll('span.addfb'))
-
-        for (const ord of ordr) {
-            ord.addEventListener('click',async()=>{
-                l = ord.getAttribute('data-wrap');
-                z = postschema
-                z.body = JSON.stringify({orderid: l,token: getdata('user')})
-                r = await request('getorder',z)
-                if (!r.success ) return 0
-                if (r.success) {
-                    showOrder(r.message)
+    
+            if (r.message.length <= 0) {
+                k.innerHTML = `<div class="w-100 h-a">
+                <div class="center p-10p bsbb w-100 h-100p svg-hol">
+                    <span class="verdana fs-15p"><svg class="w-100p h-100p" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg" aria-labelledby="removeIconTitle" stroke="#ccc" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#ccc"> <title id="removeIconTitle">Remove</title> <path d="M17,12 L7,12"/> <circle cx="12" cy="12" r="10"/> </svg></span>
+                </div>
+                <div class="center p-10p bsbb w-100 h-100">
+                    <span class="verdana fs-18p ta-c dgray">it seems like there are <br> no orders in your order history</span>
+                </div>
+            </div>`
+               return  0
+            }
+            k.innerHTML = null
+            for (const order of r.message) {
+                h = document.createElement('div')
+                k.appendChild(h)
+                h.className = 'w-100 h-a p-10p bsbb'
+                h.innerHTML = `<div class="w-100 h-100 b-1-s-gray br-10p hover-2 ordr" >
+                                <div class="w-100 h-100 obody flex bblock-resp p-10p bsbb">
+                                    <div class="imgs-cont w-100p h-100p bfull-resp bcenter-500p-resp p-r ordr" data-wrap="${order.id}">
+                                        
+                                    </div>
+                                    <div class="odesc w-80 h-100 ml-10p bsbb flex  bblock-resp bfull-resp bm-a-resp">
+                                        <div class="ordr left w-90 h-100 m-0 bfull-resp bmt-10p" data-wrap="${order.id}">
+                                            <div class="oidhol w-100 h-30p p-5p bsbb">
+                                                <div class="flex">
+                                                    <span class="w-a h-20p verdana dgray fs-12p pr-10p bsbb capitalize br-5p center">
+                                                        order:
+                                                    </span>
+                                                    <span class="w-a h-20p verdana theme consolas br-5p">
+                                                        #${order.id}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="odeschol w-80 h-a p-5p bsbb bfull-resp ">
+                                                <div class="thedesc p-10p bsbb ">
+                                                    <ul class="flex bblock-resp p-0 m-0">
+                                                        <li class="w-100 h-a flex">
+                                                            <span class="w-a h-20p verdana dgray fs-10p pr-10p bsbb capitalize br-5p center">
+                                                                products:
+                                                            </span>
+                                                            <span class="w-a h-20p verdana theme consolas br-5p">
+                                                                X${order.products.length}
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-150p h-100 p-10p bsbb bh-a-resp bfull-resp ">
+                                            <div class="w-100 h-100  osthol ">
+                                                <div class="w-100 h-a mb-10p center">
+                                                    <span class="w-a h-20p verdana dgray fs-10p pr-10p bsbb capitalize br-5p center nowrap">
+                                                        total price:
+                                                    </span>
+                                                    <span class="w-a h-20p fs-13p verdana black consolas br-5p nowrap">
+                                                        ${adcm(order.totalprice)} RWF
+                                                    </span>
+                                                </div>
+                                                <div class="w-100 h-a mb-10p center-2">
+                                                    <span class="w-a p-5p courier bold-2 ${coc(order.status)} bsbb h-a ${cobc(order.status)} br-2p fs-12p block">
+                                                        ${order.status}
+                                                    </span>
+                                                </div>
+                                                ${(order.status == 'delivered')?    `<div class="w-100 h-a mb-10p center-2">
+                                                <span class="w-a p-5p courier bold-2 addfb dgray bsbb h-a bc-tr-theme br-3p bb-1-s-theme fs-12p block capitalize" data-wrap="${order.id}">
+                                                    add feedback
+                                                </span>
+                                            </div>` : ''}
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+                i = h.querySelector('div.imgs-cont')
+                q = 1
+                for (const product of order.products) {
+    
+                    i.innerHTML+= `<div class="w-60p h-60p br-5p bc-white b-1-s-gray p-a ml-${q}p bcntr-resp">
+                        <img src="${geimgturl()}/product-imgz/${product.image}" class="contain w-100 h-100">
+                    </div>`
+                    q+=5
                 }
-            })
-        }
-        for (const feedback of addfb) {
-            feedback.addEventListener('click',async()=>{
-                l = feedback.getAttribute('data-wrap');
-                z = postschema
-                z.body = JSON.stringify({orderid: l,token: getdata('user')})
-                r = await request('getorder',z)
-                if (!r.success ) return 0
-                if (r.success) {
-                    addfbpopup(r.message[0])
+            }
+            let ordr = Array.from(k.querySelectorAll('div.ordr'))
+            let addfb = Array.from(k.querySelectorAll('span.addfb'))
+    
+            for (const ord of ordr) {
+                ord.onclick = async()=>{
+                    l = ord.getAttribute('data-wrap');
+                    z = postschema
+                    z.body = JSON.stringify({orderid: l,token: getdata('user')})
+                    r = await request('getorder',z)
+                    if (!r.success ) return 0
+                    if (r.success) {
+                        showOrder(r.message)
+                    }
                 }
-            })
+            }
+            for (const feedback of addfb) {
+                feedback.onclick = async()=>{
+                    l = feedback.getAttribute('data-wrap');
+                    z = postschema
+                    z.body = JSON.stringify({orderid: l,token: getdata('user')})
+                    r = await request('getorder',z)
+                    if (!r.success ) return 0
+                    if (r.success) {
+                        addfbpopup(r.message[0])
+                    }
+                }
+            }
         }
     }else if (x == 'my-account') {
         t = postschema
@@ -355,16 +398,21 @@ async  function cpgcntn(step) {
             }else if (password.value != confirm.value) {
                 return setErrorFor(password, 'passwords do not match')
             }else{
+                let password = await promptPassword();
                 postschema.body = JSON.stringify({
                     token: getdata('user'),
-                    type : 'password',
-                    value : password.value
+                    reqtype : 'password',
+                    value : password.value,
+                    password
                 })
-                let response = await request('edit-profile',postschema)
+                let response = await request('edituser',postschema)
                 alertMessage(response.message)
+                if (response.success) {
+                    editPform.reset()
+                }
             }
         }
-    }else{
+    }else if(x == 'my-wishlist'){
         initiatewishlist()
     }
   }

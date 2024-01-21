@@ -540,17 +540,35 @@ const s3 = new AWS.S3({
 						 email,
 						 users.status as status,
 						 addresses,
-						 COUNT(o.id) as t_orders, 
-						 COUNT(po.id) as p_orders 
+						 COALESCE(
+							CONCAT('[',
+							  GROUP_CONCAT(
+								JSON_QUOTE(o.status) SEPARATOR ','  
+							  ),
+							']'),
+						  '[]') AS ost
 						 from 
 						 users
-						 inner join orders as o on o.uid = '${t}' and o.status != 'delivered'
-						 inner join orders as po on po.uid = '${t}' and po.status = 'delivered'
+						 inner join orders as o on o.uid = '${t}'
 						  where users.id = '${t}'`)
 						if(!r) return res.status(500).send({success: false, message : 'internal server error'})
+						let obj = {p_orders: 0, d_orders: 0, t_orders: 0, n_orders: 0}
 						if (r.length) {
 							r = r[0]
 							r.addresses = JSON.parse(r.addresses)
+							r.ost = JSON.parse(r.ost)
+							obj.t_orders = r.ost.length
+							r.ost.forEach(status=>{
+								if (status == 'new') {
+									obj.n_orders+=1
+								}else if (status == 'pending') {
+									obj.p_orders+=1
+								}else if (status == 'delivered') {
+									obj.d_orders+=1
+								}
+							})
+							delete r.ost
+							Object.assign(r, {p_orders: obj.p_orders, d_orders: obj.d_orders, t_orders: obj.t_orders, n_orders: obj.n_orders})
 							res.send({success:true, message: r});
 						}else{
 							res.status(404).send({success:false, message: "user not found"});
@@ -2311,6 +2329,12 @@ const s3 = new AWS.S3({
 									b = await query(`update users set email = '${req.body.value}' where id = '${t}'`)
 									if (!b) return res.status(500).send({success: false, message: 'internal server error'})
 									return res.status(200).send({success: true, message: 'email changed successfully'})
+								}else if(s == 'password'){
+									b = await query(`update users set password = '${req.body.value}' where id = '${t}'`)
+									if (!b) return res.status(500).send({success: false, message: 'internal server error'})
+									return res.status(200).send({success: true, message: 'password changed successfully'})
+								}else{
+									return res.status(403).send({success: true, message: 'access denied, you are not allowed to perform this action'})
 								}
 							} catch (error) {
 								console.log(error)

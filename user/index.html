@@ -28,8 +28,8 @@
 	<div id="body" class="bc-gray w-100 h-100 p-r bsbb">
 		<div class="thebody w-100 h-100 p-r pt-120p">
 			<div class="w-100 h-70 mb-10p">
-				<div class="w-99 m-a h-a py-10p bc-white br-10p bsbb">
-					<div class="container w-100 h-100 py-10p bsbb flex bblock-resp" aria-controls="cont">
+				<div class="w-99 m-a min-h-600p py-10p bc-white br-10p bsbb">
+					<div class="container w-100 min-h-600p py-10p bsbb flex bblock-resp" aria-controls="cont">
 						<div class="w-20 bfull-resp h-100 bh-70p-resp p-10p bsbb the-h">
 							<div class="cont w-100 h-100">
 								<div class="the-h w-80 m-a bfull-resp bsbb h-a">
@@ -53,8 +53,24 @@
 								<div class="w-100 h-50p ">
 									<span class="theme capitalize left center bold fs-20p verdana h-100 pl-10p">my orders</span>
 								</div>
+								<div class="w-100 px-5p py-10p bsbb">
+									<ul class="ls-none py-5p m-0 px-0p flex verdana ovxs">
+										<li class="px-8p bsbb orange bc-tr-orange active flex py-10p mx-5p br-3p hover-2 o-chips" id="all-orders">
+											<span class="icon pr-5p bsbb"><i class="fas fa-car"></i></span>
+											<span class="capitalize nowrap">all orders</span>
+										</li>
+										<li id="pending-orders" class="px-8p o-chips br-3p hover-2 bsbb ddgray flex py-10p mx-5p">
+											<span class="icon pr-5p bsbb"><i class="fas fa-car"></i></span>
+											<span class="capitalize nowrap">pending orders</span>
+										</li>
+										<li id="delivered-orders" class="px-8p o-chips br-3p hover-2 bsbb ddgray flex py-10p mx-5p">
+											<span class="icon pr-5p bsbb"><i class="fas fa-car"></i></span>
+											<span class="capitalize nowrap">delivered orders</span>
+										</li>
+									</ul>
+								</div>
 								<div class="pg-cntnt w-100 h-90 p-20p bsbb ovys left bp-0-resp">
-									<div class="orders">
+									<div class="orders-hol p-r" id="all-orders">
 										<div class="w-100 h-a p-10p bsbb">
 											<div class="w-100 h-100 b-1-s-gray br-10p">
 												<div class="w-100 h-100 obody flex bblock-resp p-10p bsbb">
@@ -164,7 +180,226 @@
 											</div>
 										</div>
 									</div>
-
+									<div class="orders-hol p-r hidden" id="pending-orders">
+										<div class="w-100 h-a p-10p bsbb">
+											<div class="w-100 h-100 b-1-s-gray br-10p">
+												<div class="w-100 h-100 obody flex bblock-resp p-10p bsbb">
+													<div class="imgs-cont w-100p h-100p bfull-resp bcenter-500p-resp">
+														<div class="w-100p h-100p br-5p bc-gray skel"></div>
+													</div>
+													<div class="odesc w-80 h-100 ml-10p bsbb flex  bblock-resp bfull-resp bm-a-resp ">
+														<div class="left w-90 h-100 m-0 bfull-resp bmt-10p">
+															<div class="oidhol w-100 h-30p p-5p bsbb bcenter-500p-resp">
+																<span class="w-200p h-20p bc-gray skel block br-5p"></span>
+															</div>
+															<div class="odeschol w-80 h-a p-5p bsbb bfull-resp ">
+																<div class="thedesc p-10p bsbb ">
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-50p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-30p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-45p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-20p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																</div>
+															</div>
+														</div>
+														<div class="w-100p h-100 p-10p bsbb bh-a-resp bfull-resp ">
+															<div class="w-100 h-100  osthol ">
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-100 h-40p bc-gray mb-10p skel br-5p block"></span>
+																</div>
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-40p h-20p bc-gray skel br-5p block"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="w-100 h-a p-10p bsbb">
+											<div class="w-100 h-100 b-1-s-gray br-10p">
+												<div class="w-100 h-100 obody flex bblock-resp p-10p bsbb">
+													<div class="imgs-cont w-100p h-100p bfull-resp bcenter-500p-resp">
+														<div class="w-100p h-100p br-5p bc-gray skel"></div>
+													</div>
+													<div class="odesc w-80 h-100 ml-10p bsbb flex  bblock-resp bfull-resp bm-a-resp ">
+														<div class="left w-90 h-100 m-0 bfull-resp bmt-10p">
+															<div class="oidhol w-100 h-30p p-5p bsbb bcenter-500p-resp">
+																<span class="w-200p h-20p bc-gray skel block br-5p"></span>
+															</div>
+															<div class="odeschol w-80 h-a p-5p bsbb bfull-resp ">
+																<div class="thedesc p-10p bsbb ">
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-50p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-30p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-45p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-20p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																</div>
+															</div>
+														</div>
+														<div class="w-100p h-100 p-10p bsbb bh-a-resp bfull-resp ">
+															<div class="w-100 h-100  osthol ">
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-100 h-40p bc-gray mb-10p skel br-5p block"></span>
+																</div>
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-40p h-20p bc-gray skel br-5p block"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="w-100 h-a p-10p bsbb">
+											<div class="w-100 h-100 b-1-s-gray br-10p">
+												<div class="w-100 h-100 obody flex bblock-resp p-10p bsbb">
+													<div class="imgs-cont w-100p h-100p bfull-resp bcenter-500p-resp">
+														<div class="w-100p h-100p br-5p bc-gray skel"></div>
+													</div>
+													<div class="odesc w-80 h-100 ml-10p bsbb flex  bblock-resp bfull-resp bm-a-resp ">
+														<div class="left w-90 h-100 m-0 bfull-resp bmt-10p">
+															<div class="oidhol w-100 h-30p p-5p bsbb bcenter-500p-resp">
+																<span class="w-200p h-20p bc-gray skel block br-5p"></span>
+															</div>
+															<div class="odeschol w-80 h-a p-5p bsbb bfull-resp ">
+																<div class="thedesc p-10p bsbb ">
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-50p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-30p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-45p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-20p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																</div>
+															</div>
+														</div>
+														<div class="w-100p h-100 p-10p bsbb bh-a-resp bfull-resp ">
+															<div class="w-100 h-100  osthol ">
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-100 h-40p bc-gray mb-10p skel br-5p block"></span>
+																</div>
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-40p h-20p bc-gray skel br-5p block"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="orders-hol p-r hidden" id="delivered-orders">
+										<div class="w-100 h-a p-10p bsbb">
+											<div class="w-100 h-100 b-1-s-gray br-10p">
+												<div class="w-100 h-100 obody flex bblock-resp p-10p bsbb">
+													<div class="imgs-cont w-100p h-100p bfull-resp bcenter-500p-resp">
+														<div class="w-100p h-100p br-5p bc-gray skel"></div>
+													</div>
+													<div class="odesc w-80 h-100 ml-10p bsbb flex  bblock-resp bfull-resp bm-a-resp ">
+														<div class="left w-90 h-100 m-0 bfull-resp bmt-10p">
+															<div class="oidhol w-100 h-30p p-5p bsbb bcenter-500p-resp">
+																<span class="w-200p h-20p bc-gray skel block br-5p"></span>
+															</div>
+															<div class="odeschol w-80 h-a p-5p bsbb bfull-resp ">
+																<div class="thedesc p-10p bsbb ">
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-50p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-30p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-45p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-20p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																</div>
+															</div>
+														</div>
+														<div class="w-100p h-100 p-10p bsbb bh-a-resp bfull-resp ">
+															<div class="w-100 h-100  osthol ">
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-100 h-40p bc-gray mb-10p skel br-5p block"></span>
+																</div>
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-40p h-20p bc-gray skel br-5p block"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="w-100 h-a p-10p bsbb">
+											<div class="w-100 h-100 b-1-s-gray br-10p">
+												<div class="w-100 h-100 obody flex bblock-resp p-10p bsbb">
+													<div class="imgs-cont w-100p h-100p bfull-resp bcenter-500p-resp">
+														<div class="w-100p h-100p br-5p bc-gray skel"></div>
+													</div>
+													<div class="odesc w-80 h-100 ml-10p bsbb flex  bblock-resp bfull-resp bm-a-resp ">
+														<div class="left w-90 h-100 m-0 bfull-resp bmt-10p">
+															<div class="oidhol w-100 h-30p p-5p bsbb bcenter-500p-resp">
+																<span class="w-200p h-20p bc-gray skel block br-5p"></span>
+															</div>
+															<div class="odeschol w-80 h-a p-5p bsbb bfull-resp ">
+																<div class="thedesc p-10p bsbb ">
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-50p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-30p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-45p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-20p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																</div>
+															</div>
+														</div>
+														<div class="w-100p h-100 p-10p bsbb bh-a-resp bfull-resp ">
+															<div class="w-100 h-100  osthol ">
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-100 h-40p bc-gray mb-10p skel br-5p block"></span>
+																</div>
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-40p h-20p bc-gray skel br-5p block"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="w-100 h-a p-10p bsbb">
+											<div class="w-100 h-100 b-1-s-gray br-10p">
+												<div class="w-100 h-100 obody flex bblock-resp p-10p bsbb">
+													<div class="imgs-cont w-100p h-100p bfull-resp bcenter-500p-resp">
+														<div class="w-100p h-100p br-5p bc-gray skel"></div>
+													</div>
+													<div class="odesc w-80 h-100 ml-10p bsbb flex  bblock-resp bfull-resp bm-a-resp ">
+														<div class="left w-90 h-100 m-0 bfull-resp bmt-10p">
+															<div class="oidhol w-100 h-30p p-5p bsbb bcenter-500p-resp">
+																<span class="w-200p h-20p bc-gray skel block br-5p"></span>
+															</div>
+															<div class="odeschol w-80 h-a p-5p bsbb bfull-resp ">
+																<div class="thedesc p-10p bsbb ">
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-50p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-30p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-45p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-20p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																	<span class="w-40p h-10p bc-gray m-5p skel iblock br-5p"></span>
+																</div>
+															</div>
+														</div>
+														<div class="w-100p h-100 p-10p bsbb bh-a-resp bfull-resp ">
+															<div class="w-100 h-100  osthol ">
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-100 h-40p bc-gray mb-10p skel br-5p block"></span>
+																</div>
+																<div class="w-100 h-a mb-10p center-2">
+																	<span class="w-40p h-20p bc-gray skel br-5p block"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<!-- end of myorders section -->
@@ -232,8 +467,16 @@
 																	<span class="department" data-holder="true" id="t_orders">0</span>
 																</li>
 																<li class="mb-10p mt-10p">
+																	<span class="capitalize dgray fs-14p block mb-5p mt-5p">new orders</span>
+																	<span class="department" data-holder="true" id="n_orders">0</span>
+																</li>
+																<li class="mb-10p mt-10p">
 																	<span class="capitalize dgray fs-14p block mb-5p mt-5p">pending orders</span>
 																	<span class="department" data-holder="true" id="p_orders">0</span>
+																</li>
+																<li class="mb-10p mt-10p">
+																	<span class="capitalize dgray fs-14p block mb-5p mt-5p">delivered orders</span>
+																	<span class="department" data-holder="true" id="d_orders">0</span>
 																</li>
 															</ul>
 														</div>
@@ -257,32 +500,33 @@
 																	<span class="alert-heading fs-15p mb-1 dgray">Ensure that these requirements are met</span>
 																	<span class="dgray fs-14p">Minimum 6 characters long, uppercase &amp; symbol</span>
 																</div>
-																<div class="mt-10p flex">
-																	<div class="mr-5p ml-5p">
+																<div class="mt-10p flex bblock-resp">
+																	<div class="mr-5p ml-5p w-100 bm-a-resp bp-y-10p-resp">
 																		<label class="form-label dgray" for="password">New Password</label>
 																		<div class="p-r mt-5p">
-																			<input class="b-1-s-dgray p-7p bsbb br-5p no-outline" type="password" id="password" name="password" placeholder="············">
+																			<input class="b-1-s-dgray p-7p bsbb br-5p no-outline w-100" type="password" id="password" name="password" placeholder="············">
 																			<span class="p-a t-0 r-0 dgray p-3p mr-5p bsbb hover-2 showP"><i class="fas fa-eye fs-13p"></i></span>
-																			<small class="hidden w-100 red pl-3p verdana"></small>
+																			<small class="hidden w-100 red pl-3p verdana block"></small>
 																		</div>
 																		
 																	</div>
 											
-																	<div class="mr-5p ml-5p">
+																	<div class="mr-5p ml-5p w-100 bm-a-resp bp-y-10p-resp">
 																		<label class="form-label dgray" for="confirm">Confirm Password</label>
 																		<div class="p-r mt-5p">
-																			<input class="b-1-s-dgray p-7p bsbb br-5p no-outline" type="password" name="confirm" id="confirm" placeholder="············">
+																			<input class="b-1-s-dgray p-7p bsbb br-5p no-outline w-100" type="password" name="confirm" id="confirm" placeholder="············">
 																			<span class="p-a t-0 r-0 dgray p-3p mr-5p bsbb hover-2 showP"><i class="fas fa-eye fs-13p"></i></span>
-																			<small class="hidden w-100 red pl-3p verdana"></small>
+																			<small class="hidden w-100 red pl-3p verdana block"></small>
 		
 																		</div>
 																	</div>
-																	<div class="ml-5p mr-5p">
+																	<div class="ml-5p mr-5p w-100 bm-a-resp bp-y-10p-resp">
 																		<label class="form-label dgray op-0 block" for="confirm">..</label>
-																		<button type="submit" class="p-7p block mt-6p bsbb white br-3p bc-theme b-none no-outline">proceed</button>
+																		<button type="submit" class="p-7p block mt-6p bsbb white br-3p bc-theme b-none no-outline hover-2">proceed</button>
 																	</div>
 																</div>
-															<input type="hidden"></form>
+																<input type="hidden">
+															</form>
 														</div>
 													</div>
 													<div class="w-100 h-100 minidivs 1st form-hol ovh p-r hidden" name="address">

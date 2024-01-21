@@ -4,14 +4,14 @@ let mysql = require('mysql');
 let app = express();
 let path = require('path');
 let connection =  mysql.createPool({
-	host : 'mysql.freehostia.com',
-	// host : 'localhost',
-	user : 'itzsho_itzone',
-	// user : 'root',
-	password : 'Heshimaherbert@1',
-	// password : '',
-	database : 'itzsho_itzone',
-	// database : 'itzone',
+	// host : 'mysql.freehostia.com',
+	host : 'localhost',
+	// user : 'itzsho_itzone',
+	user : 'root',
+	// password : 'Heshimaherbert@1',
+	password : '',
+	// database : 'itzsho_itzone',
+	database : 'itzone',
 });
 connection.getConnection((err, connection) => {
     if (err) {

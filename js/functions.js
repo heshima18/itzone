@@ -876,7 +876,7 @@ export function setSuccessFor(input) {
   // rep.classList.remove('focus');
   rep.classList.remove('error');
   rep.classList.add('success');
-  if ( rep.querySelector('span')) {
+  if ( rep.querySelector('svg')) {
     let _err = rep.querySelector('span').childNodes[1];
     let _succ = rep.querySelector('span').childNodes[3];
     _err.classList.add('hidden');
