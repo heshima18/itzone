@@ -112,21 +112,32 @@ filternav.innerHTML = `<div class="w-100 h-100 br-10p bc-white p-10p bsbb ovh">
             </span>
         </div>
     </div>
-        <div class="w-a m-a h-a p-5p bsbb bblock-resp bfull-resp va-t">
-            <div class="w-100 h-40p ">
-                <span class="capitalize verdana left fs-17 p-5p">
-                    sort by
-                </span>
-            </div>
-            <div class="w-100 p-10p bsbb h-a ovys left">
-                <span class="w-100 h-100 verdana">
-                    <ul class="p-5p m-0 ls-none">
-                        
-                    </ul>
-                </span>
-            </div>
+    <div class="w-a m-a h-a p-5p bsbb bblock-resp bfull-resp va-t">
+        <div class="w-100 h-40p ">
+            <span class="capitalize verdana left fs-17 p-5p">
+                sort by
+            </span>
+        </div>
+        <div class="w-100 p-10p bsbb h-a ovys left">
+            <span class="w-100 h-100 verdana">
+                <ul class="p-5p m-0 ls-none sort">
+                    <li class="capitalize fs-15p">
+                        <input type="radio" name="order-by" id="checkbox" value="name-asc" data-zon="order-by"> name (A-Z)
+                    </li>
+                    <li class="capitalize fs-15p">
+                        <input type="radio" name="order-by" id="checkbox" value="name-desc" data-zon="order-by"> name (Z-A)
+                    </li>
+                    <li class="capitalize fs-15p">
+                        <input type="radio" name="order-by" id="checkbox" value="price-desc" data-zon="order-by"> price (High to Low)
+                    </li>
+                    <li class="capitalize fs-15p">
+                        <input type="radio" name="order-by" id="checkbox" value="price-asc" data-zon="order-by"> price (Low to High)
+                    </li>
+                </ul>
+            </span>
         </div>
     </div>
+</div>
 
 </div>
 <div class="w-100 h-60p p-10p bsbb">
