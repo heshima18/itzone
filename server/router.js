@@ -9,7 +9,6 @@ let path = require('path')
 let router = express.Router();
 let {server,database} = require('./handler');
 const { assets, page } = require('./page.controller');
-const imageSize = require('image-size');
 const Jimp = require('jimp');
 const sharp = require('sharp');
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
@@ -387,7 +386,7 @@ const s3 = new AWS.S3({
 								a = []
 								for (const image of l) {
 									e = gfxt(image)
-									let mime = gtMime(image),n
+									let n
 									
 									const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
 									const bufferData = Buffer.from(base64Data, 'base64');
@@ -1413,7 +1412,7 @@ const s3 = new AWS.S3({
 								a = []
 								for (const image of i) {
 									e = gfxt(image)
-									let mime = gtMime(image),n
+									let n
 									
 									const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
 									const bufferData = Buffer.from(base64Data, 'base64');
@@ -2722,10 +2721,6 @@ const s3 = new AWS.S3({
 					const mime = data.split(',')[0].match(/:(.*?);/)[1];
 					const extension = mime.split('/')[1].split('+')[0];
 					return extension;
-				}
-				function gtMime(data) {
-					const mime = data.split(',')[0].match(/:(.*?);/)[1];
-					return mime;
 				}
 				function rs(string){
 					string = string.replace(/\s+/g, '-')

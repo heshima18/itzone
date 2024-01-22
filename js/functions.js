@@ -1798,7 +1798,7 @@ export async function showcontent(data,targetdiv) {
         ats(select,t.message.availability,s)
       }
     }
-    f = targetdiv.querySelector('form');
+    f = targetdiv.querySelector('form#add-product-form');
     f.addEventListener('submit',async (e)=>{
       e.preventDefault()
       i = Array.from(f.querySelectorAll('input.main-input'))
@@ -1884,7 +1884,9 @@ export async function showcontent(data,targetdiv) {
               'accept': '*/*'
           }
         }
+        addSpinner(f.querySelector('button.main-but'))
         r = await request('addproduct',l)
+        removeSpinner(f.querySelector('button.main-but'))
         if (r.success) {
           alertMessage(r.message)
           f.reset()
@@ -4631,7 +4633,7 @@ async function sheditproductform(product) {
                     </div>
                     <div class="buttons w-100 h-a mt-p p-10p bsbb ovh">
                       <div class="button-hol w-100 h-100 p-10p bsbb">
-                        <button type="submit" class="b-none br-2p bc-theme white p-15p bsbb right verdana center hover-2">
+                        <button type="submit" class="b-none br-2p bc-theme white p-15p bsbb right verdana center hover-2 main-but">
                           <span class="fs-15p">edit the product</span>
                         </button>
                       </div>
@@ -4866,7 +4868,9 @@ async function sheditproductform(product) {
               'accept': '*/*'
           }
         }
+        addSpinner(f.querySelector('button.main-but'))
         r = await request('editprodinfo',l)
+        removeSpinner(f.querySelector('button.main-but'))
         if (r.success) {
           alertMessage(r.message)
           f.reset()
