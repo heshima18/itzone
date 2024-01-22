@@ -57,7 +57,6 @@ function page (req,res,page){
         });
         if (user == 'product') {
             let prodinfo = await getProdInfo(filename)
-            console.log(prodinfo)
             if (!prodinfo ) {
             res.end('product not found');
             return 

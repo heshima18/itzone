@@ -10,7 +10,7 @@ let router = express.Router();
 let {server,database} = require('./handler');
 const { assets, page } = require('./page.controller');
 const Jimp = require('jimp');
-const sharp = require('sharp');
+// const sharp = require('sharp');
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 const io = require('socket.io')(server, {
   cors: {
@@ -396,10 +396,10 @@ const s3 = new AWS.S3({
 										// Detect the image format from the buffer data
 										let ui
 					
-										if (e !== 'jpg' || e !== 'jpeg' ) {
-											ui = await sharp(uploadedImageBuffer).toFormat('jpeg').toBuffer();
-											e = 'jpeg'
-										}else
+										// if (e !== 'jpg' || e !== 'jpeg' ) {
+										// 	ui = await sharp(uploadedImageBuffer).toFormat('jpeg').toBuffer();
+										// 	e = 'jpeg'
+										// }else
 										{
 											ui = uploadedImageBuffer
 										}
@@ -1422,10 +1422,10 @@ const s3 = new AWS.S3({
 										// Detect the image format from the buffer data
 										let ui
 					
-										if (e !== 'jpg' || e !== 'jpeg' ) {
-											ui = await sharp(uploadedImageBuffer).toFormat('jpeg').toBuffer();
-											e = 'jpeg'
-										}else
+										// if (e !== 'jpg' || e !== 'jpeg' ) {
+										// 	ui = await sharp(uploadedImageBuffer).toFormat('jpeg').toBuffer();
+										// 	e = 'jpeg'
+										// }else
 										{
 											ui = uploadedImageBuffer
 										}
