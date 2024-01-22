@@ -9,6 +9,9 @@ let path = require('path')
 let router = express.Router();
 let {server,database} = require('./handler');
 const { assets, page } = require('./page.controller');
+const imageSize = require('image-size');
+const Jimp = require('jimp');
+const sharp = require('sharp');
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 const io = require('socket.io')(server, {
   cors: {
@@ -384,23 +387,64 @@ const s3 = new AWS.S3({
 								a = []
 								for (const image of l) {
 									e = gfxt(image)
-									n = `${generateUniqueId()}.${e}`
+									let mime = gtMime(image),n
+									
 									const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
 									const bufferData = Buffer.from(base64Data, 'base64');
-									const filePath = path.join(__dirname,'..','product-imgz', n);
-									const params = {
-										Bucket: 'itzone',
-										Key: `product-imgz/${n}`,
-										Body: bufferData
-									  };
-									  s3.upload(params, function(err, data) {
-										if (err) {
-										  console.log("Error uploading file: ", err);
-										} else {
-										  console.log("File uploaded successfully. Location: ", data.Location);
+									const uploadedImageBuffer = bufferData;
+									const watermarkImagePath = path.join(__dirname,'..','icons', 'favicon.png');
+									try {
+										// Detect the image format from the buffer data
+										let ui
+					
+										if (e !== 'jpg' || e !== 'jpeg' ) {
+											ui = await sharp(uploadedImageBuffer).toFormat('jpeg').toBuffer();
+											e = 'jpeg'
+										}else
+										{
+											ui = uploadedImageBuffer
 										}
-									  });
-									// fs.writeFileSync(filePath, bufferData);
+										// Read the uploaded image buffer using Jimp
+										const uploadedImage = await Jimp.read(ui);
+
+										// Read the watermark image from your server
+										const watermarkImage = await Jimp.read(watermarkImagePath);
+										const watermarkResizeOptions = {
+											width: 205, // Adjust the width as needed
+											height: 110, // Adjust the height as needed
+										};
+										watermarkImage.resize(watermarkResizeOptions.width, watermarkResizeOptions.height);
+										// Calculate the position to place the watermark (e.g., bottom right corner)
+										const x = uploadedImage.bitmap.width - watermarkImage.bitmap.width - 15;
+										const y = uploadedImage.bitmap.height - watermarkImage.bitmap.height - 5;
+
+										// Composite the watermark onto the uploaded image
+										uploadedImage.composite(watermarkImage, x, y, {
+										mode: Jimp.BLEND_SOURCE_OVER,
+										opacitySource: 0.8, // Adjust the opacity as needed
+										});
+
+										// Convert the modified image to a buffer
+										const modifiedImageBuffer = await uploadedImage.getBufferAsync(Jimp.MIME_JPEG);
+										n = `${generateUniqueId()}.${e}`
+										// Upload the modified image to S3
+										const params = {
+											Bucket: 'itzone',
+											Key: `product-imgz/${n}`,
+											Body: modifiedImageBuffer,
+											ContentType: Jimp.MIME_JPEG,
+											};
+										s3.upload(params, function(err, data) {
+											if (err) {
+												console.log("Error uploading file: ", err);
+											} else {
+												console.log("File uploaded successfully. Location: ", data.Location);
+											}
+											});
+									} catch (error) {
+										console.error('Error:', error.message);
+									}
+									
 									a.push(n)
 								}
 								c = i.conditions;
@@ -1357,7 +1401,7 @@ const s3 = new AWS.S3({
 			if (tokendata.success) {
 				try {
 					t = tokendata.token.id
-					database.query(`select * from admin where id = '${t}'`,(error,result)=>{
+					database.query(`select * from admin where id = '${t}'`,async (error,result)=>{
 						if (error) return res.send({success: false, message: 'oops an error occured'})
 						if (result.length > 0) {
 							try {
@@ -1369,23 +1413,64 @@ const s3 = new AWS.S3({
 								a = []
 								for (const image of i) {
 									e = gfxt(image)
-									n = `${generateUniqueId()}.${e}`
+									let mime = gtMime(image),n
+									
 									const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
 									const bufferData = Buffer.from(base64Data, 'base64');
-									const filePath = path.join(__dirname,'..','product-imgz', n);
-									const params = {
-										Bucket: 'itzone',
-										Key: `product-imgz/${n}`,
-										Body: bufferData
-									  };
-									  s3.upload(params, function(err, data) {
-										if (err) {
-										//   console.log("Error uploading file: ", err);
-										} else {
-										  console.log("File uploaded successfully. Location: ", data.Location);
+									const uploadedImageBuffer = bufferData;
+									const watermarkImagePath = path.join(__dirname,'..','icons', 'favicon.png');
+									try {
+										// Detect the image format from the buffer data
+										let ui
+					
+										if (e !== 'jpg' || e !== 'jpeg' ) {
+											ui = await sharp(uploadedImageBuffer).toFormat('jpeg').toBuffer();
+											e = 'jpeg'
+										}else
+										{
+											ui = uploadedImageBuffer
 										}
-									  });
-									// fs.writeFileSync(filePath, bufferData);
+										// Read the uploaded image buffer using Jimp
+										const uploadedImage = await Jimp.read(ui);
+
+										// Read the watermark image from your server
+										const watermarkImage = await Jimp.read(watermarkImagePath);
+										const watermarkResizeOptions = {
+											width: 205, // Adjust the width as needed
+											height: 110, // Adjust the height as needed
+										};
+										watermarkImage.resize(watermarkResizeOptions.width, watermarkResizeOptions.height);
+										// Calculate the position to place the watermark (e.g., bottom right corner)
+										const x = uploadedImage.bitmap.width - watermarkImage.bitmap.width - 15;
+										const y = uploadedImage.bitmap.height - watermarkImage.bitmap.height - 5;
+
+										// Composite the watermark onto the uploaded image
+										uploadedImage.composite(watermarkImage, x, y, {
+										mode: Jimp.BLEND_SOURCE_OVER,
+										opacitySource: 0.8, // Adjust the opacity as needed
+										});
+
+										// Convert the modified image to a buffer
+										const modifiedImageBuffer = await uploadedImage.getBufferAsync(Jimp.MIME_JPEG);
+										n = `${generateUniqueId()}.${e}`
+										// Upload the modified image to S3
+										const params = {
+											Bucket: 'itzone',
+											Key: `product-imgz/${n}`,
+											Body: modifiedImageBuffer,
+											ContentType: Jimp.MIME_JPEG,
+											};
+										s3.upload(params, function(err, data) {
+											if (err) {
+												console.log("Error uploading file: ", err);
+											} else {
+												console.log("File uploaded successfully. Location: ", data.Location);
+											}
+											});
+									} catch (error) {
+										console.error('Error:', error.message);
+									}
+									
 									a.push(n)
 								}
 								z = generateUniqueId();
@@ -1394,18 +1479,19 @@ const s3 = new AWS.S3({
 									res.send({success:true, message: "product inserted successfully"})
 								})
 							} catch (error) {
-								res.send({success: false, message: 'oops an error occured'})
+								console.log(error)
+								res.status(500).send({success: false, message: 'there was an error while processing your request'})
 							}
 						} else {
 							res.send({success: false, message: "admin not found"})
 						}
 					})
 				} catch (error) {
-					res.send({success: false, message: 'oops an error occured'})
+					res.status(500).send({success: false, message: 'oops an error occured'})
 					
 				}
 			}else{
-				res.send({success: false, message: 'oops an error occured'})
+				res.status(500).send({success: false, message: 'oops an error occured'})
 			}
 		})
 	})
@@ -2636,6 +2722,10 @@ const s3 = new AWS.S3({
 					const mime = data.split(',')[0].match(/:(.*?);/)[1];
 					const extension = mime.split('/')[1].split('+')[0];
 					return extension;
+				}
+				function gtMime(data) {
+					const mime = data.split(',')[0].match(/:(.*?);/)[1];
+					return mime;
 				}
 				function rs(string){
 					string = string.replace(/\s+/g, '-')
