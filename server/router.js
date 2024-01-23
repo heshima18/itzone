@@ -10,6 +10,7 @@ let router = express.Router();
 let {server,database} = require('./handler');
 const { assets, page } = require('./page.controller');
 const Jimp = require('jimp');
+const { sendmail } = require('./mail.sender.controller');
 // const sharp = require('sharp');
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 const io = require('socket.io')(server, {
@@ -1766,6 +1767,7 @@ const s3 = new AWS.S3({
 							try {
 								p = req.body.products;
 								m = 0
+								let uinfo = result[0]
 								for (const productinfo of p) {
 									r = await getPrice(productinfo)
 									if (r) {
@@ -1811,6 +1813,116 @@ const s3 = new AWS.S3({
 								}
 								if (o) {
 									res.send({success:true,message: 'cheers!, your order has been successfully submitted our team will review it in no time'})
+									const emailUserContent = `
+									<html lang="en"><head>
+									<meta charset="UTF-8">
+									<meta name="viewport" content="width=device-width, initial-scale=1.0">
+									<title>order placed</title>
+									<style>
+										/* Add your custom CSS styles here */
+										body {
+										font-family: Arial, sans-serif;
+										margin: 0;
+										padding: 0;
+										background-color: #ffffff;
+										}
+										.container {
+										max-width: 600px;
+										margin: 0 auto;
+										padding: 20px;
+										background-color: #ffffff;
+										box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+										}
+										h1 {
+										color: #333333;
+										margin-top: 0;
+										}
+										p {
+										color: #000;
+										line-height: 1.5;
+										}
+										.footer {
+										background-color: #f2f2f2;
+										padding: 20px;
+										box-sizing: border-box;
+										width: 100%;
+										position: fixed;
+										bottom: 0px;
+										text-align: center;
+										}
+									</style>
+									</head>
+									<body>
+									<div class="container">
+										<p style="text-align: center"> <img src="https://itspace.rw/icons/favicon.png" style="width: 300px;height: 152px,display:flex;justify-content:center;align-items:center;overflow-wrap:break-word"></p>
+										<h1>Hi, ${uinfo.firstname} </h1>
+										<p style="font-size:16px; text-transform: capitalize;">your order was placed successfully</p>
+										<p style="font-size: 18px; font-weight: bold;">visit <a href="https://itspace.rw/user/?page=0">your user account</a> to view more order details</p>
+									</div>
+									<div class="footer">
+										<p>&copy; ${new Date().getFullYear()} ITSPACE LTD. All rights reserved.</p>
+									</div>
+									
+									</body></html>
+									`,emailUserMessage = {subject: 'Order Placed Successully'}
+									const emailAdminContent = `
+										<!DOCTYPE html>
+										<html lang="en">
+										<head>
+										<meta charset="UTF-8">
+										<meta name="viewport" content="width=device-width, initial-scale=1.0">
+										<title>order placed</title>
+										<style>
+											/* Add your custom CSS styles here */
+											body {
+											font-family: Arial, sans-serif;
+											margin: 0;
+											padding: 0;
+											background-color: #ffffff;
+											}
+											.container {
+											max-width: 600px;
+											margin: 0 auto;
+											padding: 20px;
+											background-color: #ffffff;
+											box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+											}
+											h1 {
+											color: #333333;
+											margin-top: 0;
+											}
+											p {
+											color: #000;
+											line-height: 1.5;
+											}
+											.footer {
+											background-color: #f2f2f2;
+											padding: 20px;
+											box-sizing: border-box;
+											width: 100%;
+											position: fixed;
+											bottom: 0px;
+											text-align: center;
+											}
+										</style>
+										</head>
+										<body>
+										<div class="container">
+										<p style="text-align: center"> <img src="https://itspace.rw/icons/favicon.png" style="width: 300px;height: 152px,display:flex;justify-content:center;align-items:center;overflow-wrap:break-word"></p>
+											<h1>Hi, Admin </h1>
+											<p style="font-size:16px; text-transform: capitalize;">a new order was placed by ${uinfo.firstname} ${uinfo.lastname}</p>
+											<p style="font-size: 18px; font-weight: bold;">visit <a href="https://itspace.rw/admin/dashboard?page=new-orders">new orders page</a> to view more order details</p>
+										</div>
+										<div class="footer">
+											<p>&copy; ${new Date().getFullYear()} ITSPACE LTD. All rights reserved.</p>
+										</div>
+										</body>
+										</html>
+									`,emailAdminMessage = {subject: 'incoming New Order'}
+									sendmail('itspace250gmail.com',emailAdminMessage,emailAdminContent)
+									sendmail(uinfo.email,emailUserMessage,emailUserContent)
+
+
 								}else{
 									res.status(500).send({success:false,message: 'Oops an error occured'});
 								}
@@ -1939,7 +2051,7 @@ const s3 = new AWS.S3({
 						r = await query(`select * from admin where id = '${t}'`)
 							if (!r) return res.status(500).send({success: false, message: 'oops an error occured'})
 						if (r.length > 0) {
-							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.status = 'new' order by orders.date`)
+							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.status = 'new'  order by orders.date desc`)
 							if (!h) return res.status(500).send({success: false, message: "internal server error"})
 							
 							if (h.length > 0) {
@@ -1977,7 +2089,7 @@ const s3 = new AWS.S3({
 						r = await query(`select * from admin where id = '${t}'`)
 							if (!r) return res.status(500).send({success: false, message: 'oops an error occured'})
 						if (r.length > 0) {
-							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.status = 'pending'`)
+							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.status = 'pending'  order by orders.date desc`)
 							if (!h) return res.status(500).send({success: false, message: "internal server error"})
 							
 							if (h.length > 0) {
@@ -2015,7 +2127,7 @@ const s3 = new AWS.S3({
 						r = await query(`select * from admin where id = '${t}'`)
 							if (!r) return res.status(500).send({success: false, message: 'oops an error occured'})
 						if (r.length > 0) {
-							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.status = 'delivered'`)
+							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.status = 'delivered'  order by orders.date desc`)
 							if (!h) return res.status(500).send({success: false, message: "internal server error"})
 							
 							if (h.length > 0) {
@@ -2053,7 +2165,7 @@ const s3 = new AWS.S3({
 						r = await query(`select * from admin where id = '${t}'`)
 							if (!r) return res.status(500).send({success: false, message: 'oops an error occured'})
 						if (r.length > 0) {
-							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id`)
+							h = await query(`select orders.products,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id order by orders.date desc`)
 							if (!h) return res.status(500).send({success: false, message: "internal server error"})
 							
 							if (h.length > 0) {
@@ -2091,7 +2203,7 @@ const s3 = new AWS.S3({
 						r = await query(`select * from users where id = '${t}' and status='active'`)
 							if (!r) return res.status(500).send({success: false, message: 'oops an error occured'})
 						if (r.length > 0) {
-							h = await query(`select orders.products,orders.status,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.uid = '${t}' order by date asc`)
+							h = await query(`select orders.products,orders.status,orders.totalprice,orders.id,orders.uaddress,users.firstname,users.lastname from orders inner join users on orders.uid = users.id where orders.uid = '${t}'  order by orders.date desc`)
 							if (!h) return res.status(500).send({success: false, message: "internal server error"})
 							
 							if (h.length > 0) {

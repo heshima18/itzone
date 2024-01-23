@@ -1,9 +1,9 @@
 
 let {router} =  require('./router');
-
 let {app} = require('./handler')
 let bodyParser = require('body-parser');
 const path = require('path');
+
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 app.use(function(req, res, next) {
@@ -12,6 +12,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(router)
+
 module.exports.app  =  app
 
 		
