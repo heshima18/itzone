@@ -694,6 +694,104 @@ const s3 = new AWS.S3({
 			
 		}
 	})
+	router.post('/api/rstpsswrd',(req,res)=>{
+		t = req.body.token
+		authenticateToken(t,async (token)=>{
+			if (token.success) {
+				u = token.token.id
+			}
+			p = req.body.password
+			try {
+				database.query(`SELECT id,firstname,lastname,email,status FROM users  WHERE id = '${u}'`,(error,result,fields)=>{
+					if (error) return res.send({success: false, message: 'oops an error occured'})
+					if (result.length > 0) {
+						database.query(`UPDATE users set password = '${p}', fa2 = '${generateUniqueId()}' where id = '${u}' AND fa2 = '${token.token.fa}'`)
+						res.send({success: true, message : "password changed successfully!"})
+					} else {
+						res.status(404).json({success: false, message : {content: "user not found"}})
+					}
+				})
+			} catch (error) {
+				res.status(500).json({success: false, message : 'internal server error'})
+			}
+		})
+	})
+	router.post('/api/gntrrstlnk',(req,res)=>{
+		d = req.body.email
+		try {
+			database.query(`SELECT id,status,firstname FROM users  WHERE email = ?`,[d],(error,result,fields)=>{
+				if (error) return res.send({success: false, message: 'oops an error occured'})
+				if (result.length > 0) {
+					if (result[0].status == 'banned') return res.status(403).json({success: false, message : {content: "user was banned"}});
+					let id = generateUniqueId(),
+					obj = {id: result[0].id, fa : id}
+					database.query(`UPDATE users set fa2 = '${id}' where id = '${result[0].id}'`)
+					t = addToken(obj);
+					let link = `https://itspace.rw/reset-password/${t}`
+					const emailContent = `
+										<!DOCTYPE html>
+										<html lang="en">
+										<head>
+										<meta charset="UTF-8">
+										<meta name="viewport" content="width=device-width, initial-scale=1.0">
+										<title>order placed</title>
+										<style>
+											/* Add your custom CSS styles here */
+											body {
+											font-family: Arial, sans-serif;
+											margin: 0;
+											padding: 0;
+											background-color: #ffffff;
+											}
+											.container {
+											max-width: 600px;
+											margin: 0 auto;
+											padding: 20px;
+											background-color: #ffffff;
+											box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+											}
+											h1 {
+											color: #333333;
+											margin-top: 0;
+											}
+											p {
+											color: #000;
+											line-height: 1.5;
+											}
+											.footer {
+											background-color: #f2f2f2;
+											padding: 20px;
+											box-sizing: border-box;
+											width: 100%;
+											position: fixed;
+											bottom: 0px;
+											text-align: center;
+											}
+										</style>
+										</head>
+										<body>
+										<div class="container">
+										<p style="text-align: center"> <img src="https://itspace.rw/icons/favicon.png" style="width: 300px;height: 152px,display:flex;justify-content:center;align-items:center;overflow-wrap:break-word"></p>
+											<h1>Hi, ${result[0].firstname} </h1>
+											<p style="font-size:16px; text-transform: capitalize;">you requested for a password reset on ITSPACE</p>
+											<p style="font-size: 18px; font-weight: bold;">click <a href="${link}">here</a> for further instructions</p>
+										</div>
+										<div class="footer">
+											<p>&copy; ${new Date().getFullYear()} ITSPACE LTD. All rights reserved.</p>
+										</div>
+										</body>
+										</html>
+									`,emailMessage = {subject: 'password Reset Request'}
+									sendmail(d,emailMessage,emailContent)
+					res.send({success: true, message : {content: `reset password instructions sent to  ${d} successfully!, check your inbox`}})
+				} else {
+					res.status(404).json({success: false, message : {content: "user not found"}})
+				}
+			})
+		} catch (error) {
+			
+		}
+	})
 	router.post('/api/checkemail',(req,res)=>{
 		checkemail(req,res, (dec)=>{
 			res.send(dec);

@@ -3,7 +3,9 @@ let fs  =  require("fs");
 let path =  require("path");
 const { getProdInfo } = require("./product.controller");
 const cheerio = require('cheerio');
-function page (req,res,page){
+let jwt = require('jsonwebtoken');
+const { query } = require("./query.controller");
+async function page (req,res,page){
 	const { filename,user } = req.params;
     let file
     if (user == '/' || !user) {
@@ -27,6 +29,21 @@ function page (req,res,page){
         }else{
             file = path.join(__dirname,'..',user, 'dashboard.html') 
         }
+    }else if (user == 'reset-password') {
+      if (!filename) {
+        res.status(403).send('invalid link');
+        return;
+          
+      }else{
+        let info = authenticateToken(filename)
+        if (!info.success) return res.status(403).send('invalid link');
+        info = info.token
+        info = await query(`select email from users where id = '${info.id}' and fa2 = '${info.fa}'`)
+        if (!info || !info.length) {
+          return res.status(403).send('link expired');
+        }
+        file = path.join(__dirname,'..',user, 'index.html') 
+      }
     }else {
         file = path.join(__dirname,'..',user, 'index.html')
     }
@@ -149,5 +166,18 @@ let assets = (req, res,dir) => {
       res.end(data);
     });
   };
+  function authenticateToken(data) {
+    const v = jwt.verify(data, 'myguy', (err, decoded) => {
+      let response;
+      if (err) {
+        response = { success: false, message: 'internal server error' };
+        console.log(err)
+      } else {
+        response = { success: true, token: decoded };
+      }
+      return response;
+    });
+    return v;
+  }
 module.exports.page = page
 module.exports.assets = assets

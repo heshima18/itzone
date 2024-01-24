@@ -3250,14 +3250,17 @@ export function initiatelogin() {
                       <div class="w-100  h-60p mt-60p p-r right mb-10p p-10p bsbb">
                           <div class="w-100 h-100">
                               <span class="iblock left h-100">
-                                      <span class="verdana black h-100 fs-13p center capitalize">not yet a member<a href="signup" id="signup" class="td-none theme switch-link">signup</a></span>
+                                  <span class="verdana black h-100 fs-13p capitalize">not yet a member<a href="signup" id="signup" class="td-none theme switch-link ml-5p">signup</a></span>
                               </span>
-                              <span class="iblock right h-100">
+                              <span class="block right h-100">
                                   <button class="bc-theme p-10p b-none w-100p br-2p">
                                       <span class="verdana white fs-15p capitalize">login</span>
                                   </button>
                               </span>
-                          </div>
+                              </div>
+                              <span class="block left h-100">
+                                <span class="verdana black h-100 fs-13p capitalize"><a href="/forgot-password" id="signup" class="td-none theme">forgot password ?</a></span>
+                              </span>
                       </div>
                   </form>
               </div>
