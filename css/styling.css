@@ -2,6 +2,9 @@
 .min-h-600p{
     min-height: 600px;
 }
+.min-h-500p{
+    min-height: 500px;
+}
 .paginate_button{
     padding: 10px 8.2px;
     margin: 0 2px 0 2px;

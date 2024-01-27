@@ -3247,7 +3247,7 @@ export function initiatelogin() {
                                   <span class="verdana black h-100 fs-13p capitalize">not yet a member<a href="signup" id="signup" class="td-none theme switch-link ml-5p">signup</a></span>
                               </span>
                               <span class="block right h-100">
-                                  <button class="bc-theme p-10p b-none w-100p br-2p">
+                                  <button class="bc-theme p-10p b-none w-100p br-2p hover-2">
                                       <span class="verdana white fs-15p capitalize">login</span>
                                   </button>
                               </span>
@@ -3354,7 +3354,7 @@ export function initiatelogin() {
                                       <span class="verdana black h-100 fs-13p capitalize">already a member<a href="login" id="login" class=" px-5p bsbb td-none theme switch-link">login</a></span>
                               </span>
                               <span class="iblock right h-100">
-                                  <button class="bc-theme p-10p b-none w-100p br-2p">
+                                  <button class="bc-theme p-10p b-none w-100p br-2p hover-2">
                                       <span class="verdana white fs-15p capitalize">signup</span>
                                   </button>
                               </span>
@@ -3364,7 +3364,7 @@ export function initiatelogin() {
               </div>
           </span>
       </div>
-      <div class=" mt--35p w-100 center py-5p bsbb">
+      <div class=" mt--95p w-100 center py-5p bsbb">
         <span class="center-2 hover-2 py-5p px-15p bsbb w-100 b-1-s-gray h-45p" id="authGoogle">
           <span class="w-30p h-30p mx-5p"><img src="/api/brands/google.png" class="contain w-30p h-30p"></span>
           <span class="w-100 helvetica capitalize"> continue with google</span>
