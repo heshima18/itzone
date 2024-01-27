@@ -49,6 +49,10 @@ async  function cpgcntn(step) {
     })
   }
   async function gsd(page) {
+    let u = getdata('user')
+    if (!u) {
+        return 0
+    }
     let x = page.id
     if (x == 'my-orders') {
         k = page.querySelector('div#all-orders')
@@ -82,7 +86,6 @@ async  function cpgcntn(step) {
                   }  
                 })
                 targetD.classList.remove('hidden')
-                console.log(tdata)
                 showOs({message: tdata},targetD)
                 ohols.map((div) => {
                     if (div != targetD) {
@@ -94,6 +97,9 @@ async  function cpgcntn(step) {
         v = postschema
         v.body = JSON.stringify({token: getdata('user')})
         r = await request('myorders',v)
+        if (!r.success) {
+            return alertMessage(r.message)
+        }
         showOs(r,k)
         function showOs(r,k) {
             if (!r.success) {
@@ -398,12 +404,12 @@ async  function cpgcntn(step) {
             }else if (password.value != confirm.value) {
                 return setErrorFor(password, 'passwords do not match')
             }else{
-                let password = await promptPassword();
+                let pwd = await promptPassword();
                 postschema.body = JSON.stringify({
                     token: getdata('user'),
                     reqtype : 'password',
                     value : password.value,
-                    password
+                    password : pwd
                 })
                 let response = await request('edituser',postschema)
                 alertMessage(response.message)

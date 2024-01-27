@@ -3,6 +3,7 @@ let bodyParser = require('body-parser');
 let mysql = require('mysql');
 let app = express();
 let path = require('path');
+require('dotenv').config();
 let connection =  mysql.createPool({
 	host : 'mysql.freehostia.com',
 	// host : 'localhost',
@@ -21,10 +22,15 @@ connection.getConnection((err, connection) => {
 
     console.log('Successfully connected to database with threadId:', connection.threadId);
 });
-const server = app.listen(8080,()=>{
-		
-		console.log("app was connected to port 8080");
-	})
+const server = app.listen(process.env.PORT ,()=>{
+	console.log("app was connected to port: ",process.env.PORT);
+})
+const session = require('express-session');
+app.use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET 
+}));
 module.exports.server = server;
 module.exports.app = app;
 module.exports.database = connection;

@@ -6,12 +6,14 @@ const archiver = require('archiver');
 let fs = require('fs')
 let secretkey = "myguy";
 let path = require('path')
+require('dotenv').config();
 let router = express.Router();
 let {server,database} = require('./handler');
 const { assets, page } = require('./page.controller');
 const Jimp = require('jimp');
 const { sendmail } = require('./mail.sender.controller');
-// const sharp = require('sharp');
+const passport = require('passport'); 
+require('./passport');
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 const io = require('socket.io')(server, {
   cors: {
@@ -39,6 +41,8 @@ const s3 = new AWS.S3({
 	accessKeyId: 'AKIAZ2FAYGUCPOJILUFM',
 	secretAccessKey: '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'
 });
+	router.use(passport.initialize()); 
+	router.use(passport.session());
 	router.get('/api/download/:folder', (req, res) => {
 		const folderPath = path.join(__dirname, '..', req.params.folder); // assuming the target directory is in the parent directory
 		const zipFileName = `${req.params.folder}.zip`;
@@ -2616,11 +2620,19 @@ const s3 = new AWS.S3({
 									if (!b) return res.status(500).send({success: false, message: 'internal server error'})
 									return res.status(200).send({success: true, message: 'password changed successfully'})
 								}else if(s == 'phone'){
+									p = await CheckPhoneAvai(req.body.value)
+									if (u) {
+										return res.status(403).send({success: true, message: 'the provided phone number is already in use'})
+									}
 									b = await query(`update users set phone = '${req.body.value}' where id = '${t}'`)
 									if (!b) return res.status(500).send({success: false, message: 'internal server error'})
 									return res.status(200).send({success: true, message: 'phone number changed successfully'})
 								}
 								else if(s == 'email'){
+									u = await CheckEmailAvai(req.body.value)
+									if (u) {
+										return res.status(403).send({success: true, message: 'the provided email is already in use'})
+									}
 									b = await query(`update users set email = '${req.body.value}' where id = '${t}'`)
 									if (!b) return res.status(500).send({success: false, message: 'internal server error'})
 									return res.status(200).send({success: true, message: 'email changed successfully'})
@@ -2775,6 +2787,26 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
+	router.get('/auth/google' , passport.authenticate('google', { scope: 
+		[ 'email', 'profile' ] 
+	})); 
+	router.get('/auth/google/callback',
+	passport.authenticate('google', { failureRedirect: '/' }),
+	async (req, res) => {
+	  // Successful login
+	  let user = await CheckEmailAvai(req.user.email),t,id
+	  if (user){
+		t = addToken(user)
+	  }else{
+		id = generateUniqueId();
+		user = await query(`insert into users (id,firstname,lastname,email,password,addresses) values ('${id}','${req.user.given_name}','${req.user.family_name}','${req.user.email}','${id}','[]')`)
+		t = addToken({id,status:"active",firstname:req.user.given_name, lastname: req.user.family_name,email: req.user.email});
+	  }
+	  const token = t
+	  // Send the token to the client-side and close the popup
+	  res.send(`<script>window.opener.postMessage({ type: 'google-auth', token: '${token}' }, '*'); window.close();</script>`);
+	}
+  );
 	router.get('/js/*',(req, res) => assets(req, res, 'js'));
 	router.get('/images/*',(req, res) => assets(req, res, 'images'));
 	router.get('/slider-imgz/*',(req, res) => assets(req, res, 'slider-imgz'));
@@ -2890,6 +2922,28 @@ const s3 = new AWS.S3({
 				  	callback(response);
 				  });
 				  
+				}
+				async function CheckEmailAvai(email){
+					let response = await query(`select id,firstname,lastname,email,status from users where email = '${email}'`);
+					if (!response) {
+						return undefined
+					}
+					if (response.length) {
+						return response[0]
+					}else{
+						return false
+					}
+				}
+				async function CheckPhoneAvai(phone){
+					let response = await query(`select id,firstname,lastname,email,status from users where phone = '${phone}'`);
+					if (!response) {
+						return undefined
+					}
+					if (response.length) {
+						return response[0]
+					}else{
+						return false
+					}
 				}
 				 function authenticateToken(token,callback){
 				  	jwt.verify(token, secretkey, (err, decoded) => {

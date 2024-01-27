@@ -901,8 +901,11 @@ export async function promptPassword() {
                                       <input type="password" class="form-control p-10p bsbb b-none w-100 no-outline br-5p b-1-s-dgray block main-input" placeholder="password" name="password" id="password">
                                       <small class="w-100 red pl-3p verdana capitalize"></small>
                                     </div>
-                                    <div class="my-10p col-12">
+                                    <div class="my-10p flex jc-sb px-10p">
                                       <button type="submit" class=" b-none bc-theme white py-10p hover-2 px-15p bsbb br-5p">Proceed</button>
+                                      <span class=" right h-100 center pr-10p">
+                                        <span class="verdana black h-100 fs-13p capitalize"><a href="/forgot-password" id="signup" class="td-none theme">forgot password ?</a></span>
+                                      </span>
                                     </div>
                                   </form>
                               </div>`
@@ -3194,16 +3197,7 @@ export function initiatelogin() {
   s.appendChild(c)
   c.innerHTML = `<div class="data-cont w-100 h-100  bsbb p-10p ovh p-r" id="login">
   <div class="w-45 h-100 p-40p bsbb igrid t-0 hidden-resp">
-      <div class="text w-90  bsbb p-20p bsbb">
-          <span class="mixed big-title fs-50p capitalize black bold-2 nowrap">
-              welcome back.
-          </span>
-      </div>
-      <div class="block w-70  ml-40p bsbb">
-          <span class="verdana dgray fs-25p">
-              log into your account. Get personalized functionalities of the site
-          </span>
-      </div>
+     <img src="/icons/login.webp" class="contain w-100 h-100">
   </div>
   <div class="w-50 h-100 p-a bsbb p-r r-0 p-20p igrid bp-0-resp bfull-resp">
       <div class="text w-100  bsbb bsbb p-r  ">
@@ -3213,7 +3207,7 @@ export function initiatelogin() {
                       <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
                           <div class="w-100 igrid mr-10p left parent p-r">
                               <label class="capitalize fs-15p verdana">email</label>
-                              <input type="email" name="email" placeholder="" class="p-15p no-outline bsbb b-1-s-dgray bc-white mt-10p">
+                              <input type="email" name="email" placeholder="" class="br-5p bsbb p-15p no-outline bsbb b-1-s-dgray bc-white mt-10p">
                               <span class="p-a r-0 mt-43p mr-10p center">
                                   <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <circle cx="10" cy="10" r="10" fill="#FF0000"/>
@@ -3231,7 +3225,7 @@ export function initiatelogin() {
                       <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
                           <div class="w-100 igrid mr-10p left parent p-r">
                               <label class="capitalize fs-15p verdana">password</label>
-                              <input type="password" name="password" placeholder="" class="p-15p no-outline bsbb b-1-s-dgray bc-white mt-10p">
+                              <input type="password" name="password" placeholder="" class="br-5p bsbb p-15p no-outline bsbb b-1-s-dgray bc-white mt-10p">
                               <span class="p-a r-0 mt-43p mr-10p center">
                                   <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <circle cx="10" cy="10" r="10" fill="#FF0000"/>
@@ -3264,12 +3258,12 @@ export function initiatelogin() {
                       </div>
                   </form>
               </div>
-              <div class="w-100 h-100 p-10p bsbb bc-trgray igrid m-0 user-form  p-a t-0 tr-0-3 l-100">
+              <div class="w-100 h-100 p-10p bsbb igrid m-0 user-form  p-a t-0 tr-0-3 l-100">
                   <form method="post" name="signup-form" onsubmit="function f(e) {e.preventDefault();}" class="p-10p bsbb" id="signup-form">
                       <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
                           <div class="w-50 bsbb igrid mr-10p left parent p-r">
                               <label class="verdana capitalize fs-15p ">first name</label>
-                              <input type="text" name="firstname" placeholder="" class=" no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
+                              <input type="text" name="firstname" placeholder="" class="br-5p bsbb  no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
                               <span class="p-a r-0 mt-43p mr-10p center">
                                   <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <circle cx="10" cy="10" r="10" fill="#FF0000"/>
@@ -3285,7 +3279,7 @@ export function initiatelogin() {
                           </div>
                           <div class="p-r w-45 bsbb igrid parent">
                               <label class="verdana capitalize fs-15p left">last name</label>
-                              <input type="text" name="lastname" placeholder="" class="no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
+                              <input type="text" name="lastname" placeholder="" class="br-5p bsbb no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
                               <span class="p-a r-0 mt-43p mr-10p center">
                                   <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <circle cx="10" cy="10" r="10" fill="#FF0000"/>
@@ -3303,7 +3297,7 @@ export function initiatelogin() {
                       <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
                           <div class="w-100 igrid mr-10p left parent p-r">
                               <label class="verdana capitalize fs-15p ">email</label>
-                              <input type="text" name="email" placeholder="" class="p-15p no-outline bsbb b-1-s-dgray bc-white mt-10p" id="emailsignup">
+                              <input type="text" name="email" placeholder="" class="br-5p bsbb p-15p no-outline bsbb b-1-s-dgray bc-white mt-10p" id="emailsignup">
                               <span class="p-a r-0 mt-43p mr-10p center">
                                   <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <circle cx="10" cy="10" r="10" fill="#FF0000"/>
@@ -3322,7 +3316,7 @@ export function initiatelogin() {
                       <div class="w-100 h-60p mt-30p mb-10p p-10p bsbb">
                           <div class="w-50 bsbb igrid mr-10p left parent p-r">
                               <label class="verdana capitalize fs-15p ">password</label>
-                              <input type="text" name="password" placeholder="" class=" no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
+                              <input type="text" name="password" placeholder="" class="br-5p bsbb  no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
                               <span class="p-a r-0 mt-43p mr-10p center">
                                   <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <circle cx="10" cy="10" r="10" fill="#FF0000"/>
@@ -3338,7 +3332,7 @@ export function initiatelogin() {
                           </div>
                           <div class="p-r w-45 bsbb igrid parent">
                               <label class="verdana capitalize fs-15p left">confirm password</label>
-                              <input type="text" name="confirm" placeholder="" class="no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
+                              <input type="text" name="confirm" placeholder="" class="br-5p bsbb no-outline bsbb b-1-s-dgray bc-white w-100 p-15p mt-10p">
                               <span class="p-a r-0 mt-43p mr-10p center">
                                   <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <circle cx="10" cy="10" r="10" fill="#FF0000"/>
@@ -3357,7 +3351,7 @@ export function initiatelogin() {
                       <div class="w-100  h-60p mt-20p p-r right mb-10p p-10p bsbb">
                           <div class="w-100 h-100">
                               <span class="iblock left h-100">
-                                      <span class="verdana black h-100 fs-13p center capitalize">already a member<a href="login" id="login" class="td-none theme switch-link">login</a></span>
+                                      <span class="verdana black h-100 fs-13p capitalize">already a member<a href="login" id="login" class=" px-5p bsbb td-none theme switch-link">login</a></span>
                               </span>
                               <span class="iblock right h-100">
                                   <button class="bc-theme p-10p b-none w-100p br-2p">
@@ -3370,6 +3364,13 @@ export function initiatelogin() {
               </div>
           </span>
       </div>
+      <div class=" mt--35p w-100 center py-5p bsbb">
+        <span class="center-2 hover-2 py-5p px-15p bsbb w-100 b-1-s-gray h-45p" id="authGoogle">
+          <span class="w-30p h-30p mx-5p"><img src="/api/brands/google.png" class="contain w-30p h-30p"></span>
+          <span class="w-100 helvetica capitalize"> continue with google</span>
+        </span>
+      </div>
+      
   </div>
   </div>`
   var input = Array.from(c.getElementsByTagName('input'));
@@ -3422,6 +3423,33 @@ export function initiatelogin() {
         showForm(swl.id);
     })
   })
+  document.getElementById('authGoogle').addEventListener('click', () => {
+    // Open a popup window for Google login
+    const popup = window.open(`${geturl()}/auth/google`, 'Google Login', 'width=500,height=500');
+  
+    // Check for the token in the localStorage when the popup is closed
+    const checkTokenInterval = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(checkTokenInterval);
+        const token = localStorage.getItem('user');
+        if (!token) {
+          console.error('Google Login Error')
+        }else{
+          alertMessage("you have been successfully logged in");
+          window.location.href = localStorage.getItem('next');
+        }
+      }
+    }, 1000);
+  });
+  
+  // Listen for messages from the popup
+  window.addEventListener('message', (event) => {
+    if (event.data.type === 'google-auth') {
+      // Store the token in localStorage
+      localStorage.setItem('user', JSON.stringify(event.data.token));
+    }
+  });
+  
 }
 export function showForm(form) {
 var forms = Array.from(document.querySelectorAll("div.user-form"));
