@@ -1,4 +1,4 @@
-import { addSpinner, alertMessage, checkEmpty, getPath, postschema, removeSpinner, request } from "./functions.js";
+import { addSpinner, alertMessage, checkEmpty, getPath, postschema, removeSpinner, request, setErrorFor } from "./functions.js";
 
 ((ele) =>{
     let f = document.querySelector('form'),pass = f.querySelector('input[name="password"]'),conf = f.querySelector('input[name="confirm-password"]'),v,e;
@@ -7,6 +7,9 @@ import { addSpinner, alertMessage, checkEmpty, getPath, postschema, removeSpinne
         v = checkEmpty(pass)
         e = checkEmpty(conf)
         if (v && e) {
+            if (pass.value != conf.value) {
+                return setErrorFor(pass,"passwords do not match")
+            }
             addSpinner(this.querySelector('button'))
             postschema.body = JSON.stringify({
                 password : pass.value,

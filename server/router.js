@@ -597,7 +597,7 @@ const s3 = new AWS.S3({
 						  '[]') AS ost
 						 from 
 						 users
-						 inner join orders as o on o.uid = '${t}'
+						 left join orders as o on o.uid = '${t}'
 						  where users.id = '${t}'`)
 						if(!r) return res.status(500).send({success: false, message : 'internal server error'})
 						let obj = {p_orders: 0, d_orders: 0, t_orders: 0, n_orders: 0}
