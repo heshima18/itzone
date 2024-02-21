@@ -1,10 +1,21 @@
 
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m;
-const socket = io(geturl());
-// Listen for the 'connect' event
+const ssid = g10()
+const socket = io(geturl(),{ query : { id: ssid} });
+localStorage.setItem('SID',ssid)
+function g10() {
+  const min = 1000000000;
+  const max = 9999999999;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 socket.on('connect', () => {
   console.log('Connected to the server');
 });
+
+if (getPath()[0] == 'checkout') {
+j = Stripe('pk_test_51OfSRGFfQyATOVlL6nEVRA2CVwnOAdVXsTxxQSAE8WTLP0CjJjJuVElsifcmuM8k6LVHJ86ZqeYVuP3SgFcyKnsx00D9sZAuEb');
+}
+export const stripe = j
 d = socket.emit('message', 'Hello, server!');
 socket.on('acknowledge', (data) => {
   console.log(`Received acknowledgement from server: ${data}`);
@@ -1369,39 +1380,8 @@ export async function validateForm(form,inputs,formdata) {
       chaastep(1) 
     }
   }else if (form.name == 'card-payment-form') {
-    inputs.forEach(inp=>{
-      if (inp.name == "fullname") {
-            if (inp.value == "") {
-              setErrorFor(inp,"enter the names  on the card");
-              val = 0;
-            }
-      }else if (inp.name == "exprityyear") {
-            if (inp.value == "") {
-              setErrorFor(inp,"enter expirity year");
-              val = 0;
-            }
-      }else if (inp.name == "expritymonth") {
-        if (inp.value == "") {
-          setErrorFor(inp,"enter expirity month");
-          val = 0;
-        }
-      }else if (inp.name == "cvv") {
-        if (inp.value == "") {
-          setErrorFor(inp,"enter cvv");
-          val = 0;
-        }
-      }else if (inp.name == "cardnumber") {
-        if (inp.value == "") {
-          setErrorFor(inp,"enter card number");
-          val = 0;
-        }
-      }
-    })
     v = {}
     if(val == 1){
-      inputs.forEach(inm=>{
-        Object.assign(v,{[inm.name]: inm.value})
-      })
       sendmessage(inputs,'placeorder',form,v);
     }
   }else if (form.name == 'mobile-money-form') {
@@ -1626,7 +1606,20 @@ export async function sendmessage(inputs,type,form,formdata) {
         s = postschema
         s.body = JSON.stringify({payment: {method: m,data: d},products: p, address: l,token: u})
         form.classList.add('op-0-3');
+        socket.on('confirmPayment', (pi)=>{
+          form.querySelector('button').innerText = 'processing payments'
+          form.querySelector('button').classList.add('capitalize','white')
+          const piID = pi
+          stripe.confirmCardPayment(piID, { payment_method: { card: inputs } }).then(async result => {
+              if (result.error) {
+                alertMessage(result.error);
+              }
+          }).catch(error => {
+              console.error(error);
+            });
+        })
         r = await request('addorder',s)
+        form.querySelector('button').innerText = 'Pay & place order'
         if (r.success) {
           form.reset();
           form.classList.remove('op-0-3');
@@ -3177,7 +3170,8 @@ export const postschema = {
     body: null,
     headers: {
       "content-type": "application/json",
-      'accept': '*/*'
+      'accept': '*/*',
+      'ss-id' : ssid
 
     }
 }

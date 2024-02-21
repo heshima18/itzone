@@ -1,5 +1,5 @@
 
-import { adcm, cc, getdata, getschema, geturl, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr,geimgturl, ellipsis, postschema } from "./functions.js";
+import { adcm, cc, getdata, getschema, geturl,stripe, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr,geimgturl, ellipsis, postschema } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 
 m = document.querySelector('span.ttl-m')
@@ -27,6 +27,9 @@ if (l) {
         chaastep(1)
     }
 }
+const elements = stripe.elements();
+const cardElement = elements.create('card');
+cardElement.mount('#card-element');
 export function getcinfo(prods) {
     p = document.querySelector('div.p-cont')
     c = getdata('cart')
@@ -153,8 +156,22 @@ p.forEach(paymentForm=>{
     paymentForm.addEventListener('submit',(e)=>{
         z = Array.from(p[p.indexOf(paymentForm)].querySelectorAll('.main-input'))
         e.preventDefault()
+        if (paymentForm.name='card-payment-form'){
+            z = cardElement
+            stripe.createToken(cardElement).then(function(result) {
+                if (result.error) {
+                  // Display error message to the user
+                  setErrorFor(document.querySelector('#card-element'),result.error.message)
+                } else {
+                    setSuccessFor(document.querySelector('#card-element'))
+                    validateForm(paymentForm,z,null);
+                }
+              });
+        }else{
+            validateForm(paymentForm,z,null);
+
+        }
         if (paymentForm.classList.contains('op-0-3')) return 0
-        validateForm(paymentForm,z,null);
     })
 })
 f.addEventListener('submit',(e)=>{

@@ -8,12 +8,18 @@ let secretkey = "myguy";
 let path = require('path')
 require('dotenv').config();
 let router = express.Router();
+let stripePackage = require('stripe');
+const EventEmitter = require('events');
+class MyEmitter extends EventEmitter {}
+const myEmitter = new MyEmitter();
 let {server,database} = require('./handler');
 const { assets, page } = require('./page.controller');
 const Jimp = require('jimp');
 const { sendmail } = require('./mail.sender.controller');
 const passport = require('passport'); 
 require('./passport');
+const sSC = process.env.STRIPE_SECRET_KEY,sPC = process.env.STRIPE_PUBLIC_KEY
+const stripe = stripePackage(sSC);
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 const io = require('socket.io')(server, {
   cors: {
@@ -1858,7 +1864,7 @@ const s3 = new AWS.S3({
 			}
 		})
 	})
-	router.post('/api/addorder',async (req,res)=>{
+	router.post('/api/addorder',validatePayment,async (req,res)=>{
 		authenticateToken(req.body.token,async (tokendata)=>{
 			if (tokendata.success) {
 				try {
@@ -1867,23 +1873,8 @@ const s3 = new AWS.S3({
 						if (error) return res.send({success: false, message: error})
 						if (result.length > 0) {
 							try {
-								p = req.body.products;
-								m = 0
 								let uinfo = result[0]
-								for (const productinfo of p) {
-									r = await getPrice(productinfo)
-									if (r) {
-										r = JSON.parse(r[0].conditions)
-										r.forEach(conds=>{
-											if (conds.name == productinfo.condition) {
-												r= conds
-											}
-										})
-										m+= r.newprice
-									}
-								}
-								//the payment api must use these information to proceed to payment
-								q =  {total: m,paymentinfo: req.body.payment,uaddress: req.body.address}
+								p = req.body.products;
 								c = {products: [],total: 0}
 								for (const productinfo of p) {
 									if (productinfo.qty > 0) {
@@ -2027,19 +2018,6 @@ const s3 = new AWS.S3({
 
 								}else{
 									res.status(500).send({success:false,message: 'Oops an error occured'});
-								}
-								async function getPrice(productinfo) {
-									try {
-									  const res = await new Promise((resolve, reject) => {
-										database.query(`SELECT JSON_EXTRACT(conditions, '$') AS conditions from products where id = '${productinfo.prodid}' and JSON_CONTAINS(conditions, '{"name": "${productinfo.condition}"}', '$')`, (err, res) => {
-										  if (err) reject(err);
-										  resolve(res);
-										});
-									  });
-									  return JSON.parse(JSON.stringify(res));
-									} catch (error) {
-									  console.error(error);
-									}
 								}
 							} catch (error) {
 								res.send({success: false, message: 'oops an error occured'})
@@ -2803,10 +2781,36 @@ const s3 = new AWS.S3({
 		t = addToken({id,status:"active",firstname:req.user.given_name, lastname: req.user.family_name,email: req.user.email});
 	  }
 	  const token = t
-	  // Send the token to the client-side and close the popup
 	  res.send(`<script>window.opener.postMessage({ type: 'google-auth', token: '${token}' }, '*'); window.close();</script>`);
 	}
   );
+	router.post('/api/webhook', express.json({type: 'application/json'}), (request, response) => {
+		const event = request.body;
+		switch (event.type) {
+		case 'payment_intent.created':
+			const cpaymentIntent = event.data.object;
+			myEmitter.emit('pIcreated',{success: true,intent: cpaymentIntent});
+			break;
+		case 'payment_intent.succeeded':
+			const paymentIntent = event.data.object;
+			myEmitter.emit('pIreceived',{success: true,intent: paymentIntent});
+			break;
+		case 'payment_intent.failed':
+			const failedPaymentIntent = event.data.object;
+			myEmitter.emit('pIreceived', { success: false, intent: failedPaymentIntent });
+			break;
+		case 'payment_intent.payment_failed':
+			const failedPaymentIntent2 = event.data.object;
+			myEmitter.emit('pIreceived', { success: false, intent: failedPaymentIntent2 });
+			break;
+		case 'payment_intent.canceled':
+			const canceledPaymentIntent = event.data.object;
+			myEmitter.emit('pIreceived', { success: false, intent: canceledPaymentIntent });
+			break;
+		default:
+			console.log(`Unhandled event type ${event.type}`);
+		}
+	});
 	router.get('/js/*',(req, res) => assets(req, res, 'js'));
 	router.get('/images/*',(req, res) => assets(req, res, 'images'));
 	router.get('/slider-imgz/*',(req, res) => assets(req, res, 'slider-imgz'));
@@ -2818,6 +2822,63 @@ const s3 = new AWS.S3({
 			
 				 
 				//========================================= FUNCTIONS ==========================================
+				async function validatePayment(req,res,next) {
+					const recipientSocket = Array.from(io.sockets.sockets.values()).find((sock) => sock.handshake.query.id === req.headers['ss-id'])
+					if (recipientSocket) {
+						p = req.body.products;
+						m = 0
+						for (const productinfo of p) {
+							r = await getPrice(productinfo)
+							if (r) {
+								r = JSON.parse(r[0].conditions)
+								r.forEach(conds=>{
+									if (conds.name == productinfo.condition) {
+										r= conds
+									}
+								})
+								m += (r.newprice * parseInt(productinfo.qty))
+							}
+						}
+						//the payment api must use these information to proceed to payment
+						q =  {amount: m,paymentinfo: req.body.payment,uaddress: req.body.address,curreny: 'RWF'}
+						try {
+							const paymentIntent = await stripe.paymentIntents.create({
+							  amount: q.amount,
+							  currency: q.curreny,
+							});
+							recipientSocket.emit('confirmPayment',paymentIntent.client_secret)
+							
+							let decision = await new Promise((resolve,reject)=>{
+								myEmitter.on('pIreceived', (data) => {
+									if (data.intent.client_secret == paymentIntent.client_secret) {
+										resolve(data)
+									}
+								});
+							})
+							if (decision.success) {
+								next()
+							}else{
+								res.send({success: false, message: 'payment failed'})
+							}
+						  } catch (error) {
+							console.error(error);
+							res.status(500).json({ message: 'Error creating payment intent.' });
+						  }
+					}
+				}
+				async function getPrice(productinfo) {
+					try {
+					  const res = await new Promise((resolve, reject) => {
+						database.query(`SELECT JSON_EXTRACT(conditions, '$') AS conditions from products where id = '${productinfo.prodid}' and JSON_CONTAINS(conditions, '{"name": "${productinfo.condition}"}', '$')`, (err, res) => {
+						  if (err) reject(err);
+						  resolve(res);
+						});
+					  });
+					  return JSON.parse(JSON.stringify(res));
+					} catch (error) {
+					  console.error(error);
+					}
+				}
 				function gnrtctn(obj) {
 					let s = 'where'
 					obj.forEach(table=>{
