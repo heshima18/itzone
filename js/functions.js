@@ -1612,7 +1612,7 @@ export async function sendmessage(inputs,type,form,formdata) {
           const piID = pi
           stripe.confirmCardPayment(piID, { payment_method: { card: inputs } }).then(async result => {
               if (result.error) {
-                alertMessage(result.error);
+                alertMessage(result.error.message);
               }
           }).catch(error => {
               console.error(error);
