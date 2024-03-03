@@ -954,20 +954,7 @@ export async function initializeCleave(phoneElement, idElement) {
     });
   }
 }
-export function initializeSpecialCleave(element,blocks,length,delimitator) {
-  const nationalID = new Cleave(element, {
-    numericOnly: true,
-    blocks,
-    delimiter: delimitator || ' ',
-    delimiterLazyShow: true,
-    onValueChanged: function (e) {
-        const formattedValue = e.target.rawValue;
-        if (formattedValue.length > length) {
-            nationalID.setRawValue(formattedValue.substring(0, length));
-        }
-    }
-  });
-}
+
 export function vdtins(type,value) {
   if (type == 'phonenumber') {
     if (value.length > 9 || value.length < 9) return 0;
@@ -1396,7 +1383,12 @@ export async function validateForm(form,inputs,formdata) {
               setErrorFor(inp,"enter phone number");
               val = 0;
             }else{
-              v=vdtins('phonenumber',inp.value)
+              if (inp.value.replace(/ /gi,"").length == 9) {
+                v= 1 
+                
+              }else{
+                v = 0
+              }
               if (v == 0) {
                   setErrorFor(inp,'invalid phone number')
                   val = 0;
@@ -1410,11 +1402,25 @@ export async function validateForm(form,inputs,formdata) {
     if(val == 1){
       inputs.forEach(inm=>{
         Object.assign(v,{[inm.name]: inm.value})
-        v.payphonenumber = '+250'+v.payphonenumber
       })
+      v.payphonenumber = '250'+v.payphonenumber.replace(/ /gi,"")
       sendmessage(inputs,'placeorder',form,v);
     }
   }
+}
+export function initializeSpecialCleave(element,blocks,length,delimitator) {
+  const nationalID = new Cleave(element, {
+    numericOnly: true,
+    blocks,
+    delimiter: delimitator || ' ',
+    delimiterLazyShow: true,
+    onValueChanged: function (e) {
+        const formattedValue = e.target.rawValue;
+        if (formattedValue.length > length) {
+            nationalID.setRawValue(formattedValue.substring(0, length));
+        }
+    }
+  });
 }
 export function checkEmpty(input){
   try {
@@ -1617,6 +1623,10 @@ export async function sendmessage(inputs,type,form,formdata) {
           }).catch(error => {
               console.error(error);
             });
+        }) 
+        socket.on('processingPayment',data=>{
+          form.querySelector('button').innerText = 'processing payments...'
+          form.querySelector('button').classList.add('capitalize','white')
         })
         r = await request('addorder',s)
         form.querySelector('button').innerText = 'Pay & place order'

@@ -27,9 +27,9 @@ thenav.innerHTML = `<div class="w-100 h-70p p-5p bsbb p-r bc-white" style="/*bac
           <span class="pl-10p pr-10p bsbb"><a href="${geturl()}/terms/" class="td-none ls-n"><span class="nowrap hover-2 black">policy</span></a></span>
           </div>
         </li>
-        <li class="bfull-resp">
+        <li class="bfull-resp w-50">
         <div class="p-6p w-100 h-100 bsbb gob-resp  p-r search-sec">
-        <div class=" w-800p h-90 bmt-10p p-r bfull-resp ovh">
+        <div class=" w-100 h-90 bmt-10p p-r bfull-resp ovh">
               <form action="" method="post" class="h-100 w-100 flex" id ="searchFrm">
               <div class="#icon search-icon w-60p h-100 p-a r-0 center transparent">
                 <button type="submit" class="b-none p-0 ml--23p bc-orange py-10p px-10p br-20p white hover-2">

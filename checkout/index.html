@@ -16,6 +16,7 @@
 	<script type="module" defer src="/js/checkout.controller.js"></script>
 	<script type="module" defer src="/js/inputs.controller.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js" integrity="sha512-KaIyHb30iXTXfGyI9cyKFUIRSSuekJt6/vqXtyQKhQP6ozZEGY8nOtRS6fExqE4+RbYHus2yGyYg1BrqxzV6YA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
     <script type="module" defer src="/js/wishlist.controller.js"></script>
 	<link rel="shortcut icon" href="/icons/logo-pure.png" type="image/x-icon">
@@ -123,7 +124,7 @@
                                             <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-15p pb-15p mt--5p iblock">
                                                 <div class="consolas fs-14p dgray center">+250</div>
                                             </div>
-                                            <input type="number" name="phonenumber" placeholder="Phone number" class="no-outline bsbb b-1-s-dgray bc-white w-80 p-15p mt--5p main-input iblock" id="phonenumber">
+                                            <input type="text" name="phonenumber" placeholder="Phone number" class="no-outline bsbb b-1-s-dgray bc-white w-80 p-15p mt--5p main-input iblock" id="phonenumber">
                                             <span class="p-a r-0 t-0 mt-10p mr-10p center">
                                                 <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <circle cx="10" cy="10" r="10" fill="#FF0000"/>
@@ -283,7 +284,7 @@
                                                         <div class="no-outline bsbb b-1-s-dgray bc-gray w-30 pt-15p pb-15p mt--5p iblock">
                                                             <div class="consolas fs-14p dgray center">+250</div>
                                                         </div>
-                                                        <input type="number" name="payphonenumber" placeholder="Phone number" class="no-outline bsbb b-1-s-dgray bc-white w-80 p-15p mt--5p main-input iblock" id="payphonenumber">
+                                                        <input type="text" name="payphonenumber" placeholder="Phone number" class="no-outline bsbb b-1-s-dgray bc-white w-80 p-15p mt--5p main-input iblock" id="payphonenumber">
                                                         <span class="p-a r-0 t-0 mt-10p mr-10p center">
                                                             <svg width="15" height="15" viewBox="0 0 20 20" class="hidden" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                 <circle cx="10" cy="10" r="10" fill="#FF0000"/>

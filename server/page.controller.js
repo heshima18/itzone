@@ -1,33 +1,33 @@
-let fs  =  require("fs");
+import { readFile } from "fs";
 // import  render  from "./page.scraper.controller";
-let path =  require("path");
-const { getProdInfo } = require("./product.controller");
-const cheerio = require('cheerio');
-let jwt = require('jsonwebtoken');
-const { query } = require("./query.controller");
+import { join } from "path";
+import { getProdInfo } from "./product.controller";
+import { load } from 'cheerio';
+import { verify } from 'jsonwebtoken';
+import { query } from "./query.controller";
 async function page (req,res,page){
 	const { filename,user } = req.params;
     let file
     if (user == '/' || !user) {
-        file = path.join(__dirname,'..', 'index.html')
+        file = join(__dirname,'..', 'index.html')
     }
     else if (user == 'admin') {
         if (!filename) {
-            file = path.join(__dirname,'..',user, 'index.html')
+            file = join(__dirname,'..',user, 'index.html')
             
         }else if (filename && filename != 'dashboard') {
            return assets(req, res,'admin/js')
         }else{
-            file = path.join(__dirname,'..',user, 'dashboard.html') 
+            file = join(__dirname,'..',user, 'dashboard.html') 
         }
     }else if (user == 'user') {
         if (!filename) {
-            file = path.join(__dirname,'..',user, 'index.html')
+            file = join(__dirname,'..',user, 'index.html')
             
         }else if (filename && filename != 'dashboard') {
            return assets(req, res,'user/js')
         }else{
-            file = path.join(__dirname,'..',user, 'dashboard.html') 
+            file = join(__dirname,'..',user, 'dashboard.html') 
         }
     }else if (user == 'reset-password') {
       if (!filename) {
@@ -42,15 +42,15 @@ async function page (req,res,page){
         if (!info || !info.length) {
           return res.status(403).send('link expired');
         }
-        file = path.join(__dirname,'..',user, 'index.html') 
+        file = join(__dirname,'..',user, 'index.html') 
       }
     }else {
-        file = path.join(__dirname,'..',user, 'index.html')
+        file = join(__dirname,'..',user, 'index.html')
     }
-    fs.readFile(file, async (err, data) => {
+    readFile(file, async (err, data) => {
         if (err) {
-            file = path.join(__dirname,'..','pages', '404.html') 
-            fs.readFile(file, (err, errorPageData) => {
+            file = join(__dirname,'..','pages', '404.html') 
+            readFile(file, (err, errorPageData) => {
                 if (err) {
                   res.status(404).send('File Not Found');
                   return;
@@ -78,7 +78,7 @@ async function page (req,res,page){
             res.end('product not found');
             return 
             }
-            const $ = cheerio.load(data);
+            const $ = load(data);
             const metaNameTag = $('meta[name="title"]'),
             metaImageTag = $('meta[name="image"]'),
             metaPriceTag = $('meta[name="price"]'),
@@ -149,8 +149,8 @@ let assets = (req, res,dir) => {
           header = 'text/html'
           break;
       }
-    const file = path.join(__dirname, '..', dir, filename);
-    fs.readFile(file, (err, data) => {
+    const file = join(__dirname, '..', dir, filename);
+    readFile(file, (err, data) => {
       if (err) {
         res.status(404).send('File not Found');
         // console.log(err)
@@ -167,7 +167,7 @@ let assets = (req, res,dir) => {
     });
   };
   function authenticateToken(data) {
-    const v = jwt.verify(data, 'myguy', (err, decoded) => {
+    const v = verify(data, 'myguy', (err, decoded) => {
       let response;
       if (err) {
         response = { success: false, message: 'internal server error' };
@@ -179,5 +179,7 @@ let assets = (req, res,dir) => {
     });
     return v;
   }
-module.exports.page = page
-module.exports.assets = assets
+const _page = page;
+export { _page as page };
+const _assets = assets;
+export { _assets as assets };

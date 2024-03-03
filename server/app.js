@@ -1,12 +1,13 @@
 
-let {router} =  require('./router');
-let {app} = require('./handler')
-let bodyParser = require('body-parser');
-const path = require('path');
-require('dotenv').config();
+import { router } from './router';
+import { app } from './handler';
+import { json, urlencoded } from 'body-parser';
+import path from 'path';
+import dotenv from "dotenv";
+dotenv.config();
 
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+app.use(json({ limit: '10mb' }));
+app.use(urlencoded({ limit: '10mb', extended: true }));
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -17,6 +18,7 @@ app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin'); 
   next();
 });
-module.exports.app  =  app
+const _app = app;
+export { _app as app };
 
 		

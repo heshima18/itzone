@@ -1,5 +1,5 @@
 
-import { adcm, cc, getdata, getschema, geturl,stripe, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr,geimgturl, ellipsis, postschema } from "./functions.js";
+import { adcm, cc, getdata, getschema, geturl,stripe, request, setErrorFor, setSuccessFor, validateForm,vdtins,chaastep,shaddr,geimgturl, ellipsis, postschema, initializeSpecialCleave } from "./functions.js";
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 
 m = document.querySelector('span.ttl-m')
@@ -140,27 +140,17 @@ i = Array.from(f.querySelectorAll('input.main-input'));
 p.forEach(paymentForm=>{
     t = Array.from(p[1].querySelectorAll('input.main-input'));
     t.forEach(input=>{
-        input.addEventListener('keyup',(e)=>{
-            e.preventDefault()
-           if (input.name == 'payphonenumber') {
-                v=vdtins('phonenumber',input.value)
-                if (v == 0) {
-                    setErrorFor(input,'invalid phone number')
-                }else{
-
-                    setSuccessFor(input)
-                }
-            }
-        })
+        if (input.name == 'payphonenumber') {
+            initializeSpecialCleave(input,[3,3,3],9,' ')
+        }
     })
     paymentForm.addEventListener('submit',(e)=>{
         z = Array.from(p[p.indexOf(paymentForm)].querySelectorAll('.main-input'))
         e.preventDefault()
-        if (paymentForm.name='card-payment-form'){
+        if (paymentForm.name == 'card-payment-form'){
             z = cardElement
             stripe.createToken(cardElement).then(function(result) {
                 if (result.error) {
-                  // Display error message to the user
                   setErrorFor(document.querySelector('#card-element'),result.error.message)
                 } else {
                     setSuccessFor(document.querySelector('#card-element'))

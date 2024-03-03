@@ -1,4 +1,4 @@
-const { database } = require("./handler");
+import { database } from "./handler";
 
 async function query(query) {
     try {
@@ -13,4 +13,5 @@ async function query(query) {
       console.error(error);
     }
 }
-module.exports.query = query
+const _query = query;
+export { _query as query };

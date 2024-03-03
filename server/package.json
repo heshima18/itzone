@@ -46,6 +46,7 @@
     "ee-first": "^1.1.1",
     "encodeurl": "^1.0.2",
     "escape-html": "^1.0.3",
+    "esm": "^3.2.25",
     "etag": "^1.8.1",
     "events": "^3.3.0",
     "express-session": "^1.17.3",
@@ -88,6 +89,7 @@
     "mquery": "^4.0.3",
     "ms": "^2.0.0",
     "negotiator": "^0.6.3",
+    "node-fetch": "^2.7.0",
     "nodemailer": "^6.9.8",
     "nopt": "^1.0.10",
     "normalize-path": "^3.0.0",
@@ -146,7 +148,7 @@
     "yamljs": "^0.3.0"
   },
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon --exec \"node -r esm\" app.js"
   },
   "repository": {
     "type": "git",

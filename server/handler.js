@@ -1,10 +1,11 @@
-let express = require('express');
-let bodyParser = require('body-parser');
-let mysql = require('mysql');
+import express from 'express';
+import bodyParser from 'body-parser';
+import { createPool } from 'mysql';
 let app = express();
-let path = require('path');
-require('dotenv').config();
-let connection =  mysql.createPool({
+import path from 'path';
+import dotenv from "dotenv";
+dotenv.config();
+let connection =  createPool({
 	host : 'mysql.freehostia.com',
 	// host : 'localhost',
 	user : 'itzsho_itzone',
@@ -25,12 +26,14 @@ connection.getConnection((err, connection) => {
 const server = app.listen(process.env.PORT ,()=>{
 	console.log("app was connected to port: ",process.env.PORT);
 })
-const session = require('express-session');
+import session from 'express-session';
 app.use(session({
     resave: false,
     saveUninitialized: true,
     secret: process.env.SESSION_SECRET 
 }));
-module.exports.server = server;
-module.exports.app = app;
-module.exports.database = connection;
+const _server = server;
+export { _server as server };
+const _app = app;
+export { _app as app };
+export const database = connection;

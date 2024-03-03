@@ -1,24 +1,25 @@
-let express = require('express');
-const AWS = require('aws-sdk');
-let crypto = require('crypto');
-let jwt = require('jsonwebtoken');
-const archiver = require('archiver');
-let fs = require('fs')
+import { Router, json } from 'express';
+import { S3 } from 'aws-sdk';
+import { randomBytes } from 'crypto';
+import { verify, sign } from 'jsonwebtoken';
+import archiver from 'archiver';
+import { createWriteStream, readdir, lstatSync, writeFileSync } from 'fs';
 let secretkey = "myguy";
-let path = require('path')
+import { join } from 'path';
 require('dotenv').config();
-let router = express.Router();
-let stripePackage = require('stripe');
-const EventEmitter = require('events');
+let router = Router();
+import stripePackage from 'stripe';
+import {EventEmitter} from 'events';
 class MyEmitter extends EventEmitter {}
 const myEmitter = new MyEmitter();
-let {server,database} = require('./handler');
-const { assets, page } = require('./page.controller');
-const Jimp = require('jimp');
-const { sendmail } = require('./mail.sender.controller');
-const passport = require('passport'); 
-require('./passport');
-const sSC = process.env.STRIPE_SECRET_KEY,sPC = process.env.STRIPE_PUBLIC_KEY
+import { server, database } from './handler';
+import { assets, page } from './page.controller';
+import { read, BLEND_SOURCE_OVER, MIME_JPEG } from 'jimp';
+import fetch from 'node-fetch';
+import { sendmail } from './mail.sender.controller';
+import passport  from 'passport'; 
+import './passport';
+const sSC = process.env.STRIPE_SECRET_KEY,sPC = process.env.STRIPE_PUBLIC_KEY,MTN_AU = process.env.MTN_AU_AK,MTN_COLL_SK = process.env.MTN_COLL_SK,MTN_DISB_SK = process.env.MTN_DISB_SK,MTN_API_LINK = process.env.MTN_API_LINK,MTN_ENV = process.env.MTN_ENV
 const stripe = stripePackage(sSC);
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 const io = require('socket.io')(server, {
@@ -43,16 +44,16 @@ io.on('connection', function (socket) {
 
 	
 });	
-const s3 = new AWS.S3({
+const s3 = new S3({
 	accessKeyId: 'AKIAZ2FAYGUCPOJILUFM',
 	secretAccessKey: '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'
 });
-	router.use(passport.initialize()); 
-	router.use(passport.session());
+router.use(passport.initialize()); 
+router.use(passport.session());
 	router.get('/api/download/:folder', (req, res) => {
-		const folderPath = path.join(__dirname, '..', req.params.folder); // assuming the target directory is in the parent directory
+		const folderPath = join(__dirname, '..', req.params.folder); // assuming the target directory is in the parent directory
 		const zipFileName = `${req.params.folder}.zip`;
-		const output = fs.createWriteStream(zipFileName);
+		const output = createWriteStream(zipFileName);
 		const archive = archiver('zip', {
 		zlib: { level: 9 }
 		});
@@ -65,17 +66,17 @@ const s3 = new AWS.S3({
 		archive.pipe(res);
 	
 		// Append all the files in the directory to the archive
-		fs.readdir(folderPath, (err, files) => {
+		readdir(folderPath, (err, files) => {
 		if (err) {
 			console.error(err);
 			return res.status(500).send(err);
 		}
 	
 		files.forEach((file) => {
-			const filePath = path.join(folderPath, file);
+			const filePath = join(folderPath, file);
 	
 			// Ensure that the file is not a directory before adding it to the archive
-			if (fs.lstatSync(filePath).isFile()) {
+			if (lstatSync(filePath).isFile()) {
 			archive.file(filePath, { name: file });
 			}
 		});
@@ -402,7 +403,7 @@ const s3 = new AWS.S3({
 									const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
 									const bufferData = Buffer.from(base64Data, 'base64');
 									const uploadedImageBuffer = bufferData;
-									const watermarkImagePath = path.join(__dirname,'..','icons', 'favicon.png');
+									const watermarkImagePath = join(__dirname,'..','icons', 'favicon.png');
 									try {
 										// Detect the image format from the buffer data
 										let ui
@@ -415,10 +416,10 @@ const s3 = new AWS.S3({
 											ui = uploadedImageBuffer
 										}
 										// Read the uploaded image buffer using Jimp
-										const uploadedImage = await Jimp.read(ui);
+										const uploadedImage = await read(ui);
 
 										// Read the watermark image from your server
-										const watermarkImage = await Jimp.read(watermarkImagePath);
+										const watermarkImage = await read(watermarkImagePath);
 										const watermarkResizeOptions = {
 											width: 205, // Adjust the width as needed
 											height: 110, // Adjust the height as needed
@@ -430,19 +431,19 @@ const s3 = new AWS.S3({
 
 										// Composite the watermark onto the uploaded image
 										uploadedImage.composite(watermarkImage, x, y, {
-										mode: Jimp.BLEND_SOURCE_OVER,
+										mode: BLEND_SOURCE_OVER,
 										opacitySource: 0.8, // Adjust the opacity as needed
 										});
 
 										// Convert the modified image to a buffer
-										const modifiedImageBuffer = await uploadedImage.getBufferAsync(Jimp.MIME_JPEG);
+										const modifiedImageBuffer = await uploadedImage.getBufferAsync(MIME_JPEG);
 										n = `${generateUniqueId()}.${e}`
 										// Upload the modified image to S3
 										const params = {
 											Bucket: 'itzone',
 											Key: `product-imgz/${n}`,
 											Body: modifiedImageBuffer,
-											ContentType: Jimp.MIME_JPEG,
+											ContentType: MIME_JPEG,
 											};
 										s3.upload(params, function(err, data) {
 											if (err) {
@@ -919,8 +920,8 @@ const s3 = new AWS.S3({
 								n = `${generateUniqueId()}.${e}`
 								const base64Data = i.replace(/^data:image\/\w+;base64,/, '');
 								const bufferData = Buffer.from(base64Data, 'base64');
-								const filePath = path.join(__dirname,'..','images', n);
-								fs.writeFileSync(filePath, bufferData);
+								const filePath = join(__dirname,'..','images', n);
+								writeFileSync(filePath, bufferData);
 								database.query(`insert into  categories(id,name,image) values('${generateUniqueId()}','${req.body.name}','${n}')`,(error,result)=>{
 									if (error) return res.send({success: false, message: "Oops an error occured"})
 									res.send({success:true, message: "category created"})
@@ -982,7 +983,7 @@ const s3 = new AWS.S3({
 					n = `${generateUniqueId()}.${e}`
 					const base64Data = i.replace(/^data:image\/\w+;base64,/, '');
 					const bufferData = Buffer.from(base64Data, 'base64');
-					const filePath = path.join(__dirname,'..','brands', n);
+					const filePath = join(__dirname,'..','brands', n);
 					const params = {
 						Bucket: 'itzone',
 						Key: `brands/${n}`,
@@ -1036,7 +1037,7 @@ const s3 = new AWS.S3({
 								n = `${generateUniqueId()}.${e}`
 								const base64Data = i.replace(/^data:image\/\w+;base64,/, '');
 								const bufferData = Buffer.from(base64Data, 'base64');
-								const filePath = path.join(__dirname,'..','images', n);
+								const filePath = join(__dirname,'..','images', n);
 								const params = {
 									Bucket: 'itzone',
 									Key: `images/${n}`,
@@ -1086,7 +1087,7 @@ const s3 = new AWS.S3({
 								n = `${generateUniqueId()}.${e}`
 								const base64Data = i.replace(/^data:image\/\w+;base64,/, '');
 								const bufferData = Buffer.from(base64Data, 'base64');
-								const filePath = path.join(__dirname,'..','images', n);
+								const filePath = join(__dirname,'..','images', n);
 								const params = {
 									Bucket: 'itzone',
 									Key: `images/${n}`,
@@ -1131,7 +1132,7 @@ const s3 = new AWS.S3({
 					n = `${generateUniqueId()}.${e}`
 					const base64Data = i.replace(/^data:image\/\w+;base64,/, '');
 					const bufferData = Buffer.from(base64Data, 'base64');
-					const filePath = path.join(__dirname,'..','images', n);
+					const filePath = join(__dirname,'..','images', n);
 					const params = {
 						Bucket: 'itzone',
 						Key: `images/${n}`,
@@ -1526,7 +1527,7 @@ const s3 = new AWS.S3({
 									const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
 									const bufferData = Buffer.from(base64Data, 'base64');
 									const uploadedImageBuffer = bufferData;
-									const watermarkImagePath = path.join(__dirname,'..','icons', 'favicon.png');
+									const watermarkImagePath = join(__dirname,'..','icons', 'favicon.png');
 									try {
 										// Detect the image format from the buffer data
 										let ui
@@ -1539,10 +1540,10 @@ const s3 = new AWS.S3({
 											ui = uploadedImageBuffer
 										}
 										// Read the uploaded image buffer using Jimp
-										const uploadedImage = await Jimp.read(ui);
+										const uploadedImage = await read(ui);
 
 										// Read the watermark image from your server
-										const watermarkImage = await Jimp.read(watermarkImagePath);
+										const watermarkImage = await read(watermarkImagePath);
 										const watermarkResizeOptions = {
 											width: 205, // Adjust the width as needed
 											height: 110, // Adjust the height as needed
@@ -1554,19 +1555,19 @@ const s3 = new AWS.S3({
 
 										// Composite the watermark onto the uploaded image
 										uploadedImage.composite(watermarkImage, x, y, {
-										mode: Jimp.BLEND_SOURCE_OVER,
+										mode: BLEND_SOURCE_OVER,
 										opacitySource: 0.8, // Adjust the opacity as needed
 										});
 
 										// Convert the modified image to a buffer
-										const modifiedImageBuffer = await uploadedImage.getBufferAsync(Jimp.MIME_JPEG);
+										const modifiedImageBuffer = await uploadedImage.getBufferAsync(MIME_JPEG);
 										n = `${generateUniqueId()}.${e}`
 										// Upload the modified image to S3
 										const params = {
 											Bucket: 'itzone',
 											Key: `product-imgz/${n}`,
 											Body: modifiedImageBuffer,
-											ContentType: Jimp.MIME_JPEG,
+											ContentType: MIME_JPEG,
 											};
 										s3.upload(params, function(err, data) {
 											if (err) {
@@ -2694,7 +2695,7 @@ const s3 = new AWS.S3({
 									n = `${generateUniqueId()}.${e}`
 									const base64Data = i.replace(/^data:image\/\w+;base64,/, '');
 									const bufferData = Buffer.from(base64Data, 'base64');
-									const filePath = path.join(__dirname,'..','feedback-imgz', n);
+									const filePath = join(__dirname,'..','feedback-imgz', n);
 									const params = {
 										Bucket: 'itzone',
 										Key: `feedback-imgz/${n}`,
@@ -2784,7 +2785,7 @@ const s3 = new AWS.S3({
 	  res.send(`<script>window.opener.postMessage({ type: 'google-auth', token: '${token}' }, '*'); window.close();</script>`);
 	}
   );
-	router.post('/api/webhook', express.json({type: 'application/json'}), (request, response) => {
+	router.post('/api/webhook', json({type: 'application/json'}), (request, response) => {
 		const event = request.body;
 		switch (event.type) {
 		case 'payment_intent.created':
@@ -2821,236 +2822,460 @@ const s3 = new AWS.S3({
 	router.get('/:user/:filename*?', (req, res) => page(req, res, 'admin'));
 			
 				 
-				//========================================= FUNCTIONS ==========================================
-				async function validatePayment(req,res,next) {
-					const recipientSocket = Array.from(io.sockets.sockets.values()).find((sock) => sock.handshake.query.id === req.headers['ss-id'])
-					if (recipientSocket) {
-						p = req.body.products;
-						m = 0
-						for (const productinfo of p) {
-							r = await getPrice(productinfo)
-							if (r) {
-								r = JSON.parse(r[0].conditions)
-								r.forEach(conds=>{
-									if (conds.name == productinfo.condition) {
-										r= conds
-									}
-								})
-								m += (r.newprice * parseInt(productinfo.qty))
-							}
+//========================================= FUNCTIONS ==========================================
+async function validatePayment(req,res,next) {
+	const recipientSocket = Array.from(io.sockets.sockets.values()).find((sock) => sock.handshake.query.id === req.headers['ss-id'])
+	if (recipientSocket) {
+		p = req.body.products;
+		m = 0
+		for (const productinfo of p) {
+			r = await getPrice(productinfo)
+			if (r) {
+				r = JSON.parse(r[0].conditions)
+				r.forEach(conds=>{
+					if (conds.name == productinfo.condition) {
+						r= conds
+					}
+				})
+				m += (r.newprice * parseInt(productinfo.qty))
+			}
+		}
+		//the payment api must use these information to proceed to payment
+		q =  {amount: m,paymentinfo: req.body.payment,uaddress: req.body.address,curreny: 'RWF'}
+		// return console.log(q.paymentinfo,amount)
+		if (q.paymentinfo.method == 'mobile-money-form') {
+			let ref =  await createPayment({orderid : generateUniqueId(),amount: q.amount, phonenumber : q.paymentinfo.data.payphonenumber})
+			if (ref) {
+				recipientSocket.emit('processingPayment',true)
+				let dec = await new Promise((resolve,reject)=>{
+					let int = setInterval(async ()=>{
+						let pi = await getPaymentInfo(ref)
+						if (pi.status == 'SUCCESSFUL') {
+							resolve(ref)
+							clearInterval(int)
+						}else if (pi.status == 'FAILED') {
+							resolve(0)
+							clearInterval(int)
 						}
-						//the payment api must use these information to proceed to payment
-						q =  {amount: m,paymentinfo: req.body.payment,uaddress: req.body.address,curreny: 'RWF'}
-						try {
-							const paymentIntent = await stripe.paymentIntents.create({
-							  amount: q.amount,
-							  currency: q.curreny,
-							});
-							recipientSocket.emit('confirmPayment',paymentIntent.client_secret)
-							
-							let decision = await new Promise((resolve,reject)=>{
-								myEmitter.on('pIreceived', (data) => {
-									if (data.intent.client_secret == paymentIntent.client_secret) {
-										resolve(data)
-									}
-								});
-							})
-							if (decision.success) {
-								next()
-							}else{
-								res.send({success: false, message: 'payment failed'})
-							}
-						  } catch (error) {
-							console.error(error);
-							res.status(500).json({ message: 'Error creating payment intent.' });
-						  }
-					}
+					},5000)
+				})
+				if (dec) {
+					console.log(dec)
+					next()
+					// let drefid = await disbursement(6000);
+					// if (drefid) {
+					// 	let disinfo = await getDisbursementInfo(drefid),balance = await checkBalance()
+					// 	console.log(disinfo,balance)
+					// }
+				}else{
+					res.send({success: false, message: 'payment failed'})
 				}
-				async function getPrice(productinfo) {
-					try {
-					  const res = await new Promise((resolve, reject) => {
-						database.query(`SELECT JSON_EXTRACT(conditions, '$') AS conditions from products where id = '${productinfo.prodid}' and JSON_CONTAINS(conditions, '{"name": "${productinfo.condition}"}', '$')`, (err, res) => {
-						  if (err) reject(err);
-						  resolve(res);
-						});
-					  });
-					  return JSON.parse(JSON.stringify(res));
-					} catch (error) {
-					  console.error(error);
-					}
-				}
-				function gnrtctn(obj) {
-					let s = 'where'
-					obj.forEach(table=>{
-						if (obj.indexOf(table) == (obj.length-1)) {
-							if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'order-by' || Object.keys(table) == 'range' || Object.keys(table) == 'availability' || Object.keys(table) == 'namelike') {
-								if (Object.keys(table) == 'namelike') {
-									s+= ` products.name like '%${table[Object.keys(table)]}%'`	
-								}else if (Object.keys(table) == 'idnot') {
-									s+= ` products.id != '${table[Object.keys(table)]}'`
-								}else if (Object.keys(table) == 'order-by') {
-									if (s == 'where') {
-										s = ''
-									}else{
-										s = s.substring(0, s.length - 3)
-									}
-									if(table[Object.keys(table)] == 'name-asc'){
-										s+= ` order by products.name asc`
-									}else if(table[Object.keys(table)] == 'name-desc'){
-										s+= ` order by products.name desc`
-									}else if(table[Object.keys(table)] == 'price-asc'){
-										s+= ` order by JSON_EXTRACT(products.conditions, '$[0].newprice') asc`
-									}else if(table[Object.keys(table)] == 'price-desc'){
-										s+= ` order by JSON_EXTRACT(products.conditions, '$[0].newprice') desc`
-									}
-
-								}else if(Object.keys(table) == 'range'){
-								   s+= ` JSON_EXTRACT(products.conditions, '$[0].newprice') BETWEEN ${table[Object.keys(table)][0]} AND ${table[Object.keys(table)][1]}`
-							   }else{
-									s+= ` products.${Object.keys(table)} = '${table[Object.keys(table)]}'`
-								}
-							}
-						} else {
-							if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'range' || Object.keys(table) == 'availability') {
-							 	if(Object.keys(table) == 'range'){
-									s+= ` JSON_EXTRACT(products.conditions, '$[0].newprice') BETWEEN ${table[Object.keys(table)][0]} AND ${table[Object.keys(table)][1]} and`
-								
-								}else{
-									s+= ` products.${Object.keys(table)} = '${table[Object.keys(table)]}' and`
-								}
-							}
+			}else{
+				res.send({success: false, message: 'payment failed'})
+			}
+		}else{
+			try {
+				const paymentIntent = await stripe.paymentIntents.create({
+					amount: q.amount,
+					currency: q.curreny,
+				});
+				recipientSocket.emit('confirmPayment',paymentIntent.client_secret)
+				let decision = await new Promise((resolve,reject)=>{
+					myEmitter.on('pIreceived', (data) => {
+						if (data.intent.client_secret == paymentIntent.client_secret) {
+							resolve(data)
 						}
-					})
-					if (s == 'where') s = ''
-					return s
-				}
-				function gnrtorctn(obj) {
-					let s = 'where'
-					obj.forEach(table=>{
-						if (obj.indexOf(table) == (obj.length-1)) {
-							if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'order-by' || Object.keys(table) == 'range') {
-								if (Object.keys(table) == 'idnot') {
-								s+= ` products.id != '${table[Object.keys(table)]}'`
-								}else if (Object.keys(table) == 'order-by') {
-									if (s == 'where') {
-										s = ''
-									}else{
-										s = s.substring(0, s.length - 3)
-									}
-									if(table[Object.keys(table)] == 'name-asc'){
-										s+= ` order by products.name asc`
-									}else if(table[Object.keys(table)] == 'name-desc'){
-										s+= ` order by products.name desc`
-									}else if(table[Object.keys(table)] == 'price-asc'){
-										s+= ` order by products.name asc`
-									}else if(table[Object.keys(table)] == 'price-desc'){
-										s+= ` order by products.name asc`
-									}
-
-								}else if(Object.keys(table) == 'range'){
-								   s+= ` JSON_EXTRACT(products.conditions, '$[0].newprice') BETWEEN ${table[Object.keys(table)][0]} AND ${table[Object.keys(table)][1]}`
-							   }else{
-									s+= ` products.${Object.keys(table)} = '${table[Object.keys(table)]}'`
-								}
-							}
-						} else {
-							if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'range' || Object.keys(table) == 'availability') {
-							 	if(Object.keys(table) == 'range'){
-									s = s.substring(0, s.length - 2)
-									s+= 'and'
-									s+= ` JSON_EXTRACT(products.conditions, '$[0].newprice') BETWEEN ${table[Object.keys(table)][0]} AND ${table[Object.keys(table)][1]} or`
-								}else{
-									s+= ` products.${Object.keys(table)} = '${table[Object.keys(table)]}' or`
-								}
-							}
-						}
-					})
-					if (s == 'where') s = ''
-					return s
-				}
-				
-				function checkemail(req, res, callback) {
-				const string =  req.body.email;
-				  database.query(`select * from users where email = '${string}'`, (error, result) => {
-				    if (error) return res.send({success:false, message: error});
-				    let response;
-				    if (result.length > 0) {
-				      response = {success: true, content: "email found"};
-				    } else {
-				      response = {success: false, content: "email is not available"};
-				    }
-
-				  	callback(response);
-				  });
-				  
-				}
-				async function CheckEmailAvai(email){
-					let response = await query(`select id,firstname,lastname,email,status from users where email = '${email}'`);
-					if (!response) {
-						return undefined
-					}
-					if (response.length) {
-						return response[0]
-					}else{
-						return false
-					}
-				}
-				async function CheckPhoneAvai(phone){
-					let response = await query(`select id,firstname,lastname,email,status from users where phone = '${phone}'`);
-					if (!response) {
-						return undefined
-					}
-					if (response.length) {
-						return response[0]
-					}else{
-						return false
-					}
-				}
-				 function authenticateToken(token,callback){
-				  	jwt.verify(token, secretkey, (err, decoded) => {
-				  	  let response;
-					  if (err) {
-					  	response = {success: false, message: err.message};
-					  } else {
-					  	response = {success : true,token: decoded};
-					  }
-					   callback(response);
 					});
+				})
+				if (decision.success) {
+					next()
+				}else{
+					res.send({success: false, message: 'payment failed'})
 				}
-				function addToken(userInfo) {
-					try {
-						const token = jwt.sign(userInfo, secretkey);
-				  		return token;
-					} catch (error) {
-						return null
+				} catch (error) {
+				console.error(error);
+				res.status(500).json({ message: 'Error creating payment intent.' });
+				}
+		}
+	}
+}
+async function getPrice(productinfo) {
+	try {
+		const res = await new Promise((resolve, reject) => {
+		database.query(`SELECT JSON_EXTRACT(conditions, '$') AS conditions from products where id = '${productinfo.prodid}' and JSON_CONTAINS(conditions, '{"name": "${productinfo.condition}"}', '$')`, (err, res) => {
+			if (err) reject(err);
+			resolve(res);
+		});
+		});
+		return JSON.parse(JSON.stringify(res));
+	} catch (error) {
+		console.error(error);
+	}
+}
+function gnrtctn(obj) {
+	let s = 'where'
+	obj.forEach(table=>{
+		if (obj.indexOf(table) == (obj.length-1)) {
+			if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'order-by' || Object.keys(table) == 'range' || Object.keys(table) == 'availability' || Object.keys(table) == 'namelike') {
+				if (Object.keys(table) == 'namelike') {
+					s+= ` products.name like '%${table[Object.keys(table)]}%'`	
+				}else if (Object.keys(table) == 'idnot') {
+					s+= ` products.id != '${table[Object.keys(table)]}'`
+				}else if (Object.keys(table) == 'order-by') {
+					if (s == 'where') {
+						s = ''
+					}else{
+						s = s.substring(0, s.length - 3)
 					}
-				  	
-				}
-				const generateUniqueId = () => {
-				   return crypto.randomBytes(9).toString('hex');
-				};
-				async function query(query) {
-					try {
-					  const res = await new Promise((resolve, reject) => {
-						database.query(query, (err, res) => {
-						  if (err) reject(err);
-						  resolve(res);
-						});
-					  });
-					  return JSON.parse(JSON.stringify(res));
-					} catch (error) {
-					  console.error(error);
+					if(table[Object.keys(table)] == 'name-asc'){
+						s+= ` order by products.name asc`
+					}else if(table[Object.keys(table)] == 'name-desc'){
+						s+= ` order by products.name desc`
+					}else if(table[Object.keys(table)] == 'price-asc'){
+						s+= ` order by JSON_EXTRACT(products.conditions, '$[0].newprice') asc`
+					}else if(table[Object.keys(table)] == 'price-desc'){
+						s+= ` order by JSON_EXTRACT(products.conditions, '$[0].newprice') desc`
 					}
-				}
-				function gfxt(data) {
-					const mime = data.split(',')[0].match(/:(.*?);/)[1];
-					const extension = mime.split('/')[1].split('+')[0];
-					return extension;
-				}
-				function rs(string){
-					string = string.replace(/\s+/g, '-')
-					return string
-				}
-		
 
-module.exports.router = router;
+				}else if(Object.keys(table) == 'range'){
+					s+= ` JSON_EXTRACT(products.conditions, '$[0].newprice') BETWEEN ${table[Object.keys(table)][0]} AND ${table[Object.keys(table)][1]}`
+				}else{
+					s+= ` products.${Object.keys(table)} = '${table[Object.keys(table)]}'`
+				}
+			}
+		} else {
+			if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'range' || Object.keys(table) == 'availability') {
+				if(Object.keys(table) == 'range'){
+					s+= ` JSON_EXTRACT(products.conditions, '$[0].newprice') BETWEEN ${table[Object.keys(table)][0]} AND ${table[Object.keys(table)][1]} and`
+				
+				}else{
+					s+= ` products.${Object.keys(table)} = '${table[Object.keys(table)]}' and`
+				}
+			}
+		}
+	})
+	if (s == 'where') s = ''
+	return s
+}
+function gnrtorctn(obj) {
+	let s = 'where'
+	obj.forEach(table=>{
+		if (obj.indexOf(table) == (obj.length-1)) {
+			if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'order-by' || Object.keys(table) == 'range') {
+				if (Object.keys(table) == 'idnot') {
+				s+= ` products.id != '${table[Object.keys(table)]}'`
+				}else if (Object.keys(table) == 'order-by') {
+					if (s == 'where') {
+						s = ''
+					}else{
+						s = s.substring(0, s.length - 3)
+					}
+					if(table[Object.keys(table)] == 'name-asc'){
+						s+= ` order by products.name asc`
+					}else if(table[Object.keys(table)] == 'name-desc'){
+						s+= ` order by products.name desc`
+					}else if(table[Object.keys(table)] == 'price-asc'){
+						s+= ` order by products.name asc`
+					}else if(table[Object.keys(table)] == 'price-desc'){
+						s+= ` order by products.name asc`
+					}
+
+				}else if(Object.keys(table) == 'range'){
+					s+= ` JSON_EXTRACT(products.conditions, '$[0].newprice') BETWEEN ${table[Object.keys(table)][0]} AND ${table[Object.keys(table)][1]}`
+				}else{
+					s+= ` products.${Object.keys(table)} = '${table[Object.keys(table)]}'`
+				}
+			}
+		} else {
+			if (Object.keys(table) == 'category' || Object.keys(table) == 'subcategory' || Object.keys(table) == 'brand' || Object.keys(table) == 'family' || Object.keys(table) == 'idnot' || Object.keys(table) == 'usedin' || Object.keys(table) == 'range' || Object.keys(table) == 'availability') {
+				if(Object.keys(table) == 'range'){
+					s = s.substring(0, s.length - 2)
+					s+= 'and'
+					s+= ` JSON_EXTRACT(products.conditions, '$[0].newprice') BETWEEN ${table[Object.keys(table)][0]} AND ${table[Object.keys(table)][1]} or`
+				}else{
+					s+= ` products.${Object.keys(table)} = '${table[Object.keys(table)]}' or`
+				}
+			}
+		}
+	})
+	if (s == 'where') s = ''
+	return s
+}
+
+function checkemail(req, res, callback) {
+const string =  req.body.email;
+	database.query(`select * from users where email = '${string}'`, (error, result) => {
+	if (error) return res.send({success:false, message: error});
+	let response;
+	if (result.length > 0) {
+		response = {success: true, content: "email found"};
+	} else {
+		response = {success: false, content: "email is not available"};
+	}
+
+	callback(response);
+	});
+	
+}
+async function CheckEmailAvai(email){
+	let response = await query(`select id,firstname,lastname,email,status from users where email = '${email}'`);
+	if (!response) {
+		return undefined
+	}
+	if (response.length) {
+		return response[0]
+	}else{
+		return false
+	}
+}
+async function CheckPhoneAvai(phone){
+	let response = await query(`select id,firstname,lastname,email,status from users where phone = '${phone}'`);
+	if (!response) {
+		return undefined
+	}
+	if (response.length) {
+		return response[0]
+	}else{
+		return false
+	}
+}
+	function authenticateToken(token,callback){
+	verify(token, secretkey, (err, decoded) => {
+		let response;
+		if (err) {
+		response = {success: false, message: err.message};
+		} else {
+		response = {success : true,token: decoded};
+		}
+		callback(response);
+	});
+}
+function addToken(userInfo) {
+	try {
+		const token = sign(userInfo, secretkey);
+		return token;
+	} catch (error) {
+		return null
+	}
+	
+}
+const generateUniqueId = () => {
+	return randomBytes(9).toString('hex');
+};
+async function query(query) {
+	try {
+		const res = await new Promise((resolve, reject) => {
+		database.query(query, (err, res) => {
+			if (err) reject(err);
+			resolve(res);
+		});
+		});
+		return JSON.parse(JSON.stringify(res));
+	} catch (error) {
+		console.error(error);
+	}
+}
+function gfxt(data) {
+	const mime = data.split(',')[0].match(/:(.*?);/)[1];
+	const extension = mime.split('/')[1].split('+')[0];
+	return extension;
+}
+function rs(string){
+	string = string.replace(/\s+/g, '-')
+	return string
+}
+
+const postschema = {
+    method: "POST",
+    body: null,
+    headers: {
+	  "content-type": "application/json",
+	  'accept': '*/*',
+	  'Ocp-Apim-Subscription-Key' : MTN_COLL_SK,
+	  'Authorization' : null
+
+    }
+}
+const getschema =  {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+      'accept': '*/*',
+	  'Ocp-Apim-Subscription-Key' : MTN_COLL_SK,
+	  'Authorization' : null
+
+    }
+};
+(async ()=>{
+	let ref =  await createPayment({orderid : 12,amount: 6500, phonenumber : '250790861884'})
+	let pi = await getPaymentInfo(ref)
+	if (pi.status == 'SUCCESSFUL') {
+	let drefid = await disbursement(6000);
+	if (drefid) {
+		let disinfo = await getDisbursementInfo(drefid),balance = await checkBalance()
+		console.log(disinfo,balance)
+	}
+	}
+})
+async function createREFID() {
+	let gs = getschema
+	try {
+		let response = await fetch(`https://www.uuidgenerator.net/api/version4`,gs)
+		const data = await response.text();
+		return data
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+}
+async function getPaymentInfo(REFID) {
+	let gs = getschema,at = await createAccessToken()
+	if(!at) return null
+	Object.assign(gs.headers,{Authorization: `Bearer ${at}`,'X-Target-Environment' : MTN_ENV})
+	try {
+		let response = await fetch(`${MTN_API_LINK}/collection/v1_0/requesttopay/${REFID}`,gs)
+		if (response.status == 200) {
+			const data = await response.json();
+			return data
+		}else {
+			return null
+		}
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+
+}
+async function disbursement(amount){
+	let ps = postschema,at = await createAccessToken(),rid = await createREFID(),
+	v = {
+		method: "POST",
+		body: JSON.stringify({
+			"amount": amount,
+			"currency": "EUR",
+			"externalId": "999999898",
+			"payee": {
+			  "partyIdType": "MSISDN",
+			  "partyId": "0790861884"
+			},
+			"payerMessage": "incoming payment",
+			"payeeNote": "demo text"
+		  }),
+		headers: {
+		  "content-type": "application/json",
+		  'accept': '*/*',
+		  Authorization: `Bearer ${at}`,
+			'X-reference-Id' : rid,
+			'X-Target-Environment' : MTN_ENV,
+			'Ocp-Apim-Subscription-Key' : MTN_DISB_SK
+	
+		}
+	};
+	if(!rid || !at) return null
+	try {
+		let response = await fetch(`${MTN_API_LINK}/disbursement/v1_0/transfer`,v)
+		if (response.status == 202) {
+			return rid
+		}else {
+			return null
+		}
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+}
+async function getDisbursementInfo(REFID) {
+	let gs = getschema,at = await createAccessToken()
+	if(!at) return null
+	let v = {
+		method: "GET",
+		headers: {
+		  "content-type": "application/json",
+		  'accept': '*/*',
+		  'Authorization': `Bearer ${at}`,
+		  'X-Target-Environment' : MTN_ENV,
+		  'Ocp-Apim-Subscription-Key' : MTN_DISB_SK
+		}
+	}
+	try {
+		let response = await fetch(`${MTN_API_LINK}/disbursement/v1_0/transfer/${REFID}`,v)
+		if (response.status == 200) {
+			const data = await response.json();
+			return data
+		}else {
+			return null
+		}
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+
+}
+async function checkBalance() {
+	let gs = getschema,at = await createAccessToken()
+	if(!at) return null
+	Object.assign(gs.headers,{Authorization: `Bearer ${at}`,'X-Target-Environment' : MTN_ENV})
+	try {
+		let response = await fetch(`${MTN_API_LINK}/collection/v1_0/account/balance`,gs)
+		if (response.status == 200) {
+			const data = await response.json();
+			return data
+		}else {
+			return null
+		}
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+
+}
+async function createAccessToken() {
+	let ps = postschema
+	Object.assign(ps.headers, {Authorization: MTN_AU})
+	try {
+		let response = await fetch(`${MTN_API_LINK}/collection/token/`,ps)
+		if (response.status == 200) {
+			const data = await response.json();
+			return data.access_token
+		}else{
+			return null
+		}
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+}
+async function createPayment(info){
+	let ps = postschema,at = await createAccessToken(),rid = await createREFID();
+	if(!rid || !at) return null
+	Object.assign(ps.headers, 
+		{
+			Authorization: `Bearer ${at}`,
+			'X-reference-Id' : rid,
+			'X-Target-Environment' : MTN_ENV
+		})
+		ps.body = JSON.stringify({
+			"amount": info.amount,
+			"currency": "EUR",
+			"externalId": info.orderid,
+			"payer": {
+			  "partyIdType": "MSISDN",
+			  "partyId": info.phonenumber
+			},
+			"payerMessage": "payment to itspace.rw",
+			"payeeNote": "pay please"
+		  })
+	try {
+		let response = await fetch(`${MTN_API_LINK}/collection/v1_0/requesttopay`,ps)
+		if (response.status == 202) {
+			return rid
+		}else {
+			return null
+		}
+	} catch (error) {
+		console.log(error)
+		return null
+	}
+}
+const _router = router;
+export { _router as router };
