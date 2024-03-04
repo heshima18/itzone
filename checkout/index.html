@@ -15,7 +15,6 @@
 	<script type="module" defer src="/js/user.controller.js"></script>
 	<script type="module" defer src="/js/checkout.controller.js"></script>
 	<script type="module" defer src="/js/inputs.controller.js"></script>
-    <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js" integrity="sha512-KaIyHb30iXTXfGyI9cyKFUIRSSuekJt6/vqXtyQKhQP6ozZEGY8nOtRS6fExqE4+RbYHus2yGyYg1BrqxzV6YA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
     <script type="module" defer src="/js/wishlist.controller.js"></script>
@@ -223,11 +222,7 @@
                                     </div>
                                     <div class="p-r w-100 h-a">
                                         <div class="w-100 h-a pform p-r l-0 tr-0-2">
-                                            <form method="post" name="card-payment-form" class="p-10p bsbb payment-form" id="payment-form">
-                                                <div class="w-100 h-60p mt-30p mb-10p p-20p bsbb">
-                                                    <div id="card-element" class="p-15p bsbb b-1-s-dgray"></div>
-                                                    <small class="red hidden verdana"></small>
-                                                </div>                                 
+                                            <form method="post" name="card-payment-form" class="p-10p bsbb payment-form" id="payment-form">                                 
                                                 <div class="w-100  h-60p mt-20p p-r right mb-10p p-10p bsbb">
                                                     <div class="w-100 h-100">
                                                         <span class="iblock w-100 h-100">

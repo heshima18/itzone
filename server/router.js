@@ -9,6 +9,7 @@ import { join } from 'path';
 require('dotenv').config();
 let router = Router();
 import stripePackage from 'stripe';
+import Paystack from 'paystack';
 import {EventEmitter} from 'events';
 class MyEmitter extends EventEmitter {}
 const myEmitter = new MyEmitter();
@@ -19,8 +20,8 @@ import fetch from 'node-fetch';
 import { sendmail } from './mail.sender.controller';
 import passport  from 'passport'; 
 import './passport';
-const sSC = process.env.STRIPE_SECRET_KEY,sPC = process.env.STRIPE_PUBLIC_KEY,MTN_AU = process.env.MTN_AU_AK,MTN_COLL_SK = process.env.MTN_COLL_SK,MTN_DISB_SK = process.env.MTN_DISB_SK,MTN_API_LINK = process.env.MTN_API_LINK,MTN_ENV = process.env.MTN_ENV
-const stripe = stripePackage(sSC);
+const pSC = process.env.PAYSTACK_SECRET_KEY,MTN_AU = process.env.MTN_AU_AK,MTN_COLL_SK = process.env.MTN_COLL_SK,MTN_DISB_SK = process.env.MTN_DISB_SK,MTN_API_LINK = process.env.MTN_API_LINK,MTN_ENV = process.env.MTN_ENV
+const paystack = Paystack(pSC)
 let q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m
 const io = require('socket.io')(server, {
   cors: {
@@ -2785,32 +2786,11 @@ router.use(passport.session());
 	  res.send(`<script>window.opener.postMessage({ type: 'google-auth', token: '${token}' }, '*'); window.close();</script>`);
 	}
   );
-	router.post('/api/webhook', json({type: 'application/json'}), (request, response) => {
-		const event = request.body;
-		switch (event.type) {
-		case 'payment_intent.created':
-			const cpaymentIntent = event.data.object;
-			myEmitter.emit('pIcreated',{success: true,intent: cpaymentIntent});
-			break;
-		case 'payment_intent.succeeded':
-			const paymentIntent = event.data.object;
-			myEmitter.emit('pIreceived',{success: true,intent: paymentIntent});
-			break;
-		case 'payment_intent.failed':
-			const failedPaymentIntent = event.data.object;
-			myEmitter.emit('pIreceived', { success: false, intent: failedPaymentIntent });
-			break;
-		case 'payment_intent.payment_failed':
-			const failedPaymentIntent2 = event.data.object;
-			myEmitter.emit('pIreceived', { success: false, intent: failedPaymentIntent2 });
-			break;
-		case 'payment_intent.canceled':
-			const canceledPaymentIntent = event.data.object;
-			myEmitter.emit('pIreceived', { success: false, intent: canceledPaymentIntent });
-			break;
-		default:
-			console.log(`Unhandled event type ${event.type}`);
-		}
+	router.post('/api/webhook', json({type: 'application/json'}), (req, res) => {
+		const event = req.body
+		myEmitter.emit('ChargeInfo',{success: true,event});
+		res.send(200);
+			
 	});
 	router.get('/js/*',(req, res) => assets(req, res, 'js'));
 	router.get('/images/*',(req, res) => assets(req, res, 'images'));
@@ -2826,76 +2806,97 @@ router.use(passport.session());
 async function validatePayment(req,res,next) {
 	const recipientSocket = Array.from(io.sockets.sockets.values()).find((sock) => sock.handshake.query.id === req.headers['ss-id'])
 	if (recipientSocket) {
-		p = req.body.products;
-		m = 0
-		for (const productinfo of p) {
-			r = await getPrice(productinfo)
-			if (r) {
-				r = JSON.parse(r[0].conditions)
-				r.forEach(conds=>{
-					if (conds.name == productinfo.condition) {
-						r= conds
-					}
-				})
-				m += (r.newprice * parseInt(productinfo.qty))
+		try {
+			
+			let p = req.body.products,token = req.body.token,uinfo;
+			if (!token) {
+				res.status(401).send({success: false, message: 'you are not authorize to perform this action'})
+			}else if (authenticateToken2(token).success) {
+				uinfo = authenticateToken2(token)
+				uinfo = uinfo.token
 			}
-		}
-		//the payment api must use these information to proceed to payment
-		q =  {amount: m,paymentinfo: req.body.payment,uaddress: req.body.address,curreny: 'RWF'}
-		// return console.log(q.paymentinfo,amount)
-		if (q.paymentinfo.method == 'mobile-money-form') {
-			let ref =  await createPayment({orderid : generateUniqueId(),amount: q.amount, phonenumber : q.paymentinfo.data.payphonenumber})
-			if (ref) {
-				recipientSocket.emit('processingPayment',true)
-				let dec = await new Promise((resolve,reject)=>{
-					let int = setInterval(async ()=>{
-						let pi = await getPaymentInfo(ref)
-						if (pi.status == 'SUCCESSFUL') {
-							resolve(ref)
-							clearInterval(int)
-						}else if (pi.status == 'FAILED') {
-							resolve(0)
-							clearInterval(int)
+			m = 0
+			for (const productinfo of p) {
+				r = await getPrice(productinfo)
+				if (r) {
+					r = JSON.parse(r[0].conditions)
+					r.forEach(conds=>{
+						if (conds.name == productinfo.condition) {
+							r= conds
 						}
-					},5000)
-				})
-				if (dec) {
-					console.log(dec)
-					next()
-					// let drefid = await disbursement(6000);
-					// if (drefid) {
-					// 	let disinfo = await getDisbursementInfo(drefid),balance = await checkBalance()
-					// 	console.log(disinfo,balance)
-					// }
+					})
+					m += (r.newprice * parseInt(productinfo.qty))
+				}
+			}
+			//the payment api must use these information to proceed to payment
+			q =  {amount: m,paymentinfo: req.body.payment,uaddress: req.body.address,curreny: 'RWF'}
+			// return console.log(q.paymentinfo,amount)
+			if (q.paymentinfo.method == 'mobile-money-form') {
+				let ref =  await createPayment({orderid : generateUniqueId(),amount: q.amount, phonenumber : q.paymentinfo.data.payphonenumber})
+				if (ref) {
+					recipientSocket.emit('processingPayment',true)
+					let dec = await new Promise((resolve,reject)=>{
+						let int = setInterval(async ()=>{
+							let pi = await getPaymentInfo(ref)
+							if (pi.status == 'SUCCESSFUL') {
+								resolve(ref)
+								clearInterval(int)
+							}else if (pi.status == 'FAILED') {
+								resolve(0)
+								clearInterval(int)
+							}
+						},5000)
+					})
+					if (dec) {
+						console.log(dec)
+						next()
+						// let drefid = await disbursement(6000);
+						// if (drefid) {
+						// 	let disinfo = await getDisbursementInfo(drefid),balance = await checkBalance()
+						// 	console.log(disinfo,balance)
+						// }
+					}else{
+						res.send({success: false, message: 'payment failed'})
+					}
 				}else{
 					res.send({success: false, message: 'payment failed'})
 				}
 			}else{
-				res.send({success: false, message: 'payment failed'})
-			}
-		}else{
-			try {
-				const paymentIntent = await stripe.paymentIntents.create({
-					amount: q.amount,
-					currency: q.curreny,
+				try {
+				const transaction = await paystack.transaction.initialize({
+					email : uinfo.email,
+					amount : q.amount * 100,
+					currency : q.curreny,
 				});
-				recipientSocket.emit('confirmPayment',paymentIntent.client_secret)
-				let decision = await new Promise((resolve,reject)=>{
-					myEmitter.on('pIreceived', (data) => {
-						if (data.intent.client_secret == paymentIntent.client_secret) {
-							resolve(data)
-						}
-					});
-				})
-				if (decision.success) {
-					next()
+				if (transaction.status) {
+					recipientSocket.emit('confirmPayment',transaction.data.authorization_url)
+					let decision = await new Promise((resolve,reject)=>{
+						myEmitter.on('ChargeInfo', (data) => {
+							if (data.event.data.reference == transaction.data.reference) {
+								resolve(data)
+							}
+						});
+					})
+					if (decision.event.event == 'charge.success') {
+						recipientSocket.emit('PaymentCompleted',true)
+						next()
+					}else{
+						recipientSocket.emit('PaymentCompleted',false)
+						res.send({success: false, message: 'payment failed'})
+
+					}
 				}else{
 					res.send({success: false, message: 'payment failed'})
 				}
+			
 				} catch (error) {
 				console.error(error);
-				res.status(500).json({ message: 'Error creating payment intent.' });
+				res.status(500).send('there was an error while processing payments');
 				}
+			}
+		} catch (error) {
+			console.error(error);
+			res.status(500).send('there was an error while processing payments');
 		}
 	}
 }
@@ -3039,7 +3040,7 @@ async function CheckPhoneAvai(phone){
 		return false
 	}
 }
-	function authenticateToken(token,callback){
+function authenticateToken(token,callback){
 	verify(token, secretkey, (err, decoded) => {
 		let response;
 		if (err) {
@@ -3049,6 +3050,19 @@ async function CheckPhoneAvai(phone){
 		}
 		callback(response);
 	});
+}
+function authenticateToken2(data) {
+	const v = verify(data, secretkey, (err, decoded) => {
+		let response;
+		if (err) {
+		  response = { success: false, message: errorMessage.is_error };
+		  console.log(err)
+		} else {
+		  response = { success: true, token: decoded };
+		}
+		return response;
+	  });
+	  return v;
 }
 function addToken(userInfo) {
 	try {

@@ -11,11 +11,6 @@ function g10() {
 socket.on('connect', () => {
   console.log('Connected to the server');
 });
-
-if (getPath()[0] == 'checkout') {
-j = Stripe('pk_test_51OfSRGFfQyATOVlL6nEVRA2CVwnOAdVXsTxxQSAE8WTLP0CjJjJuVElsifcmuM8k6LVHJ86ZqeYVuP3SgFcyKnsx00D9sZAuEb');
-}
-export const stripe = j
 d = socket.emit('message', 'Hello, server!');
 socket.on('acknowledge', (data) => {
   console.log(`Received acknowledgement from server: ${data}`);
@@ -1612,18 +1607,25 @@ export async function sendmessage(inputs,type,form,formdata) {
         s = postschema
         s.body = JSON.stringify({payment: {method: m,data: d},products: p, address: l,token: u})
         form.classList.add('op-0-3');
-        socket.on('confirmPayment', (pi)=>{
-          form.querySelector('button').innerText = 'processing payments'
+        let shade
+        socket.on('confirmPayment', (link)=>{
+          form.querySelector('button').innerText = 'processing payments...'
           form.querySelector('button').classList.add('capitalize','white')
-          const piID = pi
-          stripe.confirmCardPayment(piID, { payment_method: { card: inputs } }).then(async result => {
-              if (result.error) {
-                alertMessage(result.error.message);
-              }
-          }).catch(error => {
-              console.error(error);
-            });
+          shade = addshade()
+          let c = document.createElement('div')
+          c.className = `w-520p h-85 bc-white cntr br-10p card-6 b-mgc-resp ovh`
+          shade.appendChild(c)
+          c.innerHTML = `<iframe src="${link}" class ="w-100 h-100 b-none"></iframe>`
+          
         }) 
+        socket.on('PaymentCompleted', (link)=>{
+          if (link) {
+            form.querySelector('button').innerText = 'placing order...'
+            form.querySelector('button').classList.add('capitalize','white')
+          }
+          deletechild(shade,shade.parentNode)
+          
+        })
         socket.on('processingPayment',data=>{
           form.querySelector('button').innerText = 'processing payments...'
           form.querySelector('button').classList.add('capitalize','white')
